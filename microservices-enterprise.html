@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why Modern Enterprises Are Shifting to Microservices | Nawaz Sharif</title><meta name="description" content="What microservices actually offer, what they cost, and how Docker and Kubernetes fit in when scaling business applications.">
+<link rel="stylesheet" href="/style.css"></head><body>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav></div></header>
+<main class="doc"><span class="meta">October 10, 2026 &middot; Web Architecture &middot; By Nawaz Sharif</span><h1>Why Modern Enterprises Are Shifting to Microservices</h1><p>A monolith packages all features into one deployable unit. It is simple to start with, but as teams and traffic grow, every change risks the whole system and every release needs coordination. Microservices split the application into small services, each owning one business capability and deploying independently. Many enterprises adopt them for scale and speed, but the trade-offs deserve honest attention.</p>
+<h2>What you gain</h2>
+<p><strong>Independent deployment:</strong> the payments team can release without waiting for the catalog team. <strong>Targeted scaling:</strong> scale only the search service during a sale, not the entire application. <strong>Fault isolation:</strong> one failing service need not take everything down if it is designed with timeouts and fallbacks. <strong>Technology freedom:</strong> a service can use the language or database that suits its job.</p>
+<h2>Where Docker and Kubernetes fit</h2>
+<p>Docker packages a service with its dependencies into an image that runs the same on a laptop and in production. Kubernetes then runs those containers at scale: it schedules them across machines, restarts failed ones, rolls out new versions gradually, and balances traffic. A minimal deployment looks like this:</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+spec:
+  replicas: 3
+  selector:
+    matchLabels: {app: orders}
+  template:
+    metadata:
+      labels: {app: orders}
+    spec:
+      containers:
+      - name: orders
+        image: registry.example.com/orders:1.4.2
+        ports: [{containerPort: 8080}]</code></pre>
+<h2>What it costs</h2>
+<p>Distributed systems are harder. Calls that were function calls become network requests that can be slow or fail. Data consistency across services needs careful design, and debugging requires distributed tracing, centralized logging, and metrics. You also need mature CI/CD and a team able to operate the platform. For a small team with one product, a well-structured monolith is often the better choice.</p>
+<h2>A safe way to migrate</h2>
+<p>Do not rewrite everything at once. Use the strangler pattern: place an API gateway in front of the monolith, extract one well-bounded capability at a time, and route traffic to the new service while the old code shrinks. Pick the first service for clear boundaries and real business value, and invest in observability before the second one.</p>
+<h2>Summary</h2>
+<p>Microservices pay off when organizational scale, release frequency, and uneven load make a single codebase a bottleneck. Adopt them gradually, automate deployment and security from the start, and measure whether delivery speed and reliability actually improve.</p><p><a href="/#articles">&larr; All articles</a></p></main>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>

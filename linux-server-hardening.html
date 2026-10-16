@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Securing Linux Servers: Essential Hardening Steps for Production | Nawaz Sharif</title><meta name="description" content="Practical steps to lock down a production Linux server: SSH keys, firewall rules, automatic updates, and intrusion protection.">
+<link rel="stylesheet" href="/style.css"></head><body>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav></div></header>
+<main class="doc"><span class="meta">October 16, 2026 &middot; DevSecOps &middot; By Nawaz Sharif</span><h1>Securing Linux Servers: Essential Hardening Steps for Production</h1><p>A freshly installed Linux server is open to the internet within minutes, and automated scanners will start probing it almost immediately. Hardening is not a one-time project but a checklist you apply to every server before it handles real traffic. This guide covers the steps that remove the most risk for the least effort on Ubuntu or Debian.</p>
+<h2>1. Use SSH keys and disable root login</h2>
+<p>Password logins are the most common way servers get compromised. Create a normal user, add your public key, then edit <code>/etc/ssh/sshd_config</code>:</p>
+<pre><code>PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+MaxAuthTries 3</code></pre>
+<p>Test a second SSH session before closing your current one, then reload with <code>sudo systemctl reload ssh</code>. If you made a mistake, your existing session is your way back in.</p>
+<h2>2. Turn on a default-deny firewall</h2>
+<p>Only expose the ports you actually serve. With UFW, deny everything inbound and allow only what you need:</p>
+<pre><code>sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable</code></pre>
+<p>Allow SSH before enabling the firewall, or you will lock yourself out. If your office has a fixed IP, restrict port 22 to that address.</p>
+<h2>3. Keep the system patched automatically</h2>
+<p>Most real-world breaches use vulnerabilities that already have a fix. Enable unattended security updates with <code>sudo apt install unattended-upgrades</code> and <code>sudo dpkg-reconfigure unattended-upgrades</code>. Reboot on a schedule for kernel updates.</p>
+<h2>4. Block brute-force attempts</h2>
+<p>Fail2ban watches logs and temporarily bans IPs with repeated failed logins. Install it with <code>sudo apt install fail2ban</code>, copy <code>jail.conf</code> to <code>jail.local</code>, and enable the <code>sshd</code> jail. Even with key-only SSH, this cuts log noise and load.</p>
+<h2>5. Apply least privilege</h2>
+<p>Run each service under its own unprivileged user. Grant <code>sudo</code> only to people who need it, and remove unused packages and services. Check what is listening with <code>ss -tulpn</code>; anything you do not recognize should be investigated or removed.</p>
+<h2>6. Log, monitor, and back up</h2>
+<p>Ship logs to a separate system so an attacker cannot erase them. Enable <code>auditd</code> for sensitive files, and alert on new sudo users or changes to <code>/etc/ssh</code>. Finally, keep encrypted backups off the server and test a restore regularly; a backup you have never restored is only a hope.</p>
+<h2>Summary</h2>
+<p>Key-only SSH, a default-deny firewall, automatic patching, brute-force protection, least privilege, and off-box logs and backups together stop the large majority of opportunistic attacks. Run through this list on every new server, and automate it with Ansible or cloud-init so it is applied consistently.</p><p><a href="/#articles">&larr; All articles</a></p></main>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
