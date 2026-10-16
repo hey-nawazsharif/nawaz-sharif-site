@@ -26,3 +26,5 @@ input,textarea{width:100%;background:var(--panel);border:1px solid #334155;color
 label{font-size:.9rem;color:var(--mute)}
 footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mute);font-size:.9rem}
 footer a{color:var(--mute);margin-right:16px}
+.card:not(:has(a)):hover{border-color:var(--line)}
+
