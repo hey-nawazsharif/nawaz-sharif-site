@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nginx Reverse Proxy Explained: Setup, HTTPS, Load Balancing and Security | Nawaz Sharif</title><meta name="description" content="A practical Nginx reverse proxy guide with a diagram: install, proxy_pass configuration, HTTPS with Let's Encrypt, load balancing, security and troubleshooting.">
+<link rel="stylesheet" href="/style.css"></head><body>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
+<main class="doc"><span class="meta">October 17, 2026 &middot; Web Server &middot; By Nawaz Sharif</span><h1>Nginx Reverse Proxy Explained: Setup, HTTPS, Load Balancing and Security</h1><p>When you run a web application, you rarely want users to connect to it directly. Your app may listen on a private port, it may not handle HTTPS well, and you may want to run more than one copy of it. A reverse proxy solves all of this. Nginx is the most widely used reverse proxy, and this guide shows how it works and how to set it up step by step on Ubuntu or Debian.</p>
+<h2>What is a reverse proxy?</h2>
+<p>A forward proxy sits in front of clients and hides them from the internet, like a corporate proxy. A reverse proxy does the opposite: it sits in front of your servers. Visitors connect only to the proxy, and the proxy forwards each request to the right backend and sends the answer back. The visitor never sees your backend servers.</p>
+<p>The diagram below shows the flow.</p>
+<figure style="margin:24px 0"><svg viewBox="0 0 560 335" width="100%" role="img" aria-labelledby="ntitle ndesc" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" style="max-width:100%;height:auto;display:block;margin:0 auto;background:#0a0f1d;border-radius:12px">
+<title id="ntitle">Nginx reverse proxy diagram</title>
+<desc id="ndesc">A client browser sends an HTTPS request over the internet to Nginx on your server. Nginx forwards the request over HTTP to one of two private backend application servers and returns the response to the client.</desc>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#38bdf8"/></marker></defs>
+<rect x="205" y="15" width="350" height="255" rx="12" fill="#0b1220" stroke="#334155" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="217" y="38" fill="#94a3b8" font-size="14">Your server</text>
+<rect x="15" y="105" width="110" height="74" rx="10" fill="#0f172a" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="70" y="137" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="700">Client</text>
+<text x="70" y="161" text-anchor="middle" fill="#94a3b8" font-size="14">browser</text>
+<line x1="125" y1="142" x2="222" y2="142" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="173" y="130" text-anchor="middle" fill="#38bdf8" font-size="14">HTTPS</text>
+<rect x="225" y="95" width="120" height="94" rx="10" fill="#0c2a3d" stroke="#38bdf8" stroke-width="1.5"/>
+<text x="285" y="128" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="700">Nginx</text>
+<text x="285" y="151" text-anchor="middle" fill="#94a3b8" font-size="14">reverse proxy</text>
+<text x="285" y="171" text-anchor="middle" fill="#94a3b8" font-size="14">TLS, caching</text>
+<rect x="430" y="45" width="115" height="64" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+<text x="487" y="73" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">App 1</text>
+<text x="487" y="94" text-anchor="middle" fill="#94a3b8" font-size="14">port 3000</text>
+<rect x="430" y="180" width="115" height="64" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+<text x="487" y="208" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">App 2</text>
+<text x="487" y="229" text-anchor="middle" fill="#94a3b8" font-size="14">port 3001</text>
+<line x1="345" y1="122" x2="427" y2="80" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="372" y="90" text-anchor="middle" fill="#38bdf8" font-size="14">HTTP</text>
+<line x1="345" y1="162" x2="427" y2="206" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="372" y="202" text-anchor="middle" fill="#38bdf8" font-size="14">HTTP</text>
+<rect x="15" y="285" width="530" height="40" rx="10" fill="#0b1220" stroke="#334155" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="280" y="310" text-anchor="middle" fill="#94a3b8" font-size="14">Only ports 80 and 443 are public; backend ports stay private</text>
+</svg><figcaption style="color:var(--mute);font-size:.9rem;text-align:center;margin-top:8px">Figure 1: Nginx as a reverse proxy. Clients talk only to Nginx, which forwards requests to private backend servers.</figcaption></figure>
+<h2>How a request travels</h2>
+<p>Follow one visit step by step. The browser looks up your domain name and connects to your server on port 443. Nginx decrypts the HTTPS traffic, reads the host name and the path, and decides which backend should handle the request. It then opens a separate plain HTTP connection to that backend and waits for the answer. When the backend replies, Nginx passes the response back to the browser, optionally adding headers or caching it. To the visitor it looks like one single website, even when several servers are working behind it.</p>
+<h2>Why use a reverse proxy?</h2>
+<ul><li><strong>One public entry point:</strong> only Nginx is exposed, while your applications stay on private ports.</li><li><strong>HTTPS in one place:</strong> Nginx handles TLS certificates, so each app can speak plain HTTP internally.</li><li><strong>Load balancing:</strong> requests are spread across several copies of your app.</li><li><strong>Speed:</strong> Nginx serves static files and can cache responses quickly.</li><li><strong>Security:</strong> you can add rate limits, hide server details and block unwanted traffic before it reaches your app.</li><li><strong>Several sites on one server:</strong> different domain names can point to different backends.</li></ul>
+<h2>Step 1: Install Nginx</h2>
+<pre><code>sudo apt update
+sudo apt install nginx
+sudo systemctl status nginx</code></pre>
+<p>If the service is active, opening your server's IP address in a browser shows the Nginx welcome page.</p>
+<h2>Step 2: Create the proxy configuration</h2>
+<p>Assume your application is running on port 3000 on the same machine. Create a file called <code>/etc/nginx/sites-available/myapp</code>:</p>
+<pre><code>server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}</code></pre>
+<p>The <code>proxy_pass</code> line tells Nginx where to send requests. The <code>proxy_set_header</code> lines pass useful information to your app. Without them, the backend would see every visitor as coming from 127.0.0.1 and would not know the original host name or whether the visitor used HTTPS.</p>
+<h2>Step 3: Enable the site and reload</h2>
+<pre><code>sudo ln -s /etc/nginx/sites-available/myapp /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx</code></pre>
+<p>Always run <code>nginx -t</code> before reloading. It checks the configuration for mistakes, so a typo does not take your site down. If the default welcome page still appears, remove the default site link from <code>sites-enabled</code>.</p>
+<h2>Step 4: Add free HTTPS with Let's Encrypt</h2>
+<p>Certbot can obtain a certificate and update the Nginx configuration for you. Your domain must already point to the server.</p>
+<pre><code>sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d example.com -d www.example.com
+sudo certbot renew --dry-run</code></pre>
+<p>The last command confirms that automatic renewal works. Certificates are valid for a limited time, and certbot renews them in the background.</p>
+<h2>Step 5: Load balancing across several servers</h2>
+<p>To run two copies of your app, define an upstream group and point <code>proxy_pass</code> at its name:</p>
+<pre><code>upstream myapp {
+    server 127.0.0.1:3000;
+    server 127.0.0.1:3001;
+}
+
+server {
+    listen 80;
+    server_name example.com;
+
+    location / {
+        proxy_pass http://myapp;
+        proxy_set_header Host $host;
+    }
+}</code></pre>
+<p>By default Nginx shares requests between the servers in turn (round robin). Adding <code>least_conn;</code> inside the upstream block sends each request to the server with the fewest active connections, and Nginx temporarily skips a server that stops responding.</p>
+<h2>Serving static files</h2>
+<p>Letting Nginx serve images, CSS and JavaScript directly takes load off your application:</p>
+<pre><code>location /static/ {
+    root /var/www/myapp;
+    expires 7d;
+}</code></pre>
+<h2>Security basics</h2>
+<ul><li>Bind your application to <code>127.0.0.1</code> so it can only be reached through Nginx, and allow only ports 80 and 443 in the firewall.</li><li>Add <code>server_tokens off;</code> in the <code>http</code> block to hide the Nginx version number.</li><li>Use rate limiting to slow down abusive clients. Define a zone in the <code>http</code> block with <code>limit_req_zone $binary_remote_addr zone=perip:10m rate=10r/s;</code> and apply it in a location with <code>limit_req zone=perip burst=20;</code>.</li><li>Keep Nginx and the operating system updated.</li></ul>
+<p>The server itself needs protection too, so follow my guide on <a href="/linux-server-hardening.html">securing Linux servers</a> and log in with <a href="/ssh-keys-setup-guide.html">SSH keys</a> instead of passwords.</p>
+<h2>Troubleshooting common errors</h2>
+<p><strong>502 Bad Gateway</strong> usually means the backend is not running or <code>proxy_pass</code> points to the wrong port. Test it directly with <code>curl -I http://127.0.0.1:3000</code>. <strong>504 Gateway Timeout</strong> means the backend answered too slowly. For anything else, read the error log with <code>sudo tail -f /var/log/nginx/error.log</code>, and check the service with <code>sudo journalctl -u nginx -n 50</code>. If you need a refresher on these commands, see my guide to <a href="/essential-linux-commands.html">essential Linux commands</a>.</p>
+<h2>Summary</h2>
+<p>A reverse proxy gives your application a single, secure front door. Install Nginx, forward traffic with <code>proxy_pass</code>, add HTTPS with certbot, and use an upstream group when you need more than one backend. It also pairs well with containers, so you may want to read my <a href="/docker-for-beginners.html">Docker for beginners</a> guide next.</p><p><a href="/#articles">&larr; All articles</a></p></main>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
