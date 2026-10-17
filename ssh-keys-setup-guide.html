@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Set Up SSH Keys on Linux and macOS: A Step-by-Step Guide | Nawaz Sharif</title><meta name="description" content="Generate an Ed25519 SSH key, copy it to your server, and turn off password login safely. A step-by-step SSH keys guide for Linux and macOS.">
+<link rel="stylesheet" href="/style.css"></head><body>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
+<main class="doc"><span class="meta">October 17, 2026 &middot; Linux &middot; By Nawaz Sharif</span><h1>How to Set Up SSH Keys on Linux and macOS: A Step-by-Step Guide</h1><p>Passwords are the weakest link on any server that is exposed to the internet. Within minutes of going online, automated bots start guessing usernames and passwords on port 22. SSH keys replace the password with a cryptographic key pair that is practically impossible to guess. This guide shows how to create SSH keys on Linux and macOS, copy them to a server, and then disable password login safely.</p>
+<h2>How SSH keys work</h2>
+<p>An SSH key is a pair of files. The private key stays on your own computer and must never be shared. The public key is placed on the server. When you connect, the server sends a challenge that only the matching private key can answer, so your client proves its identity without ever sending the key itself. Anyone may see your public key, but nobody should ever see your private key.</p>
+<h2>Step 1: Check for existing keys</h2>
+<p>Before creating a new key, see whether you already have one:</p>
+<pre><code>ls -al ~/.ssh</code></pre>
+<p>If you see files such as <code>id_ed25519</code> and <code>id_ed25519.pub</code>, you already have a key pair. You can reuse it, or create a new one with a different file name so you do not overwrite the old one.</p>
+<h2>Step 2: Generate a new key pair</h2>
+<p>Ed25519 is the modern default: it is fast, secure and produces short keys.</p>
+<pre><code>ssh-keygen -t ed25519 -C "your_email@example.com"</code></pre>
+<p>Press Enter to accept the default location, then choose a strong passphrase when asked. The passphrase encrypts your private key on disk, so a stolen laptop does not automatically mean a stolen server. If you must connect to a very old system that does not support Ed25519, use <code>ssh-keygen -t rsa -b 4096</code> instead.</p>
+<p>This creates two files in <code>~/.ssh</code>: <code>id_ed25519</code> (private) and <code>id_ed25519.pub</code> (public).</p>
+<h2>Step 3: Copy the public key to your server</h2>
+<p>The easiest way is the <code>ssh-copy-id</code> tool. Replace the user name and address with your own:</p>
+<pre><code>ssh-copy-id -i ~/.ssh/id_ed25519.pub user@203.0.113.10</code></pre>
+<p>If <code>ssh-copy-id</code> is not available, you can do the same thing manually:</p>
+<pre><code>cat ~/.ssh/id_ed25519.pub | ssh user@203.0.113.10 "mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</code></pre>
+<p>The permissions matter. SSH ignores keys if the <code>.ssh</code> folder or the <code>authorized_keys</code> file is writable by other users.</p>
+<h2>Step 4: Test the key login</h2>
+<p>Open a connection:</p>
+<pre><code>ssh user@203.0.113.10</code></pre>
+<p>If it asks for the passphrase of your key rather than the server password, the setup works. Do not move on until this step succeeds, because the next step removes the password fallback.</p>
+<h2>Step 5: Use ssh-agent and a config file</h2>
+<p>Typing the passphrase for every connection gets tiresome. The ssh-agent program keeps your unlocked key in memory for the session. On macOS you can also store the passphrase in the Keychain:</p>
+<pre><code>ssh-add --apple-use-keychain ~/.ssh/id_ed25519</code></pre>
+<p>On Linux, start the agent and add the key with <code>eval "$(ssh-agent -s)"</code> followed by <code>ssh-add ~/.ssh/id_ed25519</code>. You can also save shortcuts in <code>~/.ssh/config</code>:</p>
+<pre><code>Host myserver
+    HostName 203.0.113.10
+    User deploy
+    IdentityFile ~/.ssh/id_ed25519
+    AddKeysToAgent yes</code></pre>
+<p>Now <code>ssh myserver</code> is all you need to type.</p>
+<h2>Step 6: Disable password login</h2>
+<p>Once key login works, turn off passwords so bots can no longer guess their way in. <strong>Keep your current session open</strong> while you do this, so you can undo any mistake. On the server, edit <code>/etc/ssh/sshd_config</code>:</p>
+<pre><code>PasswordAuthentication no
+PubkeyAuthentication yes
+PermitRootLogin no</code></pre>
+<p>Check the syntax and reload the service:</p>
+<pre><code>sudo sshd -t
+sudo systemctl reload ssh</code></pre>
+<p>On some distributions the service is called <code>sshd</code> instead of <code>ssh</code>. Now open a second terminal and confirm you can still log in with your key. Also run <code>sudo sshd -T | grep -i passwordauthentication</code>. If it still says yes, another file in <code>/etc/ssh/sshd_config.d/</code>, often created by cloud images, is overriding your setting.</p>
+<h2>A note for Windows users</h2>
+<p>Windows 10 and 11 include an OpenSSH client, so <code>ssh-keygen</code> and <code>ssh</code> work the same way in PowerShell. Since <code>ssh-copy-id</code> is not available there, open the <code>.pub</code> file, copy its single line, and paste it into <code>~/.ssh/authorized_keys</code> on the server.</p>
+<h2>Security best practices</h2>
+<ul><li>Always protect your private key with a passphrase.</li><li>Never upload a private key to GitHub, chat tools or cloud storage.</li><li>Use a separate key for each device, so you can revoke one without affecting the others.</li><li>Remove old keys from <code>authorized_keys</code> when a laptop is lost or a team member leaves.</li><li>Consider a hardware security key for high-value servers.</li></ul>
+<h2>Troubleshooting common errors</h2>
+<p><strong>Permission denied (publickey):</strong> check that you are using the correct user name, that your public key is in that user's <code>authorized_keys</code>, and that <code>~/.ssh</code> is set to 700 and <code>authorized_keys</code> to 600. Run <code>ssh -v user@host</code> to see which keys are being tried.</p>
+<p><strong>WARNING: UNPROTECTED PRIVATE KEY FILE:</strong> your private key is readable by others. Fix it with <code>chmod 600 ~/.ssh/id_ed25519</code>.</p>
+<h2>Summary</h2>
+<p>Generate an Ed25519 key with a passphrase, copy the public key to your server, test the login, and only then disable password authentication. This one change removes the most common attack path against Linux servers. For the rest of the checklist, read my guide on <a href="/linux-server-hardening.html">securing Linux servers for production</a>, or the <a href="/cybersecurity-roadmap-2026.html">cybersecurity roadmap for 2026</a>.</p><p><a href="/#articles">&larr; All articles</a></p></main>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
