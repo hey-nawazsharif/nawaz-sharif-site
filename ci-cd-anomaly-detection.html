@@ -3,7 +3,7 @@
 <title>AI-Driven Anomaly Detection in CI/CD Pipelines | Nawaz Sharif</title><meta name="description" content="How to use scikit-learn's IsolationForest to flag unusual build and deployment behavior before it becomes an outage or a security incident.">
 <link rel="stylesheet" href="/style.css"></head><body>
 <header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
-<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav></div></header>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
 <main class="doc"><span class="meta">October 14, 2026 &middot; Python AI &middot; By Nawaz Sharif</span><h1>AI-Driven Anomaly Detection in CI/CD Pipelines</h1><p>CI/CD pipelines produce a steady stream of numbers: build times, test counts, memory use, artifact sizes, and network calls. When something changes suddenly, such as a build that doubles in duration or a job that starts reaching an unknown host, it can signal a regression, a misconfiguration, or even a compromised dependency. Fixed thresholds miss most of these. Anomaly detection learns what normal looks like and flags the outliers.</p>
 <h2>Why IsolationForest</h2>
 <p>IsolationForest is an unsupervised algorithm in scikit-learn. It builds random trees and measures how quickly a data point can be isolated; unusual points are isolated in fewer splits. It needs no labeled attack data, handles several features at once, and trains in seconds on a typical pipeline history.</p>
@@ -29,5 +29,6 @@ if model.predict(new)[0] == -1:
 <p>Start in alert-only mode and do not fail builds automatically until you trust the results. Retrain regularly, since legitimate changes such as a larger test suite will shift the baseline. Review flagged runs and record the outcome; those labels help you tune the model later. Remember that an anomaly is not proof of an attack, only a reason to look.</p>
 <h2>Summary</h2>
 <p>A small IsolationForest model gives your pipeline an early-warning layer with little effort. Combined with dependency scanning and signed artifacts, it makes unexpected behavior visible while it is still cheap to investigate.</p><p><a href="/#articles">&larr; All articles</a></p></main>
-<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>

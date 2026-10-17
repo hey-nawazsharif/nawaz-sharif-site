@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Contact | Nawaz Sharif</title><meta name="description" content="Contact Nawaz Sharif for web development, server deployment, or security consulting.">
+<title>Contact | Nawaz Sharif</title><meta name="description" content="Contact Nawaz Sharif by phone, email or form for web development, server deployment, or security consulting.">
 <link rel="stylesheet" href="/style.css"></head><body>
 <header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
-<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav></div></header>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
 <main class="doc"><h1>Contact</h1>
-<p>For web development, server deployment, or security consulting, send a message or email <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a>. I usually reply within two business days.</p>
-<form name="contact" method="POST" data-netlify="true">
+<p>For web development, server deployment, or security consulting, call, email or send a message. I usually reply within two business days.</p>
+<p class="callrow"><strong>Phone:</strong> <a href="tel:+919535184897">+91-9535184897</a><br><strong>Email:</strong> <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<h2>Send a message</h2>
+<form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true">
 <input type="hidden" name="form-name" value="contact">
+<p hidden><label>Leave this empty: <input name="bot-field"></label></p>
 <label for="n">Name</label><input id="n" name="name" required>
 <label for="e">Email</label><input id="e" name="email" type="email" required>
 <label for="m">Message</label><textarea id="m" name="message" rows="6" required></textarea>
-<button class="btn" type="submit">Send message</button></form></main>
-<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<div data-netlify-recaptcha="true"></div>
+<button class="btn" type="submit">Send message</button></form>
+<p>See also the <a href="/faq.html">frequently asked questions</a>.</p></main>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>

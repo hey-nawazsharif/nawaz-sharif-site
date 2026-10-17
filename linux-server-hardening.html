@@ -3,7 +3,7 @@
 <title>Securing Linux Servers: Essential Hardening Steps for Production | Nawaz Sharif</title><meta name="description" content="Practical steps to lock down a production Linux server: SSH keys, firewall rules, automatic updates, and intrusion protection.">
 <link rel="stylesheet" href="/style.css"></head><body>
 <header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
-<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></nav></div></header>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
 <main class="doc"><span class="meta">October 16, 2026 &middot; DevSecOps &middot; By Nawaz Sharif</span><h1>Securing Linux Servers: Essential Hardening Steps for Production</h1><p>A freshly installed Linux server is open to the internet within minutes, and automated scanners will start probing it almost immediately. Hardening is not a one-time project but a checklist you apply to every server before it handles real traffic. This guide covers the steps that remove the most risk for the least effort on Ubuntu or Debian.</p>
 <h2>1. Use SSH keys and disable root login</h2>
 <p>Password logins are the most common way servers get compromised. Create a normal user, add your public key, then edit <code>/etc/ssh/sshd_config</code>:</p>
@@ -30,5 +30,6 @@ sudo ufw enable</code></pre>
 <p>Ship logs to a separate system so an attacker cannot erase them. Enable <code>auditd</code> for sensitive files, and alert on new sudo users or changes to <code>/etc/ssh</code>. Finally, keep encrypted backups off the server and test a restore regularly; a backup you have never restored is only a hope.</p>
 <h2>Summary</h2>
 <p>Key-only SSH, a default-deny firewall, automatic patching, brute-force protection, least privilege, and off-box logs and backups together stop the large majority of opportunistic attacks. Run through this list on every new server, and automate it with Ansible or cloud-init so it is applied consistently.</p><p><a href="/#articles">&larr; All articles</a></p></main>
-<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>

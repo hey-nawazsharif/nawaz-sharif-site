@@ -15,7 +15,7 @@ h2{color:#fff;font-size:1.7rem;margin:0 0 20px}section{padding:48px 0;border-top
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px}
 .card h3{margin:0 0 8px;color:#fff;font-size:1.1rem}.card p{margin:0;color:var(--mute);font-size:.95rem}
-.card a{text-decoration:none;color:inherit;display:block}.card:hover{border-color:var(--acc)}
+.card a{text-decoration:none;color:inherit;display:block}.card:has(a):hover{border-color:var(--acc)}
 .meta{color:var(--acc);font-size:.8rem;margin-bottom:6px;display:block}
 main.doc{max-width:720px;margin:0 auto;padding:48px 20px 64px}
 main.doc h1{color:#fff;font-size:clamp(1.8rem,5vw,2.5rem);line-height:1.2;margin:0 0 8px}
@@ -26,5 +26,4 @@ input,textarea{width:100%;background:var(--panel);border:1px solid #334155;color
 label{font-size:.9rem;color:var(--mute)}
 footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mute);font-size:.9rem}
 footer a{color:var(--mute);margin-right:16px}
-.card:not(:has(a)):hover{border-color:var(--line)}
-
+details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 12px}summary{cursor:pointer;font-weight:600;color:#fff}details p{margin:10px 0 0}.callrow{margin:20px 0;line-height:2}
