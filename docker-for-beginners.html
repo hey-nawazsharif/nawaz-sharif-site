@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Docker for Beginners: Images, Containers and Your First Dockerfile | Nawaz Sharif</title><meta name="description" content="A beginner-friendly Docker guide with a diagram: images, containers, your first Dockerfile, volumes, Docker Compose and security basics.">
+<link rel="stylesheet" href="/style.css"></head><body>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
+<main class="doc"><span class="meta">October 17, 2026 &middot; DevOps &middot; By Nawaz Sharif</span><h1>Docker for Beginners: Images, Containers and Your First Dockerfile</h1><p>"It works on my machine" is one of the oldest problems in software. An application runs perfectly on a developer's laptop, then fails on the server because of a different operating system, library version or configuration. Docker solves this by packaging an application together with everything it needs, so it runs the same way everywhere. This guide explains Docker from scratch, with a diagram, your first Dockerfile and the commands you will use every day.</p>
+<h2>What is Docker?</h2>
+<p>Docker is a platform for building, shipping and running applications in containers. A container is an isolated process that includes your code, its libraries and its settings. A virtual machine runs a complete guest operating system on top of a hypervisor, which is heavy and slow to start. A container shares the kernel of the host machine and packages only the application and its dependencies, so it is small and starts in seconds.</p>
+<p>That is why Docker is so popular for web applications, automated testing, CI/CD pipelines and <a href="/microservices-enterprise.html">microservice architectures</a>.</p>
+<h2>The four core concepts</h2>
+<p>The diagram below shows how the main pieces fit together.</p>
+<figure style="margin:24px 0"><svg viewBox="0 0 560 350" width="100%" role="img" aria-labelledby="dtitle ddesc" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" style="max-width:100%;height:auto;display:block;margin:0 auto;background:#0a0f1d;border-radius:12px">
+<title id="dtitle">Docker workflow diagram</title>
+<desc id="ddesc">A Dockerfile is built into an image, and the image runs as a container. Images are pushed to and pulled from a registry such as Docker Hub. Everything runs on the Docker Engine of the host machine.</desc>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#38bdf8"/></marker></defs>
+<rect x="20" y="30" width="130" height="74" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+<text x="85" y="62" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="700">Dockerfile</text>
+<text x="85" y="86" text-anchor="middle" fill="#94a3b8" font-size="14">the recipe</text>
+<rect x="215" y="30" width="130" height="74" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+<text x="280" y="62" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="700">Image</text>
+<text x="280" y="86" text-anchor="middle" fill="#94a3b8" font-size="14">the template</text>
+<rect x="410" y="30" width="130" height="74" rx="10" fill="#0c2a3d" stroke="#38bdf8" stroke-width="1.5"/>
+<text x="475" y="62" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="700">Container</text>
+<text x="475" y="86" text-anchor="middle" fill="#94a3b8" font-size="14">running app</text>
+<line x1="150" y1="67" x2="212" y2="67" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="182" y="56" text-anchor="middle" fill="#38bdf8" font-size="14">build</text>
+<line x1="345" y1="67" x2="407" y2="67" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="376" y="56" text-anchor="middle" fill="#38bdf8" font-size="14">run</text>
+<rect x="215" y="170" width="130" height="74" rx="10" fill="#0f172a" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="280" y="202" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="700">Registry</text>
+<text x="280" y="226" text-anchor="middle" fill="#94a3b8" font-size="14">e.g. Docker Hub</text>
+<line x1="250" y1="104" x2="250" y2="167" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="242" y="142" text-anchor="end" fill="#38bdf8" font-size="14">push</text>
+<line x1="310" y1="167" x2="310" y2="106" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr)"/>
+<text x="318" y="142" text-anchor="start" fill="#38bdf8" font-size="14">pull</text>
+<rect x="20" y="272" width="520" height="58" rx="10" fill="#0b1220" stroke="#334155" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="280" y="297" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">Docker Engine</text>
+<text x="280" y="318" text-anchor="middle" fill="#94a3b8" font-size="14">runs on your laptop or server and shares the host kernel</text>
+</svg><figcaption style="color:var(--mute);font-size:.9rem;text-align:center;margin-top:8px">Figure 1: The Docker workflow. A Dockerfile is built into an image, the image runs as a container, and images travel through a registry.</figcaption></figure>
+<ul><li><strong>Dockerfile:</strong> a text file with step-by-step instructions for building your environment.</li><li><strong>Image:</strong> a read-only template created from a Dockerfile. It contains the application and everything it needs.</li><li><strong>Container:</strong> a running instance of an image. You can start many containers from one image.</li><li><strong>Registry:</strong> a place to store and share images. Docker Hub is the best-known public registry, and companies often run private ones.</li></ul>
+<h2>Installing Docker</h2>
+<p>On Windows and macOS, install Docker Desktop from the official Docker website. On Linux, follow the official instructions for your distribution to install Docker Engine. Then check that it works:</p>
+<pre><code>docker --version
+docker run hello-world</code></pre>
+<p>The second command downloads a tiny test image and runs it. If you see a welcome message, Docker is ready.</p>
+<h2>Your first container</h2>
+<p>Let us run the Nginx web server without installing anything on your machine:</p>
+<pre><code>docker run -d -p 8080:80 --name web nginx</code></pre>
+<p>The flag <code>-d</code> runs the container in the background, <code>-p 8080:80</code> maps port 8080 on your computer to port 80 inside the container, and <code>--name web</code> gives it a friendly name. Open <code>http://localhost:8080</code> in your browser and you will see the Nginx welcome page. These commands manage it:</p>
+<pre><code>docker ps              # list running containers
+docker logs web        # show the container's output
+docker stop web        # stop it
+docker rm web          # remove it
+docker images          # list downloaded images</code></pre>
+<h2>Writing your first Dockerfile</h2>
+<p>Here is a simple Dockerfile for a small Python application:</p>
+<pre><code>FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]</code></pre>
+<p>Each line has a purpose. <code>FROM</code> chooses the base image. <code>WORKDIR</code> sets the working folder inside the container. <code>COPY</code> adds files, and <code>RUN</code> executes a command while the image is being built. <code>EXPOSE</code> documents the port the app uses, and <code>CMD</code> sets the command that starts when the container runs.</p>
+<p>Notice that <code>requirements.txt</code> is copied and installed before the rest of the code. Docker caches every step, so when only your source code changes, the slow dependency installation is skipped. Also create a <code>.dockerignore</code> file to keep things like <code>.git</code> and local secrets out of the image.</p>
+<p>Build and run it:</p>
+<pre><code>docker build -t myapp:1.0 .
+docker run -d -p 5000:5000 --name myapp myapp:1.0</code></pre>
+<h2>Keeping data with volumes</h2>
+<p>Containers are temporary. When you remove one, everything written inside it is lost. To keep data such as a database, use a volume:</p>
+<pre><code>docker volume create mydata
+docker run -d -v mydata:/app/data --name myapp myapp:1.0</code></pre>
+<p>The volume lives outside the container, so your data survives restarts and upgrades.</p>
+<h2>Running several services with Docker Compose</h2>
+<p>Real applications often need more than one container, such as a web app and a database. Docker Compose describes them all in one <code>docker-compose.yml</code> file:</p>
+<pre><code>services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+volumes:
+  dbdata:</code></pre>
+<p>Start everything with <code>docker compose up -d</code> and stop it with <code>docker compose down</code>. The password above is only for local learning. In a real project, load secrets from environment files or a secrets manager.</p>
+<h2>Security basics</h2>
+<ul><li>Use official, trusted base images and pin a specific version instead of the <code>latest</code> tag.</li><li>Prefer small images such as the <code>slim</code> or <code>alpine</code> variants, which have fewer packages to attack.</li><li>Never bake passwords or API keys into an image.</li><li>Run your application as a non-root user with the <code>USER</code> instruction.</li><li>Scan images for known vulnerabilities and rebuild them regularly.</li></ul>
+<p>The host matters too. Harden the server that runs Docker by following my guide on <a href="/linux-server-hardening.html">securing Linux servers</a>.</p>
+<h2>Common beginner mistakes</h2>
+<p>Forgetting the <code>-p</code> flag, so the app runs but cannot be reached. Storing important data inside a container without a volume. Using the <code>latest</code> tag, which can change without warning. Building huge images by copying unnecessary files. And leaving old containers and images around: use <code>docker system prune</code> to clean up, but read its warning first, because it deletes unused data.</p>
+<h2>Summary</h2>
+<p>Docker packages your application and its environment into an image, runs that image as a container, and shares it through a registry. Start with <code>docker run</code>, write a small Dockerfile, use volumes for data, and move to Compose when you have more than one service. If you want to practise the commands behind all this, see my guide to <a href="/essential-linux-commands.html">essential Linux commands</a>.</p><p><a href="/#articles">&larr; All articles</a></p></main>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
