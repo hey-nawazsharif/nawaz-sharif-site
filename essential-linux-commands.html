@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Essential Linux Commands for Developers and Sysadmins: From Basic Navigation to Performance Monitoring | Nawaz Sharif</title><meta name="description" content="The most useful Linux commands for developers and sysadmins: navigation, files, permissions, processes, services, logs, disk usage and network troubleshooting.">
+<link rel="stylesheet" href="/style.css"></head><body>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
+<main class="doc"><span class="meta">October 17, 2026 &middot; Linux &middot; By Nawaz Sharif</span><h1>Essential Linux Commands for Developers and Sysadmins: From Basic Navigation to Performance Monitoring</h1><p>Whether you are managing a production cloud server or setting up a local development environment, mastering the command line is an essential skill for any developer or system administrator. Graphical tools are great for daily tasks, but the Linux shell gives you precise control, speed and automation that a GUI cannot match.</p>
+<p>This guide covers the most important Linux commands grouped by task, from basic navigation to performance monitoring and troubleshooting. Each section includes a practical example and the mistakes beginners make most often.</p>
+<h2>1. File and directory navigation</h2>
+<p>Moving efficiently through the filesystem is the foundation of shell work.</p>
+<ul><li><code>pwd</code> prints the absolute path of your current directory.</li><li><code>ls</code> lists files and folders. Use <code>ls -la</code> to show hidden files (names starting with a dot) along with permissions, owners and sizes.</li><li><code>cd</code> changes directory. <code>cd ..</code> moves up one level, <code>cd</code> alone returns to your home directory, and <code>cd -</code> jumps back to the previous directory.</li><li><code>mkdir</code> creates a directory. <code>mkdir -p project/assets</code> creates nested folders in one command.</li></ul>
+<h2>2. File manipulation and management</h2>
+<p>Creating, moving and editing files from the terminal saves time during deployments.</p>
+<ul><li><code>cp</code> copies files. Use <code>cp -r</code> to copy a directory with its contents.</li><li><code>mv</code> moves or renames a file, for example <code>mv oldname.txt newname.txt</code>.</li><li><code>rm</code> deletes files. Be extremely careful with <code>rm -rf</code>, which removes directories recursively without asking. Run <code>ls</code> on the exact path first, and never paste a delete command you do not fully understand.</li><li><code>touch</code> creates an empty file or updates the timestamp of an existing one.</li></ul>
+<h2>3. Permissions and ownership</h2>
+<p>Many "permission denied" errors come from wrong ownership or access rights. Every file has read (4), write (2) and execute (1) permissions for the owner, the group and everyone else. Add the numbers together for each group.</p>
+<ul><li><code>chmod 644 file.txt</code> lets the owner read and write, while others can only read.</li><li><code>chmod 755 script.sh</code> lets the owner do everything, while others can read and execute. <code>chmod +x script.sh</code> makes a script executable.</li><li><code>sudo chown user:group file.txt</code> changes the owner and group of a file.</li><li><code>sudo</code> runs a single command with administrator rights. Prefer it over logging in as root, because it is safer and leaves an audit trail.</li></ul>
+<p>Avoid the lazy fix of <code>chmod 777</code>. It gives every user full access and is a common security mistake.</p>
+<h2>4. Searching and filtering data</h2>
+<p>Finding text inside logs and configuration files is a daily task for administrators.</p>
+<ul><li><code>grep</code> searches for patterns. For example, <code>grep -i "error" /var/log/syslog</code> finds errors regardless of case, and <code>grep -rn "timeout" /etc/nginx</code> searches a folder recursively and shows line numbers.</li><li><code>find</code> locates files by name, size or date, such as <code>find /var/www -name "*.conf"</code> or <code>find /var -size +100M</code> to hunt for large files.</li><li><code>cat</code> and <code>less</code> show file contents. Use <code>cat</code> for short files and <code>less</code> for long ones so you can scroll page by page.</li><li><code>tail -f /var/log/syslog</code> follows a log file live, which is perfect while testing a fix.</li></ul>
+<h2>5. Process and system monitoring</h2>
+<p>When a server slows down or an application crashes, you need to know what is using CPU and memory.</p>
+<ul><li><code>top</code> and <code>htop</code> show live processes, CPU use, memory and load averages. <code>htop</code> has a friendlier, colour-coded interface.</li><li><code>uptime</code> shows how long the system has been running and its load averages.</li><li><code>free -h</code> shows memory and swap usage in readable units.</li><li><code>ps aux</code> lists every running process. Combine it with grep, as in <code>ps aux | grep nginx</code>.</li><li><code>kill</code> stops a process by its ID. Start with the polite version, <code>kill 1234</code>, which lets the program shut down cleanly. Use <code>kill -9 1234</code> only as a last resort, because it ends the process instantly without cleanup. <code>killall name</code> and <code>pkill name</code> work by process name.</li></ul>
+<h2>6. Disk usage</h2>
+<p>A full disk is one of the most common causes of mysterious server failures.</p>
+<ul><li><code>df -h</code> shows free and used space for each mounted filesystem.</li><li><code>du -sh /var/log</code> shows how much space a folder uses. Run <code>du -sh *</code> inside a directory to see which item is the biggest.</li></ul>
+<h2>7. Services and logs</h2>
+<p>Modern Linux distributions manage services with systemd.</p>
+<ul><li><code>sudo systemctl status nginx</code> shows whether a service is running.</li><li><code>sudo systemctl restart nginx</code> restarts it, and <code>sudo systemctl enable nginx</code> makes it start at boot.</li><li><code>journalctl -u nginx -n 50</code> shows the last 50 log lines for that service, and <code>journalctl -u nginx -f</code> follows them live.</li></ul>
+<h2>8. Network diagnostics</h2>
+<p>Checking ports, routes and remote connections is vital for secure server infrastructure.</p>
+<ul><li><code>ss -tuln</code> lists listening TCP and UDP ports. Add <code>-p</code> with sudo to see which process owns each port. The older <code>netstat</code> does the same job, but it is no longer installed by default on many distributions, so learn <code>ss</code> first.</li><li><code>ip addr</code> shows your network interfaces and IP addresses.</li><li><code>curl</code> tests web endpoints and APIs. <code>curl -I https://example.com</code> shows only the response headers. <code>wget</code> downloads files.</li><li><code>ping -c 4 example.com</code> tests basic reachability and latency.</li></ul>
+<h2>9. Archives and backups</h2>
+<p>The <code>tar</code> command bundles and compresses files. Create an archive with <code>tar -czf backup.tar.gz /var/www</code> and extract it with <code>tar -xzf backup.tar.gz</code>.</p>
+<h2>A simple troubleshooting routine</h2>
+<p>When someone says "the server is slow", work through the same short checklist every time:</p>
+<ol><li>Run <code>uptime</code> and <code>top</code> to check the load and the busiest processes.</li><li>Run <code>free -h</code> to see whether memory or swap is exhausted.</li><li>Run <code>df -h</code> to make sure no disk is full.</li><li>Run <code>journalctl -u servicename -n 50</code> to read recent errors.</li><li>Run <code>sudo ss -tulnp</code> to confirm the right ports are open.</li></ol>
+<h2>Getting help</h2>
+<p>You do not need to memorise every option. Type <code>man command</code> for the full manual, or <code>command --help</code> for a short summary, and press Tab to autocomplete file names and commands.</p>
+<h2>Summary</h2>
+<p>Mastering these commands turns the command line from an intimidating black box into a powerful toolkit. Learn them by category, practise on a test machine, and be careful with anything that deletes or changes permissions. For more practical infrastructure guides, read my articles on <a href="/linux-server-hardening.html">securing Linux servers</a> and <a href="/ssh-keys-setup-guide.html">setting up SSH keys safely</a>.</p><p><a href="/#articles">&larr; All articles</a></p></main>
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
