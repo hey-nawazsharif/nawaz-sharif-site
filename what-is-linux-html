@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Is Linux? Why It Is Used, Where It Runs and Why It Matters for AI | Nawaz Sharif</title>
+<meta name="description" content="A complete guide to Linux: operating system architecture, distributions, enterprise server usage, container environments, and why Linux powers modern AI.">
+<link rel="stylesheet" href="/style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1644248302584064" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+<div class="wrap">
+<a class="brand" href="/">NAWAZ SHARIF</a>
+<nav>
+<a href="/#services">Services</a>
+<a href="/articles.html">Articles</a>
+<a href="/about.html">About</a>
+<a href="/contact.html">Contact</a>
+</nav>
+</div>
+</header>
+
+<main class="wrap">
+<article class="post">
+<header class="post-header">
+<div class="meta">October 18, 2026 &middot; Linux & Infrastructure</div>
+<h1>What Is Linux? Why It Is Used, Where It Runs and Why It Matters for AI</h1>
+<p class="lead">Linux powers over 90% of cloud servers, the world's top 500 supercomputers, Android devices, and nearly all artificial intelligence training pipelines. Here is an architectural and practical breakdown of what Linux is, how it works, and why it remains the backbone of enterprise computing.</p>
+</header>
+
+<h2>1. What Is Linux? Kernel vs. Operating System</h2>
+<p>Technically, Linux is an open-source operating system kernel created by Linus Torvalds in 1991. The kernel acts as the core interface between computer hardware (CPU, memory, storage, network cards) and running applications.</p>
+<p>When most people say "Linux," they are referring to a complete GNU/Linux operating system distribution that bundles the Linux kernel with core system utilities, shell environments (like Bash or Zsh), package managers, and system libraries.</p>
+
+<h2>2. Core Linux Architecture</h2>
+<p>Linux systems operate in distinct functional layers:</p>
+<ul>
+<li><strong>Hardware Layer:</strong> Physical CPU, RAM, storage disks, and network controllers.</li>
+<li><strong>Kernel Space:</strong> Core memory management, process scheduling, virtual file system (VFS), device drivers, and network socket management.</li>
+<li><strong>System Call Interface:</strong> Controlled gateway enabling user-space programs to request kernel operations (e.g., <code>read</code>, <code>write</code>, <code>fork</code>).</li>
+<li><strong>User Space:</strong> System daemons (systemd, sshd), command-line tools, application runtime environments, and containers.</li>
+</ul>
+
+<h2>3. Major Enterprise Distributions</h2>
+<p>Different distributions (distros) target different production needs:</p>
+<ul>
+<li><strong>Ubuntu / Debian:</strong> Highly popular for developer workstations, continuous integration runners, and general cloud workloads. Debian is prized for long-term stability.</li>
+<li><strong>RHEL / Rocky Linux / AlmaLinux:</strong> The standard for mission-critical enterprise environments requiring enterprise lifecycle support, strict compliance, and SELinux enforcement.</li>
+<li><strong>Alpine Linux:</strong> Ultra-minimalist distro (often ~5MB image size) widely used for building secure, lightweight Docker containers.</li>
+</ul>
+
+<h2>4. Why Linux Dominates Modern Infrastructure</h2>
+<ul>
+<li><strong>Performance and Resource Efficiency:</strong> Headless Linux servers operate without desktop GUI overhead, directing maximum compute capacity to production workloads.</li>
+<li><strong>Automation & Scripting:</strong> Everything in Linux is a file or a process stream, making server state fully scriptable via Bash, Python, and Infrastructure-as-Code tools like Ansible and Terraform.</li>
+<li><strong>Security & Privilege Isolation:</strong> Granular POSIX file permissions, namespaces, cgroups, AppArmor, and SELinux restrict processes from compromising the host system.</li>
+<li><strong>Container Native:</strong> Docker, Podman, and Kubernetes rely directly on Linux kernel cgroups and namespaces to isolate processes.</li>
+</ul>
+
+<h2>5. Why Linux Matters for Artificial Intelligence</h2>
+<p>Modern machine learning workflows are built natively on Linux:</p>
+<ul>
+<li><strong>Direct GPU Driver Acceleration:</strong> NVIDIA CUDA, cuDNN, and ROCm target Linux kernels first for raw PCIe data transfer and multi-GPU tensor computing.</li>
+<li><strong>Distributed Training Clusters:</strong> Distributed AI frameworks (PyTorch Distributed, DeepSpeed, Ray) rely on Linux networking stacks and RDMA (Remote Direct Memory Access) to cluster thousands of GPUs with sub-microsecond latency.</li>
+<li><strong>MLOps Platforms:</strong> Production deployment pipelines run inside containerized Kubernetes pods (EKS, GKE, bare-metal clusters) configured on minimal Linux nodes.</li>
+</ul>
+
+<div style="margin-top: 40px; padding: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px;">
+<h3>Need Enterprise Linux or Cloud Infrastructure Support?</h3>
+<p>Whether configuring high-availability Kubernetes clusters, hardening Linux production servers, or automating CI/CD pipelines, I help teams build robust infrastructure.</p>
+<a class="btn" href="/#contact">Get in Touch &rarr;</a>
+</div>
+</article>
+</main>
+
+<footer>
+<div class="wrap">
+<p>
+<a href="/about.html">About</a> &middot;
+<a href="/faq.html">FAQ</a> &middot;
+<a href="/contact.html">Contact</a> &middot;
+<a href="/privacy-policy.html">Privacy Policy</a> &middot;
+<a href="/terms.html">Terms</a>
+</p>
+<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p>
+</div>
+</footer>
+</body>
+</html>
