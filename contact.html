@@ -29,13 +29,15 @@
 
 <h2>Send a message</h2>
 
-<!-- Formsubmit.co secure gateway: Zero ID hassle, Direct to inbox -->
+<!-- Formsubmit.co Gateway with Captcha Disabled for Instant Fast Submit -->
 <form action="https://formsubmit.co/contact@nawazsharif.in" method="POST">
-  <!-- Spam bot protection -->
+  <!-- Disable the intermediate FormSubmit captcha page -->
+  <input type="hidden" name="_captcha" value="false">
+  <!-- Honeypot field for background spam filter without disturbing users -->
   <input type="text" name="_honey" style="display:none">
-  <!-- Direct return back to contact page after sending -->
+  <!-- Redirect user straight back to contact page after submit -->
   <input type="hidden" name="_next" value="https://nawazsharif.in/contact.html">
-  <input type="hidden" name="_subject" value="New Portfolio Inquiry - nawazsharif.in">
+  <input type="hidden" name="_subject" value="New Inquiry from Portfolio Website">
 
   <label for="n">Name</label>
   <input id="n" name="name" required placeholder="Your name">
