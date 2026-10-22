@@ -1,235 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frequently Asked Questions (FAQ) | Nawaz Sharif</title>
-  <meta name="description" content="Frequently asked questions about enterprise Linux systems engineering, security hardening, cloud infrastructure, and consulting engagements with Nawaz Sharif.">
-  <link rel="canonical" href="https://nawazsharif.in/faq.html">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #ffffff;
-      color: #1a1f36;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .site-nav-header {
-      border-bottom: 1px solid #edf2f7;
-      padding: 18px 24px;
-      background: #ffffff;
-    }
-
-    .nav-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .nav-brand {
-      font-weight: 800;
-      font-size: 1.15rem;
-      color: #0a2540;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: 22px;
-    }
-
-    .nav-menu a {
-      color: #425466;
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    .nav-menu a:hover,
-    .nav-menu a.active {
-      color: #0052cc;
-      font-weight: 600;
-    }
-
-    .faq-container {
-      max-width: 680px;
-      margin: 40px auto 80px auto;
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
-
-    .faq-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin: 0 0 8px 0;
-      color: #0a2540;
-      letter-spacing: -0.5px;
-    }
-
-    .faq-meta {
-      font-size: 0.9rem;
-      color: #0066cc;
-      font-weight: 500;
-      margin-bottom: 28px;
-    }
-
-    .faq-item {
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      margin-bottom: 14px;
-      background: #ffffff;
-      overflow: hidden;
-      transition: border-color 0.2s ease;
-    }
-
-    .faq-item:hover {
-      border-color: #cbd5e1;
-    }
-
-    .faq-summary {
-      padding: 16px 20px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #0a2540;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-      list-style: none;
-    }
-
-    .faq-summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .faq-summary::after {
-      content: '▾';
-      font-size: 1.1rem;
-      color: #64748b;
-    }
-
-    details[open] .faq-summary::after {
-      content: '▴';
-      color: #0052cc;
-    }
-
-    .faq-content {
-      padding: 0 20px 18px 20px;
-      color: #425466;
-      line-height: 1.65;
-      font-size: 0.98rem;
-      border-top: 1px solid #f1f5f9;
-      padding-top: 14px;
-    }
-
-    .site-footer-bar {
-      border-top: 1px solid #edf2f7;
-      padding: 30px 20px;
-      text-align: center;
-      color: #6b7c93;
-      font-size: 0.9rem;
-      background: #ffffff;
-    }
-
-    .site-footer-bar a {
-      color: #6b7c93;
-      text-decoration: none;
-    }
-
-    .site-footer-bar a:hover {
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Frequently Asked Questions (FAQ) | Nawaz Sharif</title>
+<meta name="description" content="Frequently asked questions about infrastructure engineering, Linux systems hardening, DevSecOps automation, and security consulting by Nawaz Sharif.">
+<link rel="stylesheet" href="/style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1644248302584064" crossorigin="anonymous"></script>
+<style>
+  details {
+    background: #fdfdfd;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    padding: 14px 18px;
+    transition: all 0.2s ease;
+  }
+  details[open] {
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  summary {
+    font-weight: 600;
+    color: #24292e;
+    cursor: pointer;
+    outline: none;
+    list-style: none;
+    position: relative;
+    padding-right: 28px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: #0366d6;
+    font-weight: 500;
+  }
+  details[open] summary::after {
+    content: '−';
+  }
+  details p {
+    margin-top: 12px;
+    margin-bottom: 0;
+    color: #444d56;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+</style>
 </head>
 <body>
+<header>
+<div class="wrap">
+<a class="brand" href="/">NAWAZ SHARIF</a>
+<nav>
+<a href="/#services">Services</a>
+<a href="/#articles">Articles</a>
+<a href="/about.html">About</a>
+<a href="/faq.html">FAQ</a>
+<a href="/contact.html">Contact</a>
+</nav>
+</div>
+</header>
 
-  <!-- Navigation Header -->
-  <header class="site-nav-header">
-    <div class="nav-inner">
-      <a href="/index.html" class="nav-brand">NAWAZ SHARIF</a>
-      <nav class="nav-menu">
-        <a href="/index.html#services">Services</a>
-        <a href="/index.html#articles">Articles</a>
-        <a href="/about.html">About</a>
-        <a href="/faq.html" class="active">FAQ</a>
-        <a href="/contact.html">Contact</a>
-      </nav>
-    </div>
-  </header>
+<main class="doc">
+<h1>Frequently Asked Questions (FAQ)</h1>
+<p style="font-size: 0.9rem; color: #586069; margin-bottom: 24px;">Last updated: October 2026</p>
 
-  <!-- FAQ Section (All 8 Questions) -->
-  <main class="faq-container">
-    <h1 class="faq-title">Frequently Asked Questions (FAQ)</h1>
-    <div class="faq-meta">Last updated: October 2026</div>
+<details>
+  <summary>What core services do you provide?</summary>
+  <p>I specialize in end-to-end Linux systems engineering, production Kubernetes architecture, zero-trust cybersecurity frameworks, AI/ML infrastructure orchestration with Python, and distributed network deployment.</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">What core services do you provide?</summary>
-      <div class="faq-content">
-        I specialize in end-to-end Linux systems engineering, production Kubernetes architecture, zero-trust cybersecurity frameworks, AI/ML infrastructure orchestration with Python, and distributed blockchain network deployment.
-      </div>
-    </details>
+<details>
+  <summary>What types of projects do you take on?</summary>
+  <p>I consult and engineer solutions for enterprise cloud migrations, mission-critical server hardening (CIS Benchmarks), DevSecOps CI/CD automation, distributed GPU compute clusters, and high-availability enterprise infrastructure.</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">What types of projects do you take on?</summary>
-      <div class="faq-content">
-        I consult and engineer solutions for enterprise cloud migrations, mission-critical server hardening (CIS Benchmarks), DevSecOps CI/CD automation, distributed GPU compute clusters, and high-availability enterprise infrastructure.
-      </div>
-    </details>
+<details>
+  <summary>How do you approach infrastructure security and compliance?</summary>
+  <p>Security is implemented directly at the Linux kernel and container orchestration levels using strict principle-of-least-privilege, Seccomp profiles, cgroups v2, eBPF telemetry, and continuous automated compliance testing against CIS Benchmarks.</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">How do you approach infrastructure security and compliance?</summary>
-      <div class="faq-content">
-        Security is implemented directly at the Linux kernel and container orchestration levels using strict principle-of-least-privilege, Seccomp profiles, cgroups v2, eBPF telemetry, and continuous automated compliance testing against CIS Benchmarks.
-      </div>
-    </details>
+<details>
+  <summary>What is your typical engagement model and response timeline?</summary>
+  <p>Engagements are available on a dedicated technical advisory or fixed-scope project audit basis. Direct inquiries submitted through the contact form are reviewed and acknowledged within 24 business hours.</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">What is your typical engagement model and response timeline?</summary>
-      <div class="faq-content">
-        Engagements are available on a dedicated technical advisory or fixed-scope project audit basis. Direct inquiries submitted through the contact form are reviewed and acknowledged within 24 business hours.
-      </div>
-    </details>
+<details>
+  <summary>Do you offer on-demand troubleshooting for production outages?</summary>
+  <p>Yes, emergency incident triage is supported for critical server degradation, memory exhaustion, network edge latency issues, and post-exploit containment audits.</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">Do you offer on-demand troubleshooting for production outages?</summary>
-      <div class="faq-content">
-        Yes, emergency incident triage is supported for critical server degradation, memory exhaustion, network edge latency issues, and post-exploit containment audits.
-      </div>
-    </details>
+<details>
+  <summary>How do you handle remote consultations and global clients?</summary>
+  <p>Consultations are conducted asynchronously via secure ticketing/email correspondence and synchronously through structured video technical reviews across all major timezones.</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">How do you handle remote consultations and global clients?</summary>
-      <div class="faq-content">
-        Consultations are conducted asynchronously via secure ticketing/email correspondence and synchronously through structured video technical reviews across all major timezones.
-      </div>
-    </details>
+<details>
+  <summary>What infrastructure stacks do you regularly operate with?</summary>
+  <p>Core platforms include Debian/Ubuntu Server, RHEL, Docker, Kubernetes, Ansible, Terraform, NGINX, HAProxy, WireGuard, and major enterprise clouds (AWS, GCP).</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">What infrastructure stacks do you regularly operate with?</summary>
-      <div class="faq-content">
-        Core platforms include Debian/Ubuntu Server, RHEL, Docker, Kubernetes, Ansible, Terraform, NGINX, HAProxy, WireGuard, and major enterprise clouds (AWS, GCP).
-      </div>
-    </details>
+<details>
+  <summary>How can we initiate a technical consultation?</summary>
+  <p>You can submit your initial project scope directly through the <a href="/contact.html">Contact page</a> form or email <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a> with your engagement requirements.</p>
+</details>
 
-    <details class="faq-item">
-      <summary class="faq-summary">How can we initiate a technical consultation?</summary>
-      <div class="faq-content">
-        You can submit your initial project scope directly through the Contact page form or email contact@nawazsharif.in with your engagement requirements.
-      </div>
-    </details>
-  </main>
+<p style="margin-top: 32px;">Have more questions? Feel free to reach out via the <a href="/contact.html">Contact page</a>.</p>
+</main>
 
-  <!-- Footer -->
-  <footer class="site-footer-bar">
-    <p>&copy; 2026 Nawaz Sharif. All rights reserved. &bull; <a href="/privacy-policy.html">Privacy Policy</a> &bull; <a href="/terms.html">Terms</a></p>
-  </footer>
-
+<footer>
+<div class="wrap">
+<p>
+<a href="/about.html">About</a>&middot;
+<a href="/faq.html">FAQ</a>&middot;
+<a href="/contact.html">Contact</a>&middot;
+<a href="/privacy-policy.html">Privacy Policy</a>&middot;
+<a href="/terms.html">Terms</a>
+</p>
+<p>Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p>
+</div>
+</footer>
 </body>
 </html>
