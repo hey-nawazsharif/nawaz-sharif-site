@@ -7,79 +7,6 @@
 <meta name="description" content="Full repository archive covering infrastructure automation, security standards, and distributed systems.">
 <link rel="stylesheet" href="/style.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1644248302584064" crossorigin="anonymous"></script>
-<style>
-  .archive-container {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 36px 20px 60px 20px;
-    box-sizing: border-box;
-  }
-  .archive-badge {
-    color: #0969da;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-  }
-  .archive-title {
-    font-size: 2.1rem;
-    font-weight: 700;
-    margin: 0 0 10px 0;
-    color: #1f2328;
-    line-height: 1.25;
-  }
-  .archive-desc {
-    color: #586069;
-    font-size: 1.05rem;
-    margin-top: 0;
-    margin-bottom: 36px;
-    line-height: 1.5;
-  }
-  .tech-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 20px;
-    align-items: stretch;
-  }
-  .tech-item {
-    background: #ffffff;
-    border: 1px solid #d0d7de;
-    border-radius: 8px;
-    padding: 22px;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    box-sizing: border-box;
-    transition: transform 0.15s ease, border-color 0.15s ease;
-  }
-  .tech-item:hover {
-    transform: translateY(-2px);
-    border-color: #0969da;
-  }
-  .tech-item .date-tag {
-    font-size: 0.8rem;
-    color: #0969da;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .tech-item h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0 0 10px 0;
-    color: #1f2328;
-    line-height: 1.4;
-  }
-  .tech-item p {
-    font-size: 0.9rem;
-    color: #586069;
-    margin: 0;
-    line-height: 1.5;
-    flex-grow: 1;
-  }
-</style>
 </head>
 <body>
 <header>
@@ -95,59 +22,59 @@
 </div>
 </header>
 
-<main class="archive-container">
-  <div class="archive-badge">Architecture Archive</div>
-  <h1 class="archive-title">Technical Guides &amp; Engineering Documentation Index</h1>
-  <p class="archive-desc">Full repository archive covering infrastructure automation, security standards, and distributed systems.</p>
+<main class="wrap">
+  <p style="color: var(--accent, #0366d6); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; margin-top: 28px; margin-bottom: 6px;">Architecture Archive</p>
+  <h1 style="margin-top: 0; margin-bottom: 8px;">Technical Guides &amp; Engineering Documentation Index</h1>
+  <p style="color: #586069; margin-top: 0; margin-bottom: 30px;">Full repository archive covering infrastructure automation, security standards, and distributed systems.</p>
 
-  <div class="tech-grid">
+  <div class="grid">
 
-    <a href="/Linux-kernel-perfomance-tuning.html" class="tech-item">
-      <span class="date-tag">Architecture</span>
+    <a class="card" href="/Linux-kernel-perfomance-tuning.html">
+      <small>Architecture</small>
       <h3>Linux Kernel Performance Tuning</h3>
-      <p>Advanced system optimizations, sysctl parameters, memory management, and network stack tuning for high-throughput enterprise infrastructure.</p>
+      <p>Advanced system optimizations, sysctl parameters, memory management, and network stack tuning.</p>
     </a>
 
-    <a href="/microservices-enterprise.html" class="tech-item">
-      <span class="date-tag">Architecture</span>
+    <a class="card" href="/microservices-enterprise.html">
+      <small>Architecture</small>
       <h3>Microservices in the Enterprise: Distributed Systems Patterns</h3>
-      <p>Decomposing monolithic applications, event-driven messaging, circuit breakers, and data consistency models in production.</p>
+      <p>Decomposing monolithic applications, event-driven messaging, circuit breakers, and data consistency models.</p>
     </a>
 
-    <a href="/docker-for-beginners.html" class="tech-item">
-      <span class="date-tag">DevSecOps</span>
+    <a class="card" href="/docker-for-beginners.html">
+      <small>DevSecOps</small>
       <h3>Docker for Beginners: Images, Containers and Your First Dockerfile</h3>
-      <p>A beginner-friendly Docker guide: images, containers, your first Dockerfile, volumes, and Compose orchestration.</p>
+      <p>A beginner-friendly Docker guide: images, containers, your first Dockerfile, volumes, and Compose.</p>
     </a>
 
-    <a href="/essential-linux-commands.html" class="tech-item">
-      <span class="date-tag">Linux Operations</span>
+    <a class="card" href="/essential-linux-commands.html">
+      <small>Linux Operations</small>
       <h3>Essential Linux Commands for Developers and Sysadmins</h3>
-      <p>Core commands for file management, permissions, searching, process monitoring, and systematic Linux troubleshooting.</p>
+      <p>Core commands for file management, permissions, searching, process monitoring, and troubleshooting.</p>
     </a>
 
-    <a href="/linux-server-hardening.html" class="tech-item">
-      <span class="date-tag">Security Hardening</span>
+    <a class="card" href="/linux-server-hardening.html">
+      <small>Security Hardening</small>
       <h3>Linux Server Hardening: Complete Security Checklist</h3>
-      <p>Lock down production Linux servers against unauthorized access and establish secure baseline services against CIS Benchmarks.</p>
+      <p>Lock down production Linux servers against unauthorized access and secure baseline services.</p>
     </a>
 
-    <a href="/nginx-reverse-proxy-guide.html" class="tech-item">
-      <span class="date-tag">Networking</span>
+    <a href="/nginx-reverse-proxy-guide.html" class="card">
+      <small>Networking</small>
       <h3>Nginx Reverse Proxy &amp; SSL Setup</h3>
-      <p>Configuring Nginx as a high-performance reverse proxy with SSL termination, modern cipher suites, and upstream load balancing.</p>
+      <p>Configuring Nginx as a reverse proxy with SSL termination and production security headers.</p>
     </a>
 
-    <a href="/cybersecurity-roadmap-2026.html" class="tech-item">
-      <span class="date-tag">Security Engineering</span>
+    <a class="card" href="/cybersecurity-roadmap-2026.html">
+      <small>Security Engineering</small>
       <h3>Cybersecurity Roadmap 2026</h3>
-      <p>Essential skills, certifications, and career pathways spanning blue team audits, threat hunting, and modern DevSecOps.</p>
+      <p>Systematic career guide spanning network forensics, blue team audits, threat hunting, and modern DevSecOps.</p>
     </a>
 
-    <a href="/ci-cd-anomaly-detection.html" class="tech-item">
-      <span class="date-tag">DevSecOps</span>
+    <a class="card" href="/ci-cd-anomaly-detection.html">
+      <small>DevSecOps</small>
       <h3>CI/CD Anomaly Detection in DevSecOps</h3>
-      <p>Automating threat monitoring, statistical build anomaly detection, and pipeline vulnerability scanning in enterprise CI/CD.</p>
+      <p>Using statistical machine learning models to identify build failure anomalies and prevent compromised deployments.</p>
     </a>
 
   </div>
