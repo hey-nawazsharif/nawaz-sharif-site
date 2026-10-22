@@ -23,13 +23,15 @@ main.doc h1{color:var(--head);font-size:clamp(1.8rem,5vw,2.5rem);line-height:1.2
 main.doc h2{font-size:1.35rem;margin:36px 0 10px}main.doc p,main.doc li{color:var(--soft)}
 pre{background:var(--codebg);border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;font-size:.88rem;line-height:1.5}
 code{font-family:ui-monospace,Menlo,Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin:20px 0}
+th,td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+th{background:var(--panel);color:var(--head)}
+img{max-width:100%;height:auto;border-radius:8px}
 input,textarea{width:100%;background:var(--panel);border:1px solid var(--line2);color:var(--text);border-radius:8px;padding:12px;font:inherit}
 label{font-size:.9rem;color:var(--mute);display:block;margin:12px 0 4px}
 footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mute);font-size:.9rem}
 footer a{color:var(--mute);margin-right:16px}
 details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 12px}summary{cursor:pointer}
-
-/* Sleek Cookie Bar */
 .cookie-banner{display:none;position:fixed;bottom:14px;left:14px;right:14px;margin:0 auto;max-width:580px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:9999}
 .cookie-content{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .cookie-content p{margin:0;font-size:12px;line-height:1.4;color:var(--text)}
