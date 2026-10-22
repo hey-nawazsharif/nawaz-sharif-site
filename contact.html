@@ -4,137 +4,223 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact | Nawaz Sharif</title>
-  <meta name="description" content="Reach out to Nawaz Sharif for enterprise IT infrastructure, Linux systems engineering, and security advisory.">
+  <meta name="description" content="Get in touch with Nawaz Sharif for enterprise IT infrastructure, Linux systems engineering, and cybersecurity consultations.">
   <link rel="canonical" href="https://nawazsharif.in/contact.html">
   <link rel="stylesheet" href="style.css">
   <style>
-    .page-container {
-      max-width: 680px;
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #1a1f36;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .site-nav-header {
+      border-bottom: 1px solid #edf2f7;
+      padding: 18px 24px;
+      background: #ffffff;
+    }
+
+    .nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #0a2540;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 22px;
+    }
+
+    .nav-menu a {
+      color: #425466;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+      color: #0052cc;
+      font-weight: 600;
+    }
+
+    .contact-box {
+      max-width: 580px;
       margin: 40px auto 80px auto;
       padding: 0 20px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: #1a1f36;
+      box-sizing: border-box;
     }
-    .page-title {
+
+    .contact-heading {
       font-size: 2.2rem;
       font-weight: 800;
-      margin-bottom: 16px;
       color: #0a2540;
+      margin: 0 0 16px 0;
+      letter-spacing: -0.5px;
     }
-    .lead-desc {
+
+    .contact-intro {
       font-size: 1.05rem;
       line-height: 1.6;
       color: #425466;
-      margin-bottom: 24px;
+      margin: 0 0 24px 0;
     }
-    .direct-contact {
-      margin-bottom: 32px;
-      font-size: 1rem;
+
+    .contact-email-row {
+      font-size: 1.02rem;
+      margin-bottom: 36px;
+      color: #1a1f36;
     }
-    .direct-contact a {
-      color: #0066cc;
+
+    .contact-email-row a {
+      color: #0052cc;
       text-decoration: underline;
-      font-weight: 500;
+      font-weight: 600;
     }
-    .form-heading {
-      font-size: 1.4rem;
+
+    .form-title {
+      font-size: 1.35rem;
       font-weight: 700;
-      margin-bottom: 20px;
       color: #0a2540;
+      margin: 0 0 20px 0;
     }
-    .form-group {
-      margin-bottom: 18px;
+
+    .form-field {
+      margin-bottom: 20px;
     }
-    .form-group label {
+
+    .form-field label {
       display: block;
       font-size: 0.95rem;
       font-weight: 600;
       color: #3c4257;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-    .form-group input, .form-group textarea {
+
+    .form-field input,
+    .form-field textarea {
       width: 100%;
       padding: 12px 14px;
-      border: 1px solid #dcdfe6;
-      border-radius: 6px;
       font-size: 1rem;
       color: #1a1f36;
+      border: 1px solid #dcdfe6;
+      border-radius: 6px;
       box-sizing: border-box;
       outline: none;
       background: #ffffff;
-      transition: border-color 0.2s;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .form-group input:focus, .form-group textarea:focus {
-      border-color: #0066cc;
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: #0052cc;
+      box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.12);
     }
-    .submit-btn {
+
+    .submit-button {
       background-color: #0052cc;
       color: #ffffff;
-      border: none;
-      padding: 12px 28px;
       font-size: 1rem;
       font-weight: 600;
+      padding: 12px 28px;
+      border: none;
       border-radius: 6px;
       cursor: pointer;
+      display: inline-block;
       transition: background-color 0.2s;
     }
-    .submit-btn:hover {
+
+    .submit-button:hover {
       background-color: #0747a6;
+    }
+
+    .site-footer-bar {
+      border-top: 1px solid #edf2f7;
+      padding: 30px 20px;
+      text-align: center;
+      color: #6b7c93;
+      font-size: 0.9rem;
+      background: #ffffff;
+    }
+
+    .site-footer-bar a {
+      color: #6b7c93;
+      text-decoration: none;
+    }
+
+    .site-footer-bar a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <header style="border-bottom: 1px solid #edf2f7; padding: 18px 24px;">
-    <div style="max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-      <a href="/index.html" style="font-weight: 800; font-size: 1.15rem; color: #0a2540; text-decoration: none; letter-spacing: 0.5px;">NAWAZ SHARIF</a>
-      <nav style="display: flex; gap: 20px;">
-        <a href="/index.html#services" style="color: #425466; text-decoration: none; font-size: 0.95rem;">Services</a>
-        <a href="/index.html#articles" style="color: #425466; text-decoration: none; font-size: 0.95rem;">Articles</a>
-        <a href="/about.html" style="color: #425466; text-decoration: none; font-size: 0.95rem;">About</a>
-        <a href="/faq.html" style="color: #425466; text-decoration: none; font-size: 0.95rem;">FAQ</a>
-        <a href="/contact.html" style="color: #0052cc; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Contact</a>
+  <!-- Navigation Header -->
+  <header class="site-nav-header">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-brand">NAWAZ SHARIF</a>
+      <nav class="nav-menu">
+        <a href="/index.html#services">Services</a>
+        <a href="/index.html#articles">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/contact.html" class="active">Contact</a>
       </nav>
     </div>
   </header>
 
-  <!-- Contact Body -->
-  <main class="page-container">
-    <h1 class="page-title">Contact</h1>
-    <p class="lead-desc">
-      Have an enterprise infrastructure challenge, require an IT compliance audit, or want to discuss mission-critical Linux architecture? Reach out directly:
+  <!-- Main Contact Content -->
+  <main class="contact-box">
+    <h1 class="contact-heading">Contact</h1>
+    <p class="contact-intro">
+      For web development, server deployment, enterprise Linux operations, or security consulting, reach out via email or send a message below. I usually reply within two business days.
     </p>
 
-    <div class="direct-contact">
+    <!-- Email only (Phone number completely removed) -->
+    <div class="contact-email-row">
       <strong>Email:</strong> <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a>
     </div>
 
-    <h2 class="form-heading">Send a message</h2>
-    
-    <form action="https://formspree.io/f/xbjnjzqq" method="POST">
-      <div class="form-group">
-        <label for="name">Your name</label>
+    <h2 class="form-title">Send a message</h2>
+
+    <form id="contact-form" action="https://formspree.io/f/YOUR_ACTUAL_FORMSPREE_ID" method="POST">
+      <div class="form-field">
+        <label for="name">Name</label>
         <input type="text" id="name" name="name" required placeholder="Your full name">
       </div>
 
-      <div class="form-group">
-        <label for="email">Your email</label>
+      <div class="form-field">
+        <label for="email">Email</label>
         <input type="email" id="email" name="_replyto" required placeholder="your.email@example.com">
       </div>
 
-      <div class="form-group">
+      <div class="form-field">
         <label for="message">Message</label>
-        <textarea id="message" name="message" rows="5" required placeholder="Describe your project scope or consultation requirements..."></textarea>
+        <textarea id="message" name="message" rows="5" required placeholder="Describe your project or consultation requirements..."></textarea>
       </div>
 
-      <button type="submit" class="submit-btn">Send message</button>
+      <button type="submit" class="submit-button">Send message</button>
     </form>
   </main>
 
-  <!-- Simple Footer -->
-  <footer style="border-top: 1px solid #edf2f7; padding: 30px 20px; text-align: center; color: #6b7c93; font-size: 0.9rem;">
-    <p>&copy; 2026 Nawaz Sharif. All rights reserved. &bull; <a href="/privacy-policy.html" style="color: #6b7c93;">Privacy Policy</a> &bull; <a href="/terms.html" style="color: #6b7c93;">Terms</a></p>
+  <!-- Footer -->
+  <footer class="site-footer-bar">
+    <p>&copy; 2026 Nawaz Sharif. All rights reserved. &bull; <a href="/privacy-policy.html">Privacy Policy</a> &bull; <a href="/terms.html">Terms</a></p>
   </footer>
 
 </body>
