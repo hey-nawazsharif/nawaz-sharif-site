@@ -29,29 +29,30 @@
 
 <h2>Send a message</h2>
 
-<!-- Formsubmit.co Gateway with Captcha Disabled for Instant Fast Submit -->
-<form action="https://formsubmit.co/contact@nawazsharif.in" method="POST">
-  <!-- Disable the intermediate FormSubmit captcha page -->
-  <input type="hidden" name="_captcha" value="false">
-  <!-- Honeypot field for background spam filter without disturbing users -->
-  <input type="text" name="_honey" style="display:none">
-  <!-- Redirect user straight back to contact page after submit -->
-  <input type="hidden" name="_next" value="https://nawazsharif.in/contact.html">
-  <input type="hidden" name="_subject" value="New Inquiry from Portfolio Website">
+<!-- In-page status notifications -->
+<div data-fs-success style="display: none; padding: 12px 16px; background: #e6ffed; border: 1px solid #acf2bd; color: #1a7f37; border-radius: 6px; margin-bottom: 18px; font-weight: 600;">
+  Thanks! Your message has been sent successfully.
+</div>
+<div data-fs-error style="display: none; padding: 12px 16px; background: #ffebe9; border: 1px solid #ffc1c0; color: #cf222e; border-radius: 6px; margin-bottom: 18px; font-weight: 600;"></div>
 
-  <label for="n">Name</label>
-  <input id="n" name="name" required placeholder="Your name">
+<!-- Formspree Integration with Endpoint xqpergwz -->
+<form id="portfolio-form" action="https://formspree.io/f/xqpergwz" method="POST">
+  <label for="name">Name</label>
+  <input id="name" name="name" required placeholder="Your name" data-fs-field>
+  <span data-fs-error="name" style="color: #cf222e; font-size: 0.85rem; display: block; margin-top: 4px;"></span>
 
-  <label for="e">Email</label>
-  <input id="e" name="email" type="email" required placeholder="your.email@example.com">
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" required placeholder="your.email@example.com" data-fs-field>
+  <span data-fs-error="email" style="color: #cf222e; font-size: 0.85rem; display: block; margin-top: 4px;"></span>
 
-  <label for="m">Message</label>
-  <textarea id="m" name="message" rows="6" required placeholder="Describe your inquiry..."></textarea>
+  <label for="message">Message</label>
+  <textarea id="message" name="message" rows="6" required placeholder="Describe your inquiry..." data-fs-field></textarea>
+  <span data-fs-error="message" style="color: #cf222e; font-size: 0.85rem; display: block; margin-top: 4px;"></span>
 
-  <button class="btn" type="submit">Send message</button>
+  <button class="btn" type="submit" data-fs-submit-btn>Send message</button>
 </form>
 
-<p>See also the <a href="/faq.html">frequently asked questions</a>.</p>
+<p style="margin-top: 24px;">See also the <a href="/faq.html">frequently asked questions</a>.</p>
 </main>
 
 <footer>
@@ -67,5 +68,13 @@
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p>
 </div>
 </footer>
+
+<!-- Official Formspree AJAX Client Library -->
+<script>
+  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', { formElement: '#portfolio-form', formId: 'xqpergwz' });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
 </body>
 </html>
