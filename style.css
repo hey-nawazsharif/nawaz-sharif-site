@@ -28,10 +28,12 @@ label{font-size:.9rem;color:var(--mute);display:block;margin:12px 0 4px}
 footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mute);font-size:.9rem}
 footer a{color:var(--mute);margin-right:16px}
 details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 12px}summary{cursor:pointer}
-.cookie-banner{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:860px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:16px 20px;box-shadow:0 12px 32px rgba(0,0,0,0.4);z-index:9999}
-.cookie-content{display:flex;align-items:center;justify-content:space-between;gap:20px}
-.cookie-content p{margin:0;font-size:.9rem;line-height:1.5;color:var(--text)}
+
+/* Sleek Compact Cookie Bar */
+.cookie-banner{display:none;position:fixed;bottom:14px;left:14px;right:14px;margin:0 auto;max-width:580px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:9999}
+.cookie-content{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cookie-content p{margin:0;font-size:12px;line-height:1.4;color:var(--text)}
 .cookie-content p a{color:var(--acc);text-decoration:underline}
 .cookie-actions{flex-shrink:0}
-.cookie-btn{display:inline-block;background:var(--acc);color:var(--btn);font-weight:700;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-size:.9rem}
-@media (max-width:640px){.cookie-content{flex-direction:column;align-items:flex-start}.cookie-actions,.cookie-btn{width:100%;text-align:center}}
+.cookie-btn{display:inline-block;background:var(--acc);color:var(--btn);font-weight:600;padding:6px 14px;border-radius:6px;border:none;cursor:pointer;font-size:12px;white-space:nowrap}
+@media(max-width:540px){.cookie-banner{bottom:10px;left:10px;right:10px;padding:9px 12px}.cookie-content p{font-size:11.5px}.cookie-btn{padding:5px 12px;font-size:11px}}
