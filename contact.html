@@ -28,17 +28,25 @@
 <p class="callrow"><strong>Email:</strong> <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 
 <h2>Send a message</h2>
-<form action="mailto:contact@nawazsharif.in" method="POST" enctype="text/plain">
-<label for="n">Name</label>
-<input id="n" name="Name" required>
 
-<label for="e">Email</label>
-<input id="e" name="Email" type="email" required>
+<!-- Formsubmit.co secure gateway: Zero ID hassle, Direct to inbox -->
+<form action="https://formsubmit.co/contact@nawazsharif.in" method="POST">
+  <!-- Spam bot protection -->
+  <input type="text" name="_honey" style="display:none">
+  <!-- Direct return back to contact page after sending -->
+  <input type="hidden" name="_next" value="https://nawazsharif.in/contact.html">
+  <input type="hidden" name="_subject" value="New Portfolio Inquiry - nawazsharif.in">
 
-<label for="m">Message</label>
-<textarea id="m" name="Message" rows="6" required></textarea>
+  <label for="n">Name</label>
+  <input id="n" name="name" required placeholder="Your name">
 
-<button class="btn" type="submit">Send message</button>
+  <label for="e">Email</label>
+  <input id="e" name="email" type="email" required placeholder="your.email@example.com">
+
+  <label for="m">Message</label>
+  <textarea id="m" name="message" rows="6" required placeholder="Describe your inquiry..."></textarea>
+
+  <button class="btn" type="submit">Send message</button>
 </form>
 
 <p>See also the <a href="/faq.html">frequently asked questions</a>.</p>
