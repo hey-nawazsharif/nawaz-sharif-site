@@ -7,32 +7,38 @@
   <meta name="description" content="Frequently asked questions about enterprise Linux systems engineering, security hardening, cloud infrastructure, and consulting engagements with Nawaz Sharif.">
   <link rel="canonical" href="https://nawazsharif.in/faq.html">
   <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* Clean, native accordion styling for FAQ */
-    .faq-wrapper {
-      max-width: 840px;
-      margin: 0 auto;
-      padding: 40px 20px 80px 20px;
+    .faq-container {
+      max-width: 720px;
+      margin: 40px auto 80px auto;
+      padding: 0 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1a1f36;
+    }
+    .faq-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #0a2540;
+    }
+    .faq-meta {
+      font-size: 0.9rem;
+      color: #0066cc;
+      font-weight: 500;
+      margin-bottom: 30px;
     }
     .faq-item {
-      border: 1px solid #30363d;
+      border: 1px solid #e2e8f0;
       border-radius: 8px;
-      margin-bottom: 16px;
-      background: #161b22;
+      margin-bottom: 14px;
+      background: #ffffff;
       overflow: hidden;
-      transition: border-color 0.2s ease;
-    }
-    .faq-item:hover {
-      border-color: #58a6ff;
     }
     .faq-summary {
-      padding: 18px 20px;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: #f0f6fc;
+      padding: 16px 20px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0a2540;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
@@ -44,96 +50,75 @@
       display: none;
     }
     .faq-summary::after {
-      content: '+';
-      font-size: 1.4rem;
-      color: #58a6ff;
-      font-family: 'JetBrains Mono', monospace;
-      transition: transform 0.2s ease;
+      content: '▾';
+      font-size: 1rem;
+      color: #6b7c93;
     }
     details[open] .faq-summary::after {
-      content: '−';
-      color: #3fb950;
+      content: '▴';
+      color: #0052cc;
     }
-    .faq-answer {
-      padding: 0 20px 20px 20px;
-      color: #c9d1d9;
-      line-height: 1.7;
-      border-top: 1px solid #21262d;
-      padding-top: 16px;
+    .faq-content {
+      padding: 0 20px 18px 20px;
+      color: #425466;
+      line-height: 1.6;
+      font-size: 1rem;
     }
   </style>
 </head>
-<body class="bg-dark text-light">
+<body>
 
-  <!-- Top Navigation Header -->
-  <header class="site-header">
-    <div class="nav-container">
-      <a href="/index.html" class="brand-logo">NAWAZ SHARIF</a>
-      <nav class="nav-links">
-        <a href="/index.html#services">Services</a>
-        <a href="/index.html#articles">Articles</a>
-        <a href="/about.html">About</a>
-        <a href="/faq.html" class="active">FAQ</a>
-        <a href="/contact.html">Contact</a>
+  <!-- Top Navigation -->
+  <header style="border-bottom: 1px solid #edf2f7; padding: 18px 24px;">
+    <div style="max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <a href="/index.html" style="font-weight: 800; font-size: 1.15rem; color: #0a2540; text-decoration: none; letter-spacing: 0.5px;">NAWAZ SHARIF</a>
+      <nav style="display: flex; gap: 20px;">
+        <a href="/index.html#services" style="color: #425466; text-decoration: none; font-size: 0.95rem;">Services</a>
+        <a href="/index.html#articles" style="color: #425466; text-decoration: none; font-size: 0.95rem;">Articles</a>
+        <a href="/about.html" style="color: #425466; text-decoration: none; font-size: 0.95rem;">About</a>
+        <a href="/faq.html" style="color: #0052cc; text-decoration: none; font-weight: 600; font-size: 0.95rem;">FAQ</a>
+        <a href="/contact.html" style="color: #425466; text-decoration: none; font-size: 0.95rem;">Contact</a>
       </nav>
     </div>
   </header>
 
   <!-- FAQ Section -->
-  <main class="faq-wrapper">
-    <div class="section-header" style="margin-bottom: 30px;">
-      <span class="sub-heading">KNOWLEDGE &amp; ENGAGEMENT</span>
-      <h1 class="page-title">Frequently Asked Questions (FAQ)</h1>
-      <p class="lead-text" style="color: #8b949e; font-size: 0.95rem;">Last updated: October 2026</p>
-    </div>
+  <main class="faq-container">
+    <h1 class="faq-title">Frequently Asked Questions (FAQ)</h1>
+    <div class="faq-meta">Last updated: October 2026</div>
 
-    <!-- Accordion Item 1 -->
     <details class="faq-item">
       <summary class="faq-summary">What core services do you provide?</summary>
-      <div class="faq-answer">
-        I specialize in end-to-end Linux systems engineering, production Kubernetes architecture, zero-trust cybersecurity frameworks, AI/ML infrastructure orchestration with Python, and distributed network deployment.
+      <div class="faq-content">
+        I specialize in end-to-end Linux systems engineering, production Kubernetes architecture, zero-trust cybersecurity frameworks, AI/ML infrastructure orchestration with Python, and distributed blockchain network deployment.
       </div>
     </details>
 
-    <!-- Accordion Item 2 -->
     <details class="faq-item">
       <summary class="faq-summary">What types of projects do you take on?</summary>
-      <div class="faq-answer">
-        I consult and engineer solutions for enterprise cloud migrations, mission-critical server hardening (CIS Benchmarks), DevSecOps CI/CD automation, distributed GPU compute clusters, and high-availability enterprise infrastructure.
+      <div class="faq-content">
+        I consult and engineer solutions for enterprise cloud migrations, mission-critical server hardening, DevSecOps CI/CD automation, distributed GPU compute clusters, and high-availability enterprise infrastructure.
       </div>
     </details>
 
-    <!-- Accordion Item 3 -->
     <details class="faq-item">
       <summary class="faq-summary">How do you approach infrastructure security and compliance?</summary>
-      <div class="faq-answer">
-        Security is implemented at the kernel and orchestration layers using strict principle-of-least-privilege (PoLP), Seccomp profiles, cgroups v2 resource boundaries, eBPF-based monitoring, and continuous vulnerability scanning aligned with international compliance baselines.
+      <div class="faq-content">
+        Security is implemented directly at the Linux kernel and container orchestration levels using strict principle-of-least-privilege, Seccomp profiles, cgroups v2, and continuous automated compliance testing (CIS Benchmarks).
       </div>
     </details>
 
-    <!-- Accordion Item 4 -->
     <details class="faq-item">
       <summary class="faq-summary">What is your typical engagement model and response timeline?</summary>
-      <div class="faq-answer">
-        Engagements are available on a dedicated technical advisory or fixed-scope project audit basis. Direct inquiries submitted through the contact channel are reviewed and acknowledged within 24 business hours.
+      <div class="faq-content">
+        Engagements are available on a dedicated technical advisory or fixed-scope project audit basis. Direct inquiries submitted through the contact form are reviewed and acknowledged within 24 business hours.
       </div>
     </details>
-
   </main>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container footer-content">
-      <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="/index.html">Home</a>
-        <a href="/about.html">About</a>
-        <a href="/faq.html">FAQ</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/privacy-policy.html">Privacy Policy</a>
-        <a href="/terms.html">Terms</a>
-      </div>
-    </div>
+  <!-- Footer -->
+  <footer style="border-top: 1px solid #edf2f7; padding: 30px 20px; text-align: center; color: #6b7c93; font-size: 0.9rem;">
+    <p>&copy; 2026 Nawaz Sharif. All rights reserved. &bull; <a href="/privacy-policy.html" style="color: #6b7c93;">Privacy Policy</a> &bull; <a href="/terms.html" style="color: #6b7c93;">Terms</a></p>
   </footer>
 
 </body>
