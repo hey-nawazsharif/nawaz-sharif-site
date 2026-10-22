@@ -1,60 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FAQ | Nawaz Sharif</title>
-<meta name="description" content="Frequently asked questions about Linux systems, Kubernetes, Cloud, and Cybersecurity architecture.">
-<link rel="stylesheet" href="/style.css?v=11">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1644248302584064" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frequently Asked Questions (FAQ) | Nawaz Sharif</title>
+  <meta name="description" content="Frequently asked questions about enterprise Linux systems engineering, security hardening, cloud infrastructure, and consulting engagements with Nawaz Sharif.">
+  <link rel="canonical" href="https://nawazsharif.in/faq.html">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Clean, native accordion styling for FAQ */
+    .faq-wrapper {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 40px 20px 80px 20px;
+    }
+    .faq-item {
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      background: #161b22;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+    .faq-item:hover {
+      border-color: #58a6ff;
+    }
+    .faq-summary {
+      padding: 18px 20px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #f0f6fc;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      list-style: none;
+    }
+    .faq-summary::-webkit-details-marker {
+      display: none;
+    }
+    .faq-summary::after {
+      content: '+';
+      font-size: 1.4rem;
+      color: #58a6ff;
+      font-family: 'JetBrains Mono', monospace;
+      transition: transform 0.2s ease;
+    }
+    details[open] .faq-summary::after {
+      content: '−';
+      color: #3fb950;
+    }
+    .faq-answer {
+      padding: 0 20px 20px 20px;
+      color: #c9d1d9;
+      line-height: 1.7;
+      border-top: 1px solid #21262d;
+      padding-top: 16px;
+    }
+  </style>
 </head>
-<body>
-<header>
-<div class="wrap">
-<a class="brand" href="/">NAWAZ SHARIF</a>
-<nav>
-<a href="/#services">Services</a>
-<a href="/#articles">Articles</a>
-<a href="/about.html">About</a>
-<a href="/contact.html">Contact</a>
-</nav>
-</div>
-</header>
+<body class="bg-dark text-light">
 
-<main class="wrap">
-<article class="article">
-<h1>Frequently Asked Questions (FAQ)</h1>
-<span class="meta">Last updated: October 2026</span>
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/index.html" class="brand-logo">NAWAZ SHARIF</a>
+      <nav class="nav-links">
+        <a href="/index.html#services">Services</a>
+        <a href="/index.html#articles">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/faq.html" class="active">FAQ</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-<h2>What core services do you provide?</h2>
-<p>I specialize in end-to-end Linux systems engineering, production Kubernetes architecture, zero-trust cybersecurity frameworks, AI/ML infrastructure orchestration with Python, and distributed blockchain network deployment.</p>
+  <!-- FAQ Section -->
+  <main class="faq-wrapper">
+    <div class="section-header" style="margin-bottom: 30px;">
+      <span class="sub-heading">KNOWLEDGE &amp; ENGAGEMENT</span>
+      <h1 class="page-title">Frequently Asked Questions (FAQ)</h1>
+      <p class="lead-text" style="color: #8b949e; font-size: 0.95rem;">Last updated: October 2026</p>
+    </div>
 
-<h2>What types of projects do you take on?</h2>
-<p>I consult and engineer solutions for enterprise cloud migrations, mission-critical server hardening, DevSecOps CI/CD automation, distributed GPU compute clusters, and high-availability distributed systems.</p>
+    <!-- Accordion Item 1 -->
+    <details class="faq-item">
+      <summary class="faq-summary">What core services do you provide?</summary>
+      <div class="faq-answer">
+        I specialize in end-to-end Linux systems engineering, production Kubernetes architecture, zero-trust cybersecurity frameworks, AI/ML infrastructure orchestration with Python, and distributed network deployment.
+      </div>
+    </details>
 
-<h2>How do you approach infrastructure security?</h2>
-<p>Every system follows a zero-trust model. This includes minimal attack surface design, automated vulnerability scanning in deployment pipelines, hardened Linux kernel parameters, strict SSH/IAM access policies, and encrypted storage configurations.</p>
+    <!-- Accordion Item 2 -->
+    <details class="faq-item">
+      <summary class="faq-summary">What types of projects do you take on?</summary>
+      <div class="faq-answer">
+        I consult and engineer solutions for enterprise cloud migrations, mission-critical server hardening (CIS Benchmarks), DevSecOps CI/CD automation, distributed GPU compute clusters, and high-availability enterprise infrastructure.
+      </div>
+    </details>
 
-<h2>Can you optimize existing Linux and Kubernetes environments?</h2>
-<p>Yes. I perform comprehensive performance audits, kernel-level network tuning, pod resource right-sizing, ingress caching layer optimizations (Nginx/Redis), and automated failover setups.</p>
+    <!-- Accordion Item 3 -->
+    <details class="faq-item">
+      <summary class="faq-summary">How do you approach infrastructure security and compliance?</summary>
+      <div class="faq-answer">
+        Security is implemented at the kernel and orchestration layers using strict principle-of-least-privilege (PoLP), Seccomp profiles, cgroups v2 resource boundaries, eBPF-based monitoring, and continuous vulnerability scanning aligned with international compliance baselines.
+      </div>
+    </details>
 
-<h2>How can we collaborate or get in touch?</h2>
-<p>You can use the direct contact form on the <a href="/#contact">homepage</a>, email directly at <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a>, or call <a href="tel:+919535184897">+91-9535184897</a>.</p>
-</article>
-</main>
+    <!-- Accordion Item 4 -->
+    <details class="faq-item">
+      <summary class="faq-summary">What is your typical engagement model and response timeline?</summary>
+      <div class="faq-answer">
+        Engagements are available on a dedicated technical advisory or fixed-scope project audit basis. Direct inquiries submitted through the contact channel are reviewed and acknowledged within 24 business hours.
+      </div>
+    </details>
 
-<footer>
-<div class="wrap">
-<p>
-<a href="/about.html">About</a> &middot;
-<a href="/faq.html">FAQ</a> &middot;
-<a href="/contact.html">Contact</a> &middot;
-<a href="/privacy-policy.html">Privacy Policy</a> &middot;
-<a href="/terms.html">Terms</a>
-</p>
-<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
-<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p>
-</div>
-</footer>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="/index.html">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
