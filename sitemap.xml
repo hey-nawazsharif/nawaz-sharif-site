@@ -1,18 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://nawazsharif.in/</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/about</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/contact</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/faq</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/privacy-policy</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/terms</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/windows-cmd-vs-mac-terminal-commands</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/nginx-reverse-proxy-guide</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/docker-for-beginners</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/essential-linux-commands</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/ssh-keys-setup-guide</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/cybersecurity-roadmap-2026</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/linux-server-hardening</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/ci-cd-anomaly-detection</loc><lastmod>2026-10-17</lastmod></url>
-<url><loc>https://nawazsharif.in/microservices-enterprise</loc><lastmod>2026-10-17</lastmod></url>
+  <url>
+    <loc>https://nawazsharif.in/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/about.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/articles.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/contact.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/faq.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/privacy-policy.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/terms.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/Linux-kernel-perfomance-tuning.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/essential-linux-commands.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/windows-cmd-vs-mac-terminal-commands.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/docker-for-beginners.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/linux-server-hardening.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/ssh-keys-setup-guide.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/nginx-reverse-proxy-guide.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/cybersecurity-roadmap-2026.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/ci-cd-anomaly-detection.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nawazsharif.in/microservices-enterprise.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>
