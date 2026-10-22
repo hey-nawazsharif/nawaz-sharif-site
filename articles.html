@@ -7,6 +7,79 @@
 <meta name="description" content="Full repository archive covering infrastructure automation, security standards, and distributed systems.">
 <link rel="stylesheet" href="/style.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1644248302584064" crossorigin="anonymous"></script>
+<style>
+  .archive-container {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 36px 20px 60px 20px;
+    box-sizing: border-box;
+  }
+  .archive-badge {
+    color: #0969da;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .archive-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: #1f2328;
+    line-height: 1.25;
+  }
+  .archive-desc {
+    color: #586069;
+    font-size: 1.05rem;
+    margin-top: 0;
+    margin-bottom: 36px;
+    line-height: 1.5;
+  }
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 20px;
+    align-items: stretch;
+  }
+  .tech-item {
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    padding: 22px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .tech-item:hover {
+    transform: translateY(-2px);
+    border-color: #0969da;
+  }
+  .tech-item .date-tag {
+    font-size: 0.8rem;
+    color: #0969da;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .tech-item h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #1f2328;
+    line-height: 1.4;
+  }
+  .tech-item p {
+    font-size: 0.9rem;
+    color: #586069;
+    margin: 0;
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+</style>
 </head>
 <body>
 <header>
@@ -22,69 +95,63 @@
 </div>
 </header>
 
-<div class="wrap" style="padding-top: 36px; padding-bottom: 60px;">
-  <p style="color: #0366d6; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Architecture Archive</p>
-  <h1 style="font-size: 2.1rem; font-weight: 700; margin: 0 0 10px 0; color: #1f2328; line-height: 1.25;">Technical Guides &amp; Engineering Documentation Index</h1>
-  <p style="color: #586069; font-size: 1.05rem; margin-top: 0; margin-bottom: 32px; line-height: 1.5;">Full repository archive covering infrastructure automation, security standards, and distributed systems.</p>
+<main class="archive-container">
+  <div class="archive-badge">Architecture Archive</div>
+  <h1 class="archive-title">Technical Guides &amp; Engineering Documentation Index</h1>
+  <p class="archive-desc">Full repository archive covering infrastructure automation, security standards, and distributed systems.</p>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; width: 100%;">
+  <div class="tech-grid">
 
-    <a href="/what-is-linux.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 18, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">What Is Linux? Why It Is Used, Where It Runs and Why It Matters for AI</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">A beginner guide with diagrams: distributions, architecture, cloud, and why Linux matters for AI.</p>
+    <a href="/Linux-kernel-perfomance-tuning.html" class="tech-item">
+      <span class="date-tag">Architecture</span>
+      <h3>Linux Kernel Performance Tuning</h3>
+      <p>Advanced system optimizations, sysctl parameters, memory management, and network stack tuning for high-throughput enterprise infrastructure.</p>
     </a>
 
-    <a href="/windows-cmd-vs-macos-terminal.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">Windows CMD vs macOS Terminal: Essential Commands Side by Side</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">Direct comparison of Windows CMD and macOS Terminal commands with reference tables and examples.</p>
+    <a href="/microservices-enterprise.html" class="tech-item">
+      <span class="date-tag">Architecture</span>
+      <h3>Microservices in the Enterprise: Distributed Systems Patterns</h3>
+      <p>Decomposing monolithic applications, event-driven messaging, circuit breakers, and data consistency models in production.</p>
     </a>
 
-    <a href="/docker-for-beginners.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">Docker for Beginners: Images, Containers and Your First Dockerfile</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">A beginner-friendly Docker guide: images, containers, your first Dockerfile, volumes, and Compose.</p>
+    <a href="/docker-for-beginners.html" class="tech-item">
+      <span class="date-tag">DevSecOps</span>
+      <h3>Docker for Beginners: Images, Containers and Your First Dockerfile</h3>
+      <p>A beginner-friendly Docker guide: images, containers, your first Dockerfile, volumes, and Compose orchestration.</p>
     </a>
 
-    <a href="/essential-linux-commands.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">Essential Linux Commands for Developers and Sysadmins</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">Core commands for file management, permissions, searching, process monitoring, and troubleshooting.</p>
+    <a href="/essential-linux-commands.html" class="tech-item">
+      <span class="date-tag">Linux Operations</span>
+      <h3>Essential Linux Commands for Developers and Sysadmins</h3>
+      <p>Core commands for file management, permissions, searching, process monitoring, and systematic Linux troubleshooting.</p>
     </a>
 
-    <a href="/linux-server-hardening.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">Linux Server Hardening: Complete Security Checklist</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">Lock down production Linux servers against unauthorized access and secure baseline services.</p>
+    <a href="/linux-server-hardening.html" class="tech-item">
+      <span class="date-tag">Security Hardening</span>
+      <h3>Linux Server Hardening: Complete Security Checklist</h3>
+      <p>Lock down production Linux servers against unauthorized access and establish secure baseline services against CIS Benchmarks.</p>
     </a>
 
-    <a href="/ssh-keys-setup-guide.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">SSH Keys Setup and Hardening Guide</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">Generate, configure, and secure SSH key authentication for passwordless remote server logins.</p>
+    <a href="/nginx-reverse-proxy-guide.html" class="tech-item">
+      <span class="date-tag">Networking</span>
+      <h3>Nginx Reverse Proxy &amp; SSL Setup</h3>
+      <p>Configuring Nginx as a high-performance reverse proxy with SSL termination, modern cipher suites, and upstream load balancing.</p>
     </a>
 
-    <a href="/nginx-reverse-proxy-guide.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">Nginx Reverse Proxy &amp; SSL Setup</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">Configuring Nginx as a reverse proxy with SSL termination and production headers.</p>
+    <a href="/cybersecurity-roadmap-2026.html" class="tech-item">
+      <span class="date-tag">Security Engineering</span>
+      <h3>Cybersecurity Roadmap 2026</h3>
+      <p>Essential skills, certifications, and career pathways spanning blue team audits, threat hunting, and modern DevSecOps.</p>
     </a>
 
-    <a href="/cybersecurity-roadmap-2026.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">Cybersecurity Roadmap 2026</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">Essential skills, certifications, and career pathways for modern security engineering.</p>
-    </a>
-
-    <a href="/ci-cd-anomaly-detection.html" style="background: #ffffff; border: 1px solid #d0d7de; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; display: block; box-sizing: border-box;">
-      <span style="display: block; font-size: 0.8rem; color: #0969da; font-weight: 600; margin-bottom: 8px;">October 17, 2026</span>
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #1f2328; line-height: 1.4;">CI/CD Anomaly Detection in DevSecOps</h3>
-      <p style="font-size: 0.9rem; color: #586069; margin: 0; line-height: 1.5;">Automating threat monitoring and build pipeline vulnerability detection.</p>
+    <a href="/ci-cd-anomaly-detection.html" class="tech-item">
+      <span class="date-tag">DevSecOps</span>
+      <h3>CI/CD Anomaly Detection in DevSecOps</h3>
+      <p>Automating threat monitoring, statistical build anomaly detection, and pipeline vulnerability scanning in enterprise CI/CD.</p>
     </a>
 
   </div>
-</div>
+</main>
 
 <footer>
 <div class="wrap">
