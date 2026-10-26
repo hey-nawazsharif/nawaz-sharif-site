@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enterprise Linux Server Hardening (CIS Benchmarks) | Nawaz Sharif</title>
+    <meta name="description" content="Step-by-step guide to securing enterprise Linux servers using CIS (Center for Internet Security) Benchmarks.">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <a class="brand" href="/">NAWAZ SHARIF</a>
+        <nav>
+            <a href="/#services">Services</a>
+            <a href="/#articles">Articles</a>
+            <a href="/about.html">About</a>
+            <a href="/faq.html">FAQ</a>
+            <a href="/contact.html">Contact</a>
+        </nav>
+    </div>
+</header>
+
+<main class="doc">
+    <span class="meta">October 26, 2026 &middot; Enterprise Security &middot; By Nawaz Sharif</span>
+    <h1>Enterprise Linux Server Hardening (CIS Benchmarks)</h1>
+    
+    <p>In the world of enterprise IT, a default Linux installation is never secure enough for production. To protect critical infrastructure from modern cyber threats, organizations rely on the CIS (Center for Internet Security) Benchmarks. Here are the core foundational steps to harden your Linux servers based on these industry standards.</p>
+
+    <h2>1. Secure SSH Access</h2>
+    <p>SSH is the most common entry point for attackers. Hardening the SSH daemon (<code>sshd_config</code>) is your absolute first priority:</p>
+    <ul>
+        <li><strong>Disable Root Login:</strong> Set <code>PermitRootLogin no</code>. Admins should log in as a standard user and elevate privileges using <code>sudo</code>.</li>
+        <li><strong>Disable Password Authentication:</strong> Set <code>PasswordAuthentication no</code> and strictly enforce SSH Key-based authentication (like Ed25519 keys).</li>
+        <li><strong>Change Default Port:</strong> Moving away from Port 22 reduces automated brute-force bot attacks.</li>
+    </ul>
+
+    <h2>2. Network Configuration & Firewalls</h2>
+    <p>Never expose a server to the internet without a strict firewall policy. Use UFW or firewalld to implement a "Default Deny" policy.</p>
+    <pre><code>sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 2222/tcp  # Your new SSH port
+sudo ufw enable</code></pre>
+    <p>Additionally, disable unused network protocols like IPv6 (if not in use) and ensure IP forwarding is disabled unless the server acts as a dedicated router.</p>
+
+    <h2>3. Disable Unused Filesystems and Services</h2>
+    <p>Every running service is a potential vulnerability. Reduce your attack surface by disabling legacy filesystems (like <code>cramfs</code>, <code>freevxfs</code>) and stopping services you don't need (like FTP, Telnet, or unnecessary mail transfer agents). You can use <code>systemctl disable</code> to ensure they don't start on boot.</p>
+    
+    <h2>4. Implement Audit Logging (auditd)</h2>
+    <p>You cannot secure what you cannot monitor. The <code>auditd</code> service tracks system events, file access, and user commands. Configure audit rules to log events such as changes to <code>/etc/passwd</code>, failed login attempts, and modifications to network configurations.</p>
+
+    <h2>Summary</h2>
+    <p>Server hardening is not a one-time setup; it is a continuous process of auditing, patching, and monitoring. By adhering to CIS Benchmarks, you establish a zero-trust foundation that drastically mitigates the risk of infrastructure compromise.</p>
+</main>
+
+<footer>
+    <div class="wrap">
+        <a href="/about.html">About</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+        <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>
