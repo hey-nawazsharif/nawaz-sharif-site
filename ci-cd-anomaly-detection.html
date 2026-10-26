@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI-Driven Anomaly Detection in CI/CD Pipelines | Nawaz Sharif</title><meta name="description" content="How to use scikit-learn's IsolationForest to flag unusual build and deployment behavior before it becomes an outage or a security incident.">
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Driven Anomaly Detection in CI/CD Pipelines | Nawaz Sharif</title><meta name="description" content="How to use scikit-learn's IsolationForest for CI/CD anomaly detection.">
 <link rel="stylesheet" href="/style.css"></head><body>
 <header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
 <nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
-<main class="doc"><span class="meta">October 14, 2026 &middot; Python AI &middot; By Nawaz Sharif</span><h1>AI-Driven Anomaly Detection in CI/CD Pipelines</h1><p>CI/CD pipelines produce a steady stream of numbers: build times, test counts, memory use, artifact sizes, and network calls. When something changes suddenly, such as a build that doubles in duration or a job that starts reaching an unknown host, it can signal a regression, a misconfiguration, or even a compromised dependency. Fixed thresholds miss most of these. Anomaly detection learns what normal looks like and flags the outliers.</p>
-<h2>Why IsolationForest</h2>
-<p>IsolationForest is an unsupervised algorithm in scikit-learn. It builds random trees and measures how quickly a data point can be isolated; unusual points are isolated in fewer splits. It needs no labeled attack data, handles several features at once, and trains in seconds on a typical pipeline history.</p>
+<main class="doc"><span class="meta">October 14, 2026 &middot; Python AI &middot; By Nawaz Sharif</span><h1>AI-Driven Anomaly Detection in CI/CD Pipelines</h1>
+
+<h2>Why IsolationForest?</h2>
+<p>IsolationForest is an unsupervised algorithm in scikit-learn. It builds random trees and measures how quickly a data point can be isolated. Anomalies are isolated quickly because they are few and different. In the context of CI/CD, this is incredibly powerful. Traditional rule-based monitoring often fails because pipelines are dynamic. Builds might take longer due to network latency, or memory usage might spike during complex compilations. IsolationForest adapts to your unique pipeline behavior without needing manually labeled "good" or "bad" runs.</p>
+
 <h2>1. Collect features per pipeline run</h2>
-<p>Export a row per run from your CI system's API or logs. Useful features include total duration, peak memory, CPU time, number of tests, artifact size, count of outbound network connections, and number of newly added dependencies. Keep at least a few hundred runs of healthy history.</p>
+<p>Export a row per run from your CI system's API or logs. Useful features include total duration, peak memory, CPU time, number of test failures, and network connections. The more contextual data you can extract from tools like Jenkins, GitHub Actions, or GitLab CI, the better your machine learning model will perform. Store this baseline data securely in a CSV or a time-series database.</p>
+
 <h2>2. Train on the baseline</h2>
 <pre><code>import pandas as pd
 from sklearn.ensemble import IsolationForest
@@ -18,17 +21,21 @@ features = ["duration_s", "peak_mem_mb", "cpu_s", "artifact_mb", "net_conns"]
 
 model = IsolationForest(n_estimators=200, contamination=0.02, random_state=42)
 model.fit(df[features])</code></pre>
-<p>The <code>contamination</code> value is your expected share of anomalies. Start low, around 1 to 3 percent, and tune it from real results.</p>
+<p>The <code>contamination</code> value is your expected share of anomalies. Start low, around 1 to 3 percent, and tune it from real results. Using 200 estimators generally provides a stable prediction surface without slowing down the training process significantly.</p>
+
 <h2>3. Score new runs inside the pipeline</h2>
 <pre><code>new = pd.DataFrame([current_run_metrics])[features]
 score = model.decision_function(new)[0]
 if model.predict(new)[0] == -1:
-    print(f"Anomalous run (score={score:.3f})")</code></pre>
-<p>Add this as a final pipeline step. Lower scores mean a stronger anomaly, so you can post a warning to Slack or email at a mild score and escalate at a severe one.</p>
-<h2>Practical cautions</h2>
-<p>Start in alert-only mode and do not fail builds automatically until you trust the results. Retrain regularly, since legitimate changes such as a larger test suite will shift the baseline. Review flagged runs and record the outcome; those labels help you tune the model later. Remember that an anomaly is not proof of an attack, only a reason to look.</p>
+    print(f"Anomalous run (score={score:.3f})")</code></pre>
+<p>Add this as a final pipeline step. Lower scores mean a stronger anomaly, so you can post a warning to Slack or Teams at a mild score, and actively block the release or trigger a rollback if the score indicates a severe anomaly.</p>
+
+<h2>Practical cautions & Best Practices</h2>
+<p>Start in alert-only mode and do not fail builds automatically until you trust the results. Retrain regularly, since legitimate changes (like adding integration tests or upgrading a framework) will naturally shift the baseline. Set up a cron job to retrain your model weekly to prevent false positives.</p>
+
 <h2>Summary</h2>
-<p>A small IsolationForest model gives your pipeline an early-warning layer with little effort. Combined with dependency scanning and signed artifacts, it makes unexpected behavior visible while it is still cheap to investigate.</p><p><a href="/#articles">&larr; All articles</a></p></main>
-<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>A small IsolationForest model gives your pipeline an early-warning layer with little effort. Combined with dependency scanning, static code analysis, and traditional unit testing, it forms a robust, intelligent defense mechanism for modern DevOps teams.</p>
+</main>
+<footer><div class="wrap"><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a>
 <p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
