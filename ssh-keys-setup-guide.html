@@ -31,10 +31,10 @@
 <pre><code>ssh-add --apple-use-keychain ~/.ssh/id_ed25519</code></pre>
 <p>On Linux, start the agent and add the key with <code>eval "$(ssh-agent -s)"</code> followed by <code>ssh-add ~/.ssh/id_ed25519</code>. You can also save shortcuts in <code>~/.ssh/config</code>:</p>
 <pre><code>Host myserver
-    HostName 203.0.113.10
-    User deploy
-    IdentityFile ~/.ssh/id_ed25519
-    AddKeysToAgent yes</code></pre>
+    HostName 203.0.113.10
+    User deploy
+    IdentityFile ~/.ssh/id_ed25519
+    AddKeysToAgent yes</code></pre>
 <p>Now <code>ssh myserver</code> is all you need to type.</p>
 <h2>Step 6: Disable password login</h2>
 <p>Once key login works, turn off passwords so bots can no longer guess their way in. <strong>Keep your current session open</strong> while you do this, so you can undo any mistake. On the server, edit <code>/etc/ssh/sshd_config</code>:</p>
@@ -55,5 +55,5 @@ sudo systemctl reload ssh</code></pre>
 <h2>Summary</h2>
 <p>Generate an Ed25519 key with a passphrase, copy the public key to your server, test the login, and only then disable password authentication. This one change removes the most common attack path against Linux servers. For the rest of the checklist, read my guide on <a href="/linux-server-hardening.html">securing Linux servers for production</a>, or the <a href="/cybersecurity-roadmap-2026.html">cybersecurity roadmap for 2026</a>.</p><p><a href="/#articles">&larr; All articles</a></p></main>
 <footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
-<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
