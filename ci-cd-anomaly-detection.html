@@ -27,7 +27,7 @@ model.fit(df[features])</code></pre>
 <pre><code>new = pd.DataFrame([current_run_metrics])[features]
 score = model.decision_function(new)[0]
 if model.predict(new)[0] == -1:
-    print(f"Anomalous run (score={score:.3f})")</code></pre>
+  print(f"Anomalous run (score={score:.3f})")</code></pre>
 <p>Add this as a final pipeline step. Lower scores mean a stronger anomaly, so you can post a warning to Slack or Teams at a mild score, and actively block the release or trigger a rollback if the score indicates a severe anomaly.</p>
 
 <h2>Practical cautions & Best Practices</h2>
@@ -37,5 +37,5 @@ if model.predict(new)[0] == -1:
 <p>A small IsolationForest model gives your pipeline an early-warning layer with little effort. Combined with dependency scanning, static code analysis, and traditional unit testing, it forms a robust, intelligent defense mechanism for modern DevOps teams.</p>
 </main>
 <footer><div class="wrap"><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a>
-<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
