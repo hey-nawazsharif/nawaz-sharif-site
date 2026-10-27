@@ -8,10 +8,40 @@ header{border-bottom:1px solid var(--line);position:sticky;top:0;background:var(
 header .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;min-height:64px}
 .brand{font-weight:700;letter-spacing:.04em;color:var(--head);text-decoration:none}
 nav a{color:var(--mute);text-decoration:none;margin-left:18px;font-size:15px}nav a:hover{color:var(--acc)}
-.hero{padding:72px 0 56px}.hero h1{font-size:clamp(2rem,6vw,3.6rem);line-height:1.1;margin:0 0 20px;color:var(--head);max-width:18ch}
-.hero p{color:var(--mute);max-width:60ch;font-size:1.1rem}
+
+/* --- NAYA HERO SECTION BACKGROUND KE SATH --- */
+.hero {
+    background-image: linear-gradient(rgba(10, 15, 29, 0.75), rgba(10, 15, 29, 0.95)), url('/server-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 100px 20px;
+    text-align: center;
+    border-radius: 12px;
+    margin: 40px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.hero h1 {
+    font-size: clamp(2rem,6vw,3.6rem);
+    line-height: 1.1;
+    margin: 0 0 20px;
+    color: #ffffff; /* Text hamesha white rahega */
+    max-width: 18ch;
+}
+.hero p {
+    color: #cbd5e1; /* Paragraph light gray rahega */
+    max-width: 60ch;
+    font-size: 1.1rem;
+    margin-bottom: 28px;
+}
+/* ---------------------------------------------- */
+
 .btn{display:inline-block;background:var(--acc);color:var(--btn);font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;border:none;cursor:pointer}
-.btn.alt{background:none;color:var(--text);border:1px solid var(--line2);margin-left:8px}
+.btn.alt{background:none;color:#ffffff;border:1px solid rgba(255,255,255,0.3);margin-left:8px} /* Alt btn adjusted for dark hero bg */
+.btn.alt:hover { background: rgba(255,255,255,0.1); }
+
 h2{color:var(--head);font-size:1.7rem;margin:0 0 20px}section{padding:48px 0;border-top:1px solid var(--line)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px}
