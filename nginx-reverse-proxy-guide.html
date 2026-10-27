@@ -48,16 +48,16 @@ sudo systemctl status nginx</code></pre>
 <h2>Step 2: Create the proxy configuration</h2>
 <p>Assume your application is running on port 3000 on the same machine. Create a file called <code>/etc/nginx/sites-available/myapp</code>:</p>
 <pre><code>server {
-    listen 80;
-    server_name example.com www.example.com;
+    listen 80;
+    server_name example.com www.example.com;
 
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 }</code></pre>
 <p>The <code>proxy_pass</code> line tells Nginx where to send requests. The <code>proxy_set_header</code> lines pass useful information to your app. Without them, the backend would see every visitor as coming from 127.0.0.1 and would not know the original host name or whether the visitor used HTTPS.</p>
 <h2>Step 3: Enable the site and reload</h2>
@@ -74,25 +74,25 @@ sudo certbot renew --dry-run</code></pre>
 <h2>Step 5: Load balancing across several servers</h2>
 <p>To run two copies of your app, define an upstream group and point <code>proxy_pass</code> at its name:</p>
 <pre><code>upstream myapp {
-    server 127.0.0.1:3000;
-    server 127.0.0.1:3001;
+    server 127.0.0.1:3000;
+    server 127.0.0.1:3001;
 }
 
 server {
-    listen 80;
-    server_name example.com;
+    listen 80;
+    server_name example.com;
 
-    location / {
-        proxy_pass http://myapp;
-        proxy_set_header Host $host;
-    }
+    location / {
+        proxy_pass http://myapp;
+        proxy_set_header Host $host;
+    }
 }</code></pre>
 <p>By default Nginx shares requests between the servers in turn (round robin). Adding <code>least_conn;</code> inside the upstream block sends each request to the server with the fewest active connections, and Nginx temporarily skips a server that stops responding.</p>
 <h2>Serving static files</h2>
 <p>Letting Nginx serve images, CSS and JavaScript directly takes load off your application:</p>
 <pre><code>location /static/ {
-    root /var/www/myapp;
-    expires 7d;
+    root /var/www/myapp;
+    expires 7d;
 }</code></pre>
 <h2>Security basics</h2>
 <ul><li>Bind your application to <code>127.0.0.1</code> so it can only be reached through Nginx, and allow only ports 80 and 443 in the firewall.</li><li>Add <code>server_tokens off;</code> in the <code>http</code> block to hide the Nginx version number.</li><li>Use rate limiting to slow down abusive clients. Define a zone in the <code>http</code> block with <code>limit_req_zone $binary_remote_addr zone=perip:10m rate=10r/s;</code> and apply it in a location with <code>limit_req zone=perip burst=20;</code>.</li><li>Keep Nginx and the operating system updated.</li></ul>
@@ -102,5 +102,5 @@ server {
 <h2>Summary</h2>
 <p>A reverse proxy gives your application a single, secure front door. Install Nginx, forward traffic with <code>proxy_pass</code>, add HTTPS with certbot, and use an upstream group when you need more than one backend. It also pairs well with containers, so you may want to read my <a href="/docker-for-beginners.html">Docker for beginners</a> guide next.</p><p><a href="/#articles">&larr; All articles</a></p></main>
 <footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
-<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
