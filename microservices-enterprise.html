@@ -12,19 +12,19 @@
 <pre><code>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orders
+  name: orders
 spec:
-  replicas: 3
-  selector:
-    matchLabels: {app: orders}
-  template:
-    metadata:
-      labels: {app: orders}
-    spec:
-      containers:
-      - name: orders
-        image: registry.example.com/orders:1.4.2
-        ports: [{containerPort: 8080}]</code></pre>
+  replicas: 3
+  selector:
+    matchLabels: {app: orders}
+  template:
+    metadata:
+      labels: {app: orders}
+    spec:
+      containers:
+      - name: orders
+        image: registry.example.com/orders:1.4.2
+        ports: [{containerPort: 8080}]</code></pre>
 <h2>What it costs</h2>
 <p>Distributed systems are harder. Calls that were function calls become network requests that can be slow or fail. Data consistency across services needs careful design, and debugging requires distributed tracing, centralized logging, and metrics. You also need mature CI/CD and a team able to operate the platform. For a small team with one product, a well-structured monolith is often the better choice.</p>
 <h2>A safe way to migrate</h2>
@@ -32,5 +32,5 @@ spec:
 <h2>Summary</h2>
 <p>Microservices pay off when organizational scale, release frequency, and uneven load make a single codebase a bottleneck. Adopt them gradually, automate deployment and security from the start, and measure whether delivery speed and reliability actually improve.</p><p><a href="/#articles">&larr; All articles</a></p></main>
 <footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
-<p>Phone: <a href="tel:+919535184897">+91-9535184897</a> &middot; Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
 <p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer></body></html>
