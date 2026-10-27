@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Modern Linux Fundamentals & Shell Scripting for AI Automation | Nawaz Sharif</title>
+<meta name="description" content="Learn advanced bash scripting, GPU/CPU process management, and secure environment variable configuration for AI model training and automation on Linux.">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF</a>
+<nav><a href="/#services">Services</a><a href="/#articles">Articles</a><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a></nav></div></header>
+
+<main class="doc">
+<span class="meta">October 28, 2026 &middot; Linux & AI Automation &middot; By Nawaz Sharif</span>
+<h1>Modern Linux Fundamentals & Shell Scripting for AI Automation</h1>
+
+<p>The artificial intelligence boom has transformed how we write software, but under the hood, the entire AI ecosystem—from training massive Large Language Models (LLMs) to deploying inference APIs—runs on Linux. While Python is the language of AI, Linux is its engine room. To truly master AI engineering and MLOps, you must be comfortable automating workflows, managing heavy compute resources, and securely handling credentials directly from the command line.</p>
+
+<p>This guide covers three fundamental Linux skills every modern AI developer needs: advanced bash scripting for automation, resource management for GPU/CPU workloads, and secure environment configuration.</p>
+
+<h2>1. Advanced Bash Scripting for AI Pipelines</h2>
+<p>Training an AI model generates massive amounts of data, checkpoints, and logs. Doing this manually is prone to error and wastes time. Bash scripting allows you to automate data preprocessing, batch model execution, and system cleanup.</p>
+
+<p>Here is an example of an automated cleanup and batch processing script. It deletes old training logs to free up disk space, then iterates over a directory of datasets to run a Python training script automatically:</p>
+
+<pre><code>#!/bin/bash
+# ai_pipeline_automator.sh
+
+LOG_DIR="/var/log/ai_training"
+DATA_DIR="/datasets/incoming"
+
+echo "Starting AI Pipeline Maintenance..."
+
+# 1. Clean up logs older than 7 days to free up NVMe space
+find $LOG_DIR -name "*.log" -type f -mtime +7 -exec rm -f {} \;
+echo "Old training logs cleared."
+
+# 2. Batch process new datasets
+for dataset in $DATA_DIR/*.csv; do
+    echo "Processing $dataset..."
+    # Run the python script in the background
+    python3 train_model.py --data "$dataset" &
+done
+
+wait
+echo "All batch jobs submitted successfully."
+</code></pre>
+
+<p>To run this script automatically every night at 2:00 AM, you can set up a <strong>cron job</strong>. Type <code>crontab -e</code> in your terminal and add the following line:</p>
+<pre><code>0 2 * * * /path/to/ai_pipeline_automator.sh &gt;&gt; /var/log/cron_ai.log 2&gt;&amp;1</code></pre>
+
+<h2>2. Process & Resource Management (CPU & GPU)</h2>
+<p>AI workloads are incredibly resource-hungry. A memory leak or a hanging Python script can lock up an expensive GPU server, halting all progress. You need to know how to monitor and terminate rogue processes.</p>
+
+<ul>
+    <li><strong>htop & top:</strong> While <code>top</code> is standard, <code>htop</code> provides a color-coded, interactive view of your CPU cores and RAM. It helps you spot if your data-loader threads are maxing out your CPU.</li>
+    <li><strong>nvidia-smi:</strong> This is the most important command for AI engineers. Running <code>watch -n 1 nvidia-smi</code> gives you a live, 1-second refresh rate of your GPU utilization, VRAM usage, and temperature.</li>
+    <li><strong>ps & grep:</strong> To find a specific hanging AI script, use <code>ps aux | grep train_model.py</code>. This will return the Process ID (PID) of the script.</li>
+    <li><strong>kill:</strong> Once you have the PID, stop the process safely with <code>kill PID</code>. If it refuses to close (common with CUDA out-of-memory errors), force quit it using <code>kill -9 PID</code>.</li>
+</ul>
+
+<h2>3. Environment Variables & Secure Path Configuration</h2>
+<p>Never hardcode API keys (like OpenAI or Hugging Face tokens) into your Python scripts. If you accidentally push that script to GitHub, malicious bots will scrape your key in seconds and rack up massive bills. Instead, use Linux environment variables.</p>
+
+<p>You can define these variables in your user profile configuration file, typically <code>~/.bashrc</code> (or <code>~/.zshrc</code> if you use macOS/Zsh). Open the file using a text editor like Nano:</p>
+
+<pre><code>nano ~/.bashrc</code></pre>
+
+<p>Scroll to the bottom and securely export your AI keys and custom paths:</p>
+
+<pre><code># AI Platform API Keys
+export OPENAI_API_KEY="sk-proj-YourSuperSecretKeyHere..."
+export HUGGING_FACE_HUB_TOKEN="hf_YourSuperSecretTokenHere..."
+
+# Add custom AI tools to system PATH
+export PATH="$HOME/.local/bin:/opt/cuda/bin:$PATH"
+</code></pre>
+
+<p>Save the file and apply the changes immediately by running <code>source ~/.bashrc</code>. Now, your Python code can access these keys securely using the <code>os</code> module:</p>
+
+<pre><code>import os
+api_key = os.getenv("OPENAI_API_KEY")
+# Your script is now secure and portable!
+</code></pre>
+
+<h2>Summary</h2>
+<p>By mastering bash automation, resource monitoring tools like <code>nvidia-smi</code> and <code>htop</code>, and secure environment configurations, you elevate yourself from a basic programmer to a capable AI/MLOps engineer. These Linux fundamentals ensure your AI deployments are efficient, secure, and ready for production scale.</p>
+
+<p><a href="/#articles">&larr; All articles</a></p>
+</main>
+
+<footer><div class="wrap"><p><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms</a></p>
+<p>Email: <a href="mailto:contact@nawazsharif.in">contact@nawazsharif.in</a></p>
+<p>&copy; 2026 Nawaz Sharif. All rights reserved.</p></div></footer>
+</body>
+</html>
