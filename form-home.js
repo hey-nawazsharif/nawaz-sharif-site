@@ -1,83 +1,88 @@
-/* Editorial V2: submit to Formspree in place, without leaving this website.
-   Preserve the HTML form action so local preview can use a separate test form.
-   Formspree (not this script) must also verify reCAPTCHA server-side. */
+/* V2 contact forms: show Formspree's result on this page, not its hosted thanks page.
+   The server must still verify any reCAPTCHA token. JS checks are only UX protection. */
 (function () {
   'use strict';
 
-  var form = document.getElementById('home-contact-form');
-  var notice = document.getElementById('home-form-error');
-  if (!form || !notice) return;
+  var forms = document.querySelectorAll('#home-contact-form, #portfolio-form');
+  forms.forEach(function (form) {
+    var button = form.querySelector('button[type="submit"]');
+    if (!button) return;
 
-  var button = form.querySelector('button[type="submit"]');
-  if (!button) return;
-  var initialLabel = button.textContent;
-  var busy = false;
+    var status = document.createElement('p');
+    status.className = 'form-alert';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    status.hidden = true;
+    button.insertAdjacentElement('afterend', status);
 
-  function showMessage(message, success) {
-    notice.textContent = message;
-    notice.classList.toggle('error', !success);
-    notice.setAttribute('role', success ? 'status' : 'alert');
-    notice.setAttribute('aria-live', success ? 'polite' : 'assertive');
-    notice.hidden = false;
-  }
+    var initialText = button.textContent;
+    var busy = false;
 
-  form.addEventListener('submit', async function (event) {
-    event.preventDefault();
-    if (busy) return;
-
-    if (!form.reportValidity()) return;
-
-    var captcha = window.grecaptcha;
-    var responseToken = captcha && typeof captcha.getResponse === 'function'
-      ? captcha.getResponse()
-      : '';
-    if (!responseToken) {
-      showMessage('Please complete the security check before sending.', false);
-      return;
+    function message(text, isError) {
+      status.textContent = text;
+      status.classList.toggle('error', isError);
+      status.setAttribute('role', isError ? 'alert' : 'status');
+      status.hidden = false;
     }
 
-    var data = new FormData(form);
-    data.set('g-recaptcha-response', responseToken);
-    busy = true;
-    notice.hidden = true;
-    button.disabled = true;
-    button.textContent = 'Sending…';
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      if (busy || !form.reportValidity()) return;
 
-    try {
-      var response = await fetch(form.action, {
-        method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      });
+      var hasCaptcha = Boolean(form.querySelector('.g-recaptcha'));
+      var recaptcha = window.grecaptcha;
+      var token = recaptcha && typeof recaptcha.getResponse === 'function'
+        ? recaptcha.getResponse() : '';
 
-      if (!response.ok) {
-        var message = 'Your message could not be sent. Please try again.';
-        try {
-          var result = await response.json();
-          if (Array.isArray(result.errors) && result.errors.length) {
-            message = result.errors.map(function (item) {
-              return item.message || 'Submission failed';
-            }).join(' ');
-          }
-        } catch (_) {
-          // Keep generic failure message if the server did not return JSON.
-        }
-        throw new Error(message);
+      if (hasCaptcha && !token) {
+        message('Please complete the security check before sending.', true);
+        return;
       }
 
-      // Formspree accepted the submission; delivery to the inbox is separate.
-      form.reset();
-      if (captcha && typeof captcha.reset === 'function') captcha.reset();
-      showMessage('Thank you! Your message has been sent successfully.', true);
-    } catch (error) {
-      showMessage(error && error.message
-        ? error.message
-        : 'Network error. Please try again or email me directly.', false);
-      if (captcha && typeof captcha.reset === 'function') captcha.reset();
-    } finally {
-      busy = false;
-      button.disabled = false;
-      button.textContent = initialLabel;
-    }
+      var payload = new FormData(form);
+      if (hasCaptcha) payload.set('g-recaptcha-response', token);
+
+      busy = true;
+      status.hidden = true;
+      button.disabled = true;
+      button.textContent = 'Sending…';
+
+      try {
+        var response = await fetch(form.action, {
+          method: 'POST',
+          body: payload,
+          headers: { 'Accept': 'application/json' },
+          mode: 'cors'
+        });
+        if (!response.ok) {
+          var errorText = 'Message could not be submitted. Please try again.';
+          try {
+            var result = await response.json();
+            if (result && Array.isArray(result.errors) && result.errors.length) {
+              errorText = result.errors.map(function (e) {
+                return e.message || 'Submission rejected';
+              }).join(' ');
+            }
+          } catch (_) {}
+          throw new Error(errorText);
+        }
+
+        form.reset();
+        if (hasCaptcha && recaptcha && typeof recaptcha.reset === 'function') {
+          recaptcha.reset();
+        }
+        message('Thank you! Your message has been submitted successfully.', false);
+      } catch (error) {
+        if (hasCaptcha && recaptcha && typeof recaptcha.reset === 'function') {
+          recaptcha.reset();
+        }
+        message(error && error.message ? error.message
+          : 'Network error. Please try again or email me directly.', true);
+      } finally {
+        busy = false;
+        button.disabled = false;
+        button.textContent = initialText;
+      }
+    });
   });
 })();
