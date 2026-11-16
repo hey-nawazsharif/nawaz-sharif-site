@@ -306,3 +306,27 @@ pre,code,kbd,samp{font-family:var(--font-mono);letter-spacing:0}
  .profile-doc .profile-lead{line-height:1.55}
  .policy-section p,.policy-section li{line-height:1.75}
 }
+
+
+/* V2 final review: site-notice visibility, mobile reading comfort and accessible focus. */
+.cookie-banner:not([hidden]){display:block}
+.footer-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.footer-links a{margin:0;line-height:1.6}
+.faq-doc details summary:focus-visible,.faq-jump a:focus-visible,
+.policy-toc a:focus-visible,.text-arrow:focus-visible{outline:2px solid var(--acc);outline-offset:4px}
+.faq-doc details summary{padding-inline:8px;min-height:48px}
+@media(max-width:850px){
+ .hero-professional .hero-aside{max-width:70ch}
+ .profile-doc,.faq-doc,.policy-doc{max-width:100%}
+}
+@media(max-width:600px){
+ .policy-doc,.faq-doc,.profile-doc{overflow-wrap:break-word}
+ .policy-toc a,.faq-jump a{padding-block:12px}
+ .faq-doc details summary{padding-block:16px}
+ .footer-inner{align-items:flex-start}
+ .footer-links{width:100%;gap:8px 14px}
+ .footer-links a{font-size:13px;padding-block:5px}
+ .cookie-content{flex-wrap:wrap;gap:10px}
+ .cookie-actions{margin-left:auto}
+ .profile-bottom{gap:10px 22px}
+}
