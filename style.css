@@ -274,3 +274,35 @@ h3,.focus-item h3,.feature-story h3{font-weight:600;letter-spacing:-.015em}
 .eyebrow,.category,.meta,.focus-item .index,.policy-date{font-family:var(--font-mono);font-weight:500;letter-spacing:.08em}
 pre,code,kbd,samp{font-family:var(--font-mono);letter-spacing:0}
 @media(max-width:600px){.hero-professional h1{font-size:clamp(2.2rem,9.2vw,3rem);line-height:1.12}}
+
+
+/* IBM Plex visual rhythm and responsive readability — V2 preview */
+.hero-professional h1{
+  font-size:clamp(2.65rem,4.25vw,4.85rem);
+  line-height:1.12;
+  letter-spacing:-.038em;
+  text-wrap:balance;
+}
+.hero-professional .hero-intro{
+  line-height:1.65;
+  max-width:65ch;
+}
+.section-head h2,.editorial-title,.feature-story h3,.profile-section h2,
+.faq-section-title h2,.policy-section h2{
+  line-height:1.2;
+}
+.profile-doc .profile-lead{line-height:1.58;max-width:64ch}
+.doc p,.doc li,.faq-answer p{line-height:1.75}
+.policy-section p,.policy-section li{max-width:80ch}
+.eyebrow,.category,.meta,.focus-item .index{overflow-wrap:break-word}
+@media(max-width:850px){
+ .hero-professional h1{font-size:clamp(2.45rem,6.1vw,4rem)}
+}
+@media(max-width:600px){
+ .hero-professional h1{font-size:clamp(2.15rem,9.3vw,3rem);line-height:1.13;letter-spacing:-.03em}
+ .hero-professional .hero-intro{line-height:1.63}
+ .brand{font-size:13px}
+ nav a{line-height:1.6}
+ .profile-doc .profile-lead{line-height:1.55}
+ .policy-section p,.policy-section li{line-height:1.75}
+}
