@@ -158,3 +158,25 @@ footer a{margin-right:0}
 
 /* V2 inner-page refinements */
 .doc{max-width:800px;margin:0 auto;padding:80px 28px 100px}.doc h1,.standard-page h1,.v2-archive h1{font:400 clamp(2.6rem,5vw,4.5rem)/1.1 Georgia,serif;letter-spacing:-.04em;margin:15px 0 24px}.doc h2{font:400 1.9rem/1.3 Georgia,serif;margin:35px 0 12px}.doc p{color:var(--soft);line-height:1.8}.doc details{background:#f0f2ee}.standard-page{padding:80px 28px 100px}.v2-archive .lead{max-width:700px;color:var(--soft);margin-bottom:40px}.v2-archive .card .category{display:block;margin-bottom:20px}.form-alert{border:1px solid #bed2cb;padding:12px 15px;margin-bottom:17px;background:#ecf7f2;color:#214f44}.form-alert.error{border-color:#ddb2a9;color:#922e25;background:#fff4f2}.field-error{display:block;color:#922e25;font-size:12px;margin-top:4px}@media(max-width:600px){.doc{padding:55px 20px 75px}.standard-page{padding:55px 20px 75px}}
+
+
+/* V2 QA fixes: visible notices and narrow article layouts. */
+.cookie-banner:not([hidden]) { display:block; }
+.cookie-banner[hidden] { display:none !important; }
+main.doc { min-width:0; overflow-wrap:break-word; }
+main.doc svg,main.doc img { max-width:100%; height:auto; }
+main.doc pre { max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+main.doc table {
+  display:block;
+  width:100%;
+  max-width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+main.doc td,main.doc th { overflow-wrap:break-word; }
+@media (max-width:600px) {
+  main.doc { padding-inline:20px; }
+  main.doc > div { max-width:100%; }
+  main.doc table { font-size:13px; }
+  main.doc td,main.doc th { padding:8px 10px; }
+}
