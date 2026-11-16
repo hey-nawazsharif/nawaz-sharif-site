@@ -1,0 +1,2 @@
+/* Keep legacy localStorage preference; no analytics consent implied. */
+(function(){'use strict';var b=document.getElementById('cookie-banner'),a=document.getElementById('accept-cookies');if(!b||!a)return;var ok=false;try{ok=localStorage.getItem('cookies_accepted')==='true';}catch(e){}b.hidden=ok;a.addEventListener('click',function(){try{localStorage.setItem('cookies_accepted','true');}catch(e){}b.hidden=true;});})();
