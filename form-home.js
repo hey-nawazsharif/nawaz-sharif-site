@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  var forms = document.querySelectorAll('#home-contact-form, #portfolio-form');
+  var forms = document.querySelectorAll('form[action^="https://formspree.io/f/"]');
   forms.forEach(function (form) {
     var button = form.querySelector('button[type="submit"]');
     if (!button) return;
