@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 :root{color-scheme:light dark;--bg:#f8fafc;--panel:#ffffff;--line:#e2e8f0;--line2:#cbd5e1;--text:#1e293b;--soft:#334155;--mute:#475569;--head:#0f172a;--acc:#2563eb;--btn:#ffffff;--headbg:rgba(248,250,252,0.85);--codebg:#f1f5f9}
 @media (prefers-color-scheme:dark){:root{--bg:#0a0f1d;--panel:#0f172a;--line:#1e293b;--line2:#334155;--text:#e2e8f0;--soft:#cbd5e1;--mute:#94a3b8;--head:#f8fafc;--acc:#38bdf8;--btn:#0a0f1d;--headbg:rgba(10,15,29,0.85);--codebg:#1e293b}}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
@@ -249,3 +250,27 @@ main.doc td,main.doc th { overflow-wrap:break-word; }
  .faq-doc details summary{font-size:1rem}
  .faq-answer{padding-left:10px}
 }
+
+
+/* V2 IBM Plex typography: Sans for reading; Mono for code and technical metadata.
+   Preview fonts load through Google Fonts with font-display:swap. */
+:root{
+ --font-sans:"IBM Plex Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+body,button,input,textarea,select{font-family:var(--font-sans)}
+h1,h2,h3,h4,h5,h6,.hero-editorial h1,.hero-professional h1,
+.section-head h2,.editorial-title,.feature-story h3,.focus-item h3,
+.large-copy,.doc h1,.doc h2,main.doc h1,main.doc h2,.standard-page h1,.v2-archive h1,
+.profile-doc .profile-lead,.profile-principle p:last-child,.profile-section h2,
+.faq-section-title h2,.faq-end h2,.policy-section h2{font-family:var(--font-sans)}
+h1,.hero-editorial h1,.hero-professional h1,.doc h1,main.doc h1,
+.standard-page h1,.v2-archive h1{font-weight:600;letter-spacing:-.035em}
+h2,.section-head h2,.editorial-title,.doc h2,main.doc h2,
+.profile-section h2,.faq-section-title h2,.policy-section h2{font-weight:600;letter-spacing:-.025em}
+h3,.focus-item h3,.feature-story h3{font-weight:600;letter-spacing:-.015em}
+.large-copy,.profile-doc .profile-lead,.profile-principle p:last-child{font-weight:400;letter-spacing:-.02em}
+.brand{font-family:var(--font-sans);font-weight:700;letter-spacing:.12em}
+.eyebrow,.category,.meta,.focus-item .index,.policy-date{font-family:var(--font-mono);font-weight:500;letter-spacing:.08em}
+pre,code,kbd,samp{font-family:var(--font-mono);letter-spacing:0}
+@media(max-width:600px){.hero-professional h1{font-size:clamp(2.2rem,9.2vw,3rem);line-height:1.12}}
