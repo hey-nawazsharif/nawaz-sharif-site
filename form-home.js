@@ -8,6 +8,18 @@
     var button = form.querySelector('button[type="submit"]');
     if (!button) return;
 
+    // The HTML maxlength is the limit; the counter only mirrors current input.
+    var messageField = form.querySelector('textarea[name="message"][maxlength]');
+    var counter = form.querySelector('.message-counter');
+    var updateCounter = null;
+    if (messageField && counter) {
+      updateCounter = function () {
+        counter.textContent = messageField.value.length + ' / ' + messageField.maxLength + ' characters';
+      };
+      messageField.addEventListener('input', updateCounter);
+      updateCounter();
+    }
+
     var status = document.createElement('p');
     status.className = 'form-alert';
     status.setAttribute('role', 'status');
@@ -79,6 +91,7 @@
         }
 
         form.reset();
+        if (updateCounter) updateCounter();
         if (hasCaptcha && recaptcha && typeof recaptcha.reset === 'function') {
           recaptcha.reset();
         }
