@@ -1,35 +1,32 @@
-# NawazSharif.in — editorial V2 review branch
+# NawazSharif.in — Website V2 launch-readiness record
 
-**Status:** Development only. Not approved for production deployment.
+**Status:** V2 preview branch; **not deployed**. Publication requires the owner's explicit approval.
 **Repository:** hey-nawazsharif/nawaz-sharif-site
-**Branch:** website-v2-editorial
-**Production:** main / nawazsharif.in must remain unchanged until explicit owner approval.
+**Development branch:** website-v2-editorial
+**Production:** main / https://nawazsharif.in/
+**Production backup:** backup-main-before-v2-2026-11-17 (created from main SHA `8a7c40e22c9a9d44451b51917fa892da159812fe`).
 
-## Content and design
-- Editorial homepage, About, FAQ, article archive, contact, privacy and terms.
-- Existing 14 article HTML files, filenames, original URLs and CNAME remain unchanged.
-- `privacy.html` is a compatibility redirect for one existing article link.
-- No experience-duration, overseas-history, confidential-project or unverified specialist claims added.
-- Shared CSS retains legacy article styling plus new responsive page styles.
+## Reviewed in November 2026
 
-## Forms: account-side verification is mandatory
-- Homepage uses native POST to https://formspree.io/f/xqpergwz with original public reCAPTCHA site key.
-- Separate contact page retains the original Formspree AJAX library and form ID (no new CAPTCHA dependency on this page).
-- Real server-side reCAPTCHA configuration, spam protection, endpoint acceptance, success/error UI and delivery to the intended inbox **have not been verified**.
-- Do not merge until one unique test message from **each** page reaches both the Formspree dashboard and the destination inbox. Check CAPTCHA failure, invalid email, duplicate click, and fallback when scripts fail.
+- Editorial homepage, About, FAQ, technical archive, contact, privacy and terms pages were reviewed on Mac and/or mobile with the owner.
+- All 23 HTML pages on V2 were checked for their internal file references, duplicate HTML IDs, consistent article footer components and prohibited experience/confidential-project terms; no missing internal file target was identified in that static review.
+- Sitemap includes the existing `what-is-linux.html` article; `robots.txt` and `CNAME` are preserved.
+- Both V2 forms use the same Formspree endpoint `xqpergwz` and the same Google reCAPTCHA v2 site key; mobile CAPTCHA widgets were reported working by the owner after allowed-domain and preview updates.
+- Formspree dashboard displayed CAPTCHA Enabled / Custom reCAPTCHA, and the owner's token-free test received a JSON `{"error":"Please complete the reCAPTCHA"}`. A previous token-free request had appeared in the Inbox before secret-key changes.
+- `form-home.js` now parses JSON error responses even if HTTP status is 200; browser success/error regression testing after that code update remains a launch check.
+- The cookie notice is informational only; dismissing it is not consent management. Privacy disclosures should be checked against actual third-party service configuration.
 
-## Privacy and monetization
-- The original `cookies_accepted` localStorage preference is preserved on the homepage.
-- Notice dismissal is not a consent-management platform.
-- Previous privacy and terms pages loaded AdSense scripts. Those scripts are not included in redesigned legal pages. Verify live monetization/consent requirements before deploying and revise policy accordingly.
-- Proposed security monitoring is NOT implemented; no IP logging is added.
+## Still requiring confirmation before publishing
 
-## Required before merge
-1. Review the V2 website at a **separate staging preview** (do not enable GitHub Pages on the primary domain from this branch).
-2. Inspect desktop, mobile Safari and browser console; verify horizontal layout and keyboard navigation.
-3. Verify every article URL / archive link, robots.txt, sitemap.xml, HTTPS and canonical tags.
-4. Test both Formspree flows end-to-end with account owner; confirm inbox delivery.
-5. Verify cookie acceptance after reload and after clearing site data.
-6. Check actual AdSense usage, legal-policy language and privacy notice.
-7. Review branch diff and record `main` SHA before deployment.
-8. Obtain explicit owner approval before merging or deploying.
+1. **Production Formspree / reCAPTCHA compatibility.** Production `main` and V2 currently use *different* public site keys with the **same** Formspree endpoint. Confirm a production-safe matching site/secret pair and validate the live form; do not assume preview success guarantees the live form works. Prefer distinct development and production forms/keys where feasible.
+2. **Final valid submission:** Complete reCAPTCHA and send one genuine test message from each V2 page after the response-handling update; ensure the success message corresponds to a message in Formspree Inbox and intended email inbox. Avoid repeating tests once verified.
+3. **Professional claim approval:** Homepage and About use `Principal Systems & Cybersecurity Architect`, `Senior Linux Engineer` and advanced production-scale system statements. Obtain owner confirmation that public-facing titles, roles, and described production implementations accurately reflect professional history, or revise to defensible skills/focus statements.
+4. **Browser/production smoke test:** Check mobile Safari, all articles, site notice behavior, HTTPS, canonical links and final forms on the real domain once published. A static source review cannot validate live behavior or full legal compliance.
+5. **Final permission:** Record current production `main` SHA, review changes, obtain owner's explicit approval, and only then merge or deploy. Preserve the backup and keep confidential projects, UAE history and duration claims out of public copy.
+
+## Safety constraints
+
+- Never edit or merge `main` before explicit owner authorization.
+- Do not include confidential AegisOps content, UAE history or "6+ years" statements.
+- Preserve existing article URLs, form behavior, and `CNAME`.
+- No visitor-IP tracking system has been added. Google Fonts and reCAPTCHA are external providers.
