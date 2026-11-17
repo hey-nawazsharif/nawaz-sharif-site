@@ -330,3 +330,63 @@ pre,code,kbd,samp{font-family:var(--font-mono);letter-spacing:0}
  .cookie-actions{margin-left:auto}
  .profile-bottom{gap:10px 22px}
 }
+
+
+/* V3 editorial preview: authoritative branding, 8 competencies, expanded About. */
+header .brand,footer .brand{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:var(--font-sans);font-size:clamp(1.5rem,1.8vw,1.75rem);
+  line-height:1.3;font-weight:800;letter-spacing:.04em;
+  color:var(--head);white-space:nowrap
+}
+header .brand::before,footer .brand::before{
+  content:"NS";display:inline-grid;place-items:center;flex:0 0 auto;
+  width:39px;height:39px;border:1px solid #8ba7a2;
+  background:linear-gradient(145deg,#e8f0ec,#dce8e2);
+  color:var(--acc);font:800 12px/1 var(--font-mono);
+  letter-spacing:-.025em
+}
+header .wrap{gap:16px 22px}
+header nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
+header nav a{margin:0}
+.hero-signature{font-family:var(--font-mono);font-weight:700;letter-spacing:.08em}
+.hero-signature span{color:#9caaa5;padding:0 .3em}
+.competency-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.competency-grid .focus-item{min-width:0;min-height:300px;display:flex;align-items:flex-start;flex-direction:column;padding:28px 22px 30px;background:var(--bg);border:0}
+.competency-icon{height:44px;width:44px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #b7cac2;background:#edf2ee;color:var(--acc);margin-bottom:27px}
+.competency-icon svg{width:25px;height:25px}
+.competency-grid .focus-item .index{font-size:11px;margin-bottom:4px}
+.competency-grid .focus-item h3{font:700 17px/1.32 var(--font-sans);margin:10px 0 13px;letter-spacing:-.02em}
+.competency-grid .focus-item p{font-size:13px;line-height:1.7;margin:0;color:var(--soft)}
+.about-expanded-intro{display:grid;grid-template-columns:1fr 1fr;gap:32px 70px;margin:22px 0 42px;align-items:start}
+.about-expanded-intro .large-copy{font:600 clamp(1.34rem,2vw,1.85rem)/1.52 var(--font-sans);letter-spacing:-.02em;color:var(--head)}
+.about-expanded-intro .about-context{font-size:16px;line-height:1.8;color:var(--soft)}
+.about-pillars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 44px}
+.about-pillar{border-top:1px solid var(--line);padding:25px 0 30px;min-width:0}
+.about-pillar h3{font:700 clamp(1.12rem,1.6vw,1.32rem)/1.4 var(--font-sans);color:var(--head);letter-spacing:-.025em;margin:0 0 15px}
+.about-pillar p{color:var(--soft);font-size:15px;line-height:1.8;margin:0}
+.about-conclusion{max-width:90ch;border-left:3px solid var(--acc);padding:10px 0 10px 25px;margin:15px 0 25px;font-size:17px;line-height:1.75;color:var(--head);font-weight:600}
+.about-expanded-actions{margin-top:27px}
+.profile-expanded{max-width:1060px}
+.profile-expanded .about-expanded-intro{margin-top:30px}
+.profile-expanded .profile-bottom{margin-top:38px}
+@media(max-width:1020px){
+  .competency-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .competency-grid .focus-item{min-height:265px}
+  .about-expanded-intro{gap:28px 38px}
+  .about-pillars{column-gap:30px}
+}
+@media(max-width:650px){
+  header .brand,footer .brand{font-size:1.25rem;letter-spacing:.04em;gap:9px}
+  header .brand::before,footer .brand::before{width:34px;height:34px;font-size:11px}
+  header nav{gap:6px 15px}
+  .competency-grid{grid-template-columns:1fr}
+  .competency-grid .focus-item{min-height:0;padding:25px 23px 29px}
+  .competency-icon{margin-bottom:15px}
+  .about-expanded-intro,.about-pillars{grid-template-columns:1fr;gap:0}
+  .about-expanded-intro{margin-bottom:24px}
+  .about-expanded-intro .large-copy{margin-bottom:18px}
+  .about-expanded-intro .about-context{margin:0}
+  .about-pillar{padding:21px 0 25px}
+  .about-conclusion{font-size:15px;padding-left:18px}
+}
