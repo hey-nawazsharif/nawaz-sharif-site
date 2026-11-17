@@ -393,3 +393,12 @@ header nav a{margin:0}
 
 /* Contact forms: unobtrusive, mobile-friendly message length display. */
 .message-counter{display:block;text-align:right;margin-top:6px;font-size:12px;line-height:1.4;color:var(--mute)}
+
+/* Editorial attribution: quiet and readable on every technical article. */
+.article-rights{margin:45px 0 10px;padding:23px 25px;border:1px solid var(--line);border-left:3px solid var(--acc);background:var(--panel);color:var(--soft)}
+.article-rights p{margin:9px 0 0;max-width:76ch;line-height:1.7;font-size:.88rem}
+.article-rights .rights-heading{margin:0 0 4px;color:var(--acc);font:700 .73rem/1.4 var(--font-mono);letter-spacing:.07em;text-transform:uppercase}
+.article-rights .rights-credit{color:var(--head);font-size:.9rem}
+.article-rights .rights-source{font:400 .78rem/1.65 var(--font-mono);overflow-wrap:anywhere}
+.article-rights a{text-underline-offset:3px}
+@media(max-width:600px){.article-rights{padding:19px 16px;margin-top:35px}}
