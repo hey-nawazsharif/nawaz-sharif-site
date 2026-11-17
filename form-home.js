@@ -54,17 +54,28 @@
           headers: { 'Accept': 'application/json' },
           mode: 'cors'
         });
-        if (!response.ok) {
-          var errorText = 'Message could not be submitted. Please try again.';
-          try {
-            var result = await response.json();
-            if (result && Array.isArray(result.errors) && result.errors.length) {
-              errorText = result.errors.map(function (e) {
-                return e.message || 'Submission rejected';
-              }).join(' ');
-            }
-          } catch (_) {}
-          throw new Error(errorText);
+        // Formspree can report validation or CAPTCHA errors in JSON
+        // even when the HTTP response status is 200.
+        var result;
+        try {
+          result = await response.json();
+        } catch (_) {
+          throw new Error('Could not confirm submission. Please try again or email me directly.');
+        }
+
+        var errorText = '';
+        if (result && typeof result.error === 'string' && result.error.trim()) {
+          errorText = result.error;
+        } else if (result && Array.isArray(result.errors) && result.errors.length) {
+          errorText = result.errors.map(function (e) {
+            return typeof e === 'string' ? e : (e && e.message) || 'Submission rejected';
+          }).join(' ');
+        } else if (result && (result.ok === false || result.success === false)) {
+          errorText = 'Form submission was not accepted. Please try again.';
+        }
+
+        if (!response.ok || errorText) {
+          throw new Error(errorText || 'Message could not be submitted. Please try again.');
         }
 
         form.reset();
