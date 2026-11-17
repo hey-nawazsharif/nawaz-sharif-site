@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python for Cybersecurity Beginners: 5 Safe Projects | Nawaz Sharif</title>
+<meta name="description" content="Learn Python for cybersecurity with five safe, beginner-friendly automation projects: file hashing, login log review, permissions, secret detection and HTTP security headers.">
+<link rel="canonical" href="https://nawazsharif.in/python-cybersecurity-beginners-projects.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python for Cybersecurity Beginners: 5 Practical Projects">
+<meta property="og:description" content="Build five defensive Python scripts with free tools and clear, runnable examples.">
+<meta property="og:url" content="https://nawazsharif.in/python-cybersecurity-beginners-projects.html">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="/style.css">
+<style>
+.cyber-python-guide .guide-lead{font-size:1.14rem;line-height:1.85;color:var(--soft)}
+.cyber-python-guide .guide-summary{border:1px solid var(--line);background:var(--panel);padding:24px 26px;margin:30px 0}
+.cyber-python-guide .guide-summary strong{color:var(--head)}
+.cyber-python-guide .guide-summary ul{margin:10px 0 0;padding-left:20px}
+.cyber-python-guide .guide-note{padding:17px 21px;border-left:3px solid var(--acc);background:#eff2ee;margin:26px 0}
+.cyber-python-guide .guide-toc{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin:35px 0}
+.cyber-python-guide .guide-toc strong{display:block;color:var(--head);margin-bottom:8px}
+.cyber-python-guide .guide-toc ol{margin:0;padding-left:21px}
+.cyber-python-guide .guide-toc li{padding:3px 0}
+.cyber-python-guide .guide-kicker{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:var(--acc);margin-top:37px}
+.cyber-python-guide section{scroll-margin-top:90px}
+.cyber-python-guide pre{overflow-x:auto;tab-size:4;white-space:pre}
+.cyber-python-guide .guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:25px 0}
+.cyber-python-guide .guide-grid>div{border-top:2px solid var(--line);padding-top:15px}
+.cyber-python-guide .guide-grid strong{color:var(--head)}
+.cyber-python-guide .guide-grid p{margin:6px 0}
+.cyber-python-guide .guide-related{border-top:1px solid var(--line);padding-top:22px;margin-top:45px}
+@media(max-width:650px){.cyber-python-guide .guide-grid{grid-template-columns:1fr}.cyber-python-guide .guide-summary{padding:17px 20px}.cyber-python-guide .guide-note{padding:15px 16px}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header><div class="wrap"><a class="brand" href="/index.html">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav aria-label="Main navigation"><a href="/about.html">About</a><a href="/articles.html">Technical articles</a><a href="/index.html#services">Areas of focus</a><a href="/contact.html">Contact</a></nav></div></header>
+
+<main id="main" class="doc cyber-python-guide">
+<p class="meta">November 17, 2026 &middot; Python / Defensive Cybersecurity / Beginner Guide &middot; By Nawaz Sharif</p>
+<h1>Python for Cybersecurity Beginners: 5 Practical, Safe Automation Projects</h1>
+<p class="guide-lead">Cybersecurity is not only about attacking or defending networks. A large part of everyday security work is checking files, understanding logs, inspecting permissions and reviewing configuration. Python helps beginners turn those repetitive checks into small, readable tools. This tutorial walks through five <strong>defensive projects you can practise with your own files or systems</strong>.</p>
+<div class="guide-summary"><strong>At a glance</strong><ul><li><strong>Level:</strong> Beginner &mdash; basic variables, loops and file reading are enough.</li><li><strong>Cost:</strong> Free. Python 3.10+ and a text editor; no external packages or AI API needed.</li><li><strong>Projects:</strong> SHA-256 file checks, login-log summaries, permission reviews, local secret detection and HTTP security headers.</li><li><strong>Safety:</strong> Read-only examples. Work with sample files, your own device and websites you administer.</li></ul></div>
+<p class="guide-note"><strong>Important:</strong> These examples are learning tools, not production-grade vulnerability scanners or incident-response systems. A warning is a reason to investigate, not automatic proof of compromise. Never inspect another person's systems or logs without permission.</p>
+<h2>Before you start: install and run Python</h2>
+<p>Install Python from the <a href="https://www.python.org/downloads/" rel="noopener noreferrer">official download page</a>. Open Terminal (macOS/Linux) or PowerShell (Windows) and check your version:</p>
+<pre><code>python3 --version
+# On Windows, try: py --version</code></pre>
+<p>Create a folder called <code>cyber-python-lab</code>. Save each script below in that folder, using the exact filename shown. On Windows, run <code>py filename.py</code> instead of <code>python3 filename.py</code> if that is how Python is installed.</p>
+<nav class="guide-toc" aria-label="Article sections"><strong>Jump to a project</strong><ol><li><a href="#integrity">Check file integrity</a></li><li><a href="#login-logs">Summarize failed logins</a></li><li><a href="#permissions">Audit file permissions</a></li><li><a href="#secrets">Spot possible secrets in local files</a></li><li><a href="#headers">Review website security headers</a></li></ol></nav>
+<section id="integrity">
+<span class="guide-kicker">Project 01 / File integrity</span>
+<h2>Calculate a SHA-256 hash to detect file changes</h2>
+<p>A cryptographic hash is a fingerprint of a file's contents. If even one byte changes, its SHA-256 digest will normally be different. Comparing a known-good hash with a later one can reveal unexpected changes to a configuration or document.</p>
+<p>Save the following as <code>file_hash.py</code>:</p>
+<pre><code>from pathlib import Path
+import hashlib
+import sys
+
+if len(sys.argv) != 2:
+    raise SystemExit(&quot;Usage: python file_hash.py FILE&quot;)
+
+path = Path(sys.argv[1])
+if not path.is_file():
+    raise SystemExit(&quot;File not found.&quot;)
+
+digest = hashlib.sha256()
+with path.open(&quot;rb&quot;) as stream:
+    for chunk in iter(lambda: stream.read(1024 * 1024), b&quot;&quot;):
+        digest.update(chunk)
+
+print(&quot;SHA-256:&quot;, digest.hexdigest())</code></pre>
+<p>Create a harmless file called <code>notes.txt</code> and run:</p>
+<pre><code>python3 file_hash.py notes.txt</code></pre>
+<p>Copy the displayed hash to a separate, trusted record. Edit <code>notes.txt</code>, run the script again and compare the hashes. <strong>What you learn:</strong> binary file reading, chunking and checksums. A hash alone cannot prove a file is trustworthy if an attacker could replace both the file and your reference hash.</p>
+</section>
+<section id="login-logs">
+<span class="guide-kicker">Project 02 / Security log review</span>
+<h2>Count failed login events from a sample CSV</h2>
+<p>Reviewing repeated authentication failures is a basic defensive monitoring task. Real logs have different formats; start with a tiny, invented CSV dataset so the code and the expected result are easy to understand.</p>
+<p>Save this as <code>login_events.csv</code>:</p>
+<pre><code>time,event,source
+09:00,login_failed,192.0.2.10
+09:01,login_failed,192.0.2.10
+09:02,login_success,192.0.2.20
+09:03,login_failed,192.0.2.10</code></pre>
+<p>Next, save as <code>login_review.py</code>:</p>
+<pre><code>import csv
+from collections import Counter
+from pathlib import Path
+
+counts = Counter()
+with Path(&quot;login_events.csv&quot;).open(newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as stream:
+    for row in csv.DictReader(stream):
+        if row.get(&quot;event&quot;) == &quot;login_failed&quot;:
+            counts[row[&quot;source&quot;]] += 1
+
+for source, total in counts.most_common():
+    print(source, &quot;failed logins:&quot;, total)
+    if total &gt;= 3:
+        print(&quot;  Review this source (demo threshold).&quot;)</code></pre>
+<p>Run <code>python3 login_review.py</code>. The script should report three failed logins from <code>192.0.2.10</code>, a documentation-only example IP address. It ignores the successful login event. The <code>3</code>-attempt threshold is deliberately a <em>demo rule</em>, not a validated alert policy.</p>
+<p><strong>What you learn:</strong> CSV parsing, counting events and separating a potential signal from a confirmed attack. Do not put real passwords, tokens or unnecessary personal information into log exports.</p>
+</section>
+<section id="permissions">
+<span class="guide-kicker">Project 03 / Local system checks</span>
+<h2>Find world-writable files on Linux or macOS</h2>
+<p>On Unix-like systems, a world-writable file may deserve review because other users can modify it. Not every world-writable file is an issue; the location, owner and intended use matter.</p>
+<p>Save as <code>permission_audit.py</code>:</p>
+<pre><code>from pathlib import Path
+import stat
+import sys
+
+if len(sys.argv) != 2:
+    raise SystemExit(&quot;Usage: python permission_audit.py FOLDER&quot;)
+
+root = Path(sys.argv[1])
+if not root.is_dir():
+    raise SystemExit(&quot;Folder not found.&quot;)
+
+for path in root.rglob(&quot;*&quot;):
+    if path.is_symlink() or not path.is_file():
+        continue
+    try:
+        if path.stat().st_mode &amp; stat.S_IWOTH:
+            print(&quot;World-writable:&quot;, path)
+    except OSError as exc:
+        print(&quot;Skipped:&quot;, path, exc)</code></pre>
+<p>Run it against a <strong>small folder you own</strong>:</p>
+<pre><code>python3 permission_audit.py ./training_folder</code></pre>
+<p>The script only prints matches. It does <em>not</em> change permissions, follow symbolic links deliberately, or run commands with administrator privileges. Permission-bit interpretation is Unix-oriented, so Windows ACLs require different checks.</p>
+<p><strong>What you learn:</strong> file metadata, permission flags and safe audit-first thinking.</p>
+</section>
+<section id="secrets">
+<span class="guide-kicker">Project 04 / Sensitive configuration</span>
+<h2>Flag possible hard-coded secrets without printing their values</h2>
+<p>Accidentally committing an API key or password to a project can expose an account. This simple pattern-based check looks for suspicious assignments in local text files and reports only the path and line number.</p>
+<p>Save as <code>secret_scan.py</code>:</p>
+<pre><code>from pathlib import Path
+import re
+import sys
+
+if len(sys.argv) != 2:
+    raise SystemExit(&quot;Usage: python secret_scan.py FOLDER&quot;)
+
+root = Path(sys.argv[1])
+if not root.is_dir():
+    raise SystemExit(&quot;Folder not found.&quot;)
+
+pattern = re.compile(r&quot;\b(?:api[_-]?key|token|password|secret)\s*[:=]&quot;, re.I)
+allowed = {&quot;.py&quot;, &quot;.txt&quot;, &quot;.json&quot;, &quot;.env&quot;}
+
+for path in root.rglob(&quot;*&quot;):
+    if path.is_symlink() or not path.is_file() or path.suffix.lower() not in allowed:
+        continue
+    try:
+        with path.open(encoding=&quot;utf-8&quot;, errors=&quot;replace&quot;) as stream:
+            for number, line in enumerate(stream, 1):
+                if pattern.search(line):
+                    print(&quot;Review possible secret:&quot;, path, &quot;line&quot;, number)
+    except OSError as exc:
+        print(&quot;Skipped:&quot;, path, exc)</code></pre>
+<p>Make a small <code>training_folder</code> with a pretend config such as <code>API_KEY=demo-placeholder-not-real</code>, then run:</p>
+<pre><code>python3 secret_scan.py ./training_folder</code></pre>
+<p><strong>What you learn:</strong> regular expressions, handling text files and minimizing sensitive output. Expect false positives and false negatives: a regex is not a replacement for a maintained secrets-detection tool. Do not paste real credentials into learning files. If a real key is exposed, revoke or rotate it through its provider.</p>
+</section>
+<section id="headers">
+<span class="guide-kicker">Project 05 / Website defensive review</span>
+<h2>Check which HTTP security headers a website returns</h2>
+<p>Security headers tell browsers how to handle certain risks. For example, <code>Content-Security-Policy</code> can restrict content sources, and <code>X-Content-Type-Options</code> can reduce MIME-type sniffing. This checker requests just one page and reports whether several common headers are present.</p>
+<p>Save as <code>header_check.py</code>:</p>
+<pre><code>from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+
+url = &quot;https://your-domain.example&quot;  # Replace with a website you own.
+wanted = [
+    &quot;content-security-policy&quot;,
+    &quot;x-content-type-options&quot;,
+    &quot;referrer-policy&quot;,
+    &quot;strict-transport-security&quot;,
+]
+
+try:
+    request = Request(url, headers={&quot;User-Agent&quot;: &quot;HeaderLearningCheck/1.0&quot;})
+    with urlopen(request, timeout=8) as response:
+        present = {name.lower() for name in response.headers.keys()}
+    for header in wanted:
+        print(header, &quot;present&quot; if header in present else &quot;not found&quot;)
+except (HTTPError, URLError) as exc:
+    print(&quot;Could not read response headers:&quot;, exc)</code></pre>
+<p>Replace <code>https://your-domain.example</code> with an HTTPS website <strong>you own or are authorized to assess</strong>, then run:</p>
+<pre><code>python3 header_check.py</code></pre>
+<p><strong>What you learn:</strong> HTTP responses and basic web configuration. A missing header does not automatically mean a website is vulnerable, and header presence alone does not mean its value is secure. HSTS, for instance, is meaningful for HTTPS sites.</p>
+</section>
+<h2>A realistic seven-day beginner practice plan</h2>
+<div class="guide-grid"><div><strong>Days 1–2</strong><p>Learn variables, loops, <code>pathlib</code> and reading files. Run the hash project on harmless notes.</p></div><div><strong>Days 3–4</strong><p>Practise CSV data, counting events and explaining why alerts may be false positives.</p></div><div><strong>Days 5–6</strong><p>Explore file permissions and secret-handling mistakes using a disposable folder.</p></div><div><strong>Day 7</strong><p>Review your own website's response headers. Write a short README explaining what each script checks and what it cannot prove.</p></div></div>
+<h2>How to turn these exercises into a portfolio</h2>
+<p>Keep each project in its own folder with a README, a sample input file and sample output that contains <strong>no real personal data or credentials</strong>. Explain your assumptions and limitations. That is much more useful than claiming a simple script is an advanced security product. You can later add unit tests, structured output and scheduling after understanding the basics.</p>
+<h2>Frequently asked questions</h2>
+<h3>Do I need Kali Linux to learn Python for cybersecurity?</h3>
+<p>No. These five projects run with regular Python on macOS, Linux or (except the Unix permissions check) Windows. You do not need Kali Linux, paid security software or a cloud subscription.</p>
+<h3>Will these tools make me a cybersecurity analyst?</h3>
+<p>They build useful foundations: understanding logs, filesystem metadata, HTTP and defensive scripting. Professional security work also requires networking, operating-system fundamentals, documentation, alert triage and careful judgement.</p>
+<h3>Can Python replace security tools?</h3>
+<p>No. Small scripts can help with repeatable checks, but they need testing and review before operational use. For sensitive systems, follow your organization's policies and use tools designed for the task.</p>
+<h2>Official references and further reading</h2>
+<ul><li><a href="https://docs.python.org/3/library/hashlib.html" rel="noopener noreferrer">Python documentation: hashlib</a> &mdash; cryptographic digests.</li><li><a href="https://docs.python.org/3/library/csv.html" rel="noopener noreferrer">Python documentation: csv</a> &mdash; structured input.</li><li><a href="https://docs.python.org/3/library/stat.html" rel="noopener noreferrer">Python documentation: stat</a> &mdash; filesystem mode flags.</li><li><a href="https://docs.python.org/3/library/urllib.request.html" rel="noopener noreferrer">Python documentation: urllib.request</a> &mdash; HTTP requests.</li><li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html" rel="noopener noreferrer">OWASP Logging Cheat Sheet</a> &mdash; security-event logging and sensitive-data precautions.</li><li><a href="/python-automation-it-support-projects.html">Companion: Python automation for IT support</a> &mdash; three more beginner projects.</li></ul>
+<p class="guide-related"><a href="/articles.html">&larr; Browse all technical articles</a> <span aria-hidden="true"> · </span> <a href="/cybersecurity-roadmap-2026.html">Cybersecurity learning roadmap &rarr;</a></p>
+</main>
+<footer><div class="wrap"><div class="footer-inner"><a class="brand" href="/index.html">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="/about.html">About</a><a href="/articles.html">Articles</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy</a><a href="/terms.html">Terms</a></nav></div><div class="footer-bottom"><span>© 2026 Nawaz Sharif. All rights reserved.</span><span>Independent notes on technology and IT systems.</span></div></div></footer>
+</body>
+</html>
