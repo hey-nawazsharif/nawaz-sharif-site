@@ -8,19 +8,9 @@
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<header>
-<div class="wrap">
-<a class="brand" href="/">NAWAZ SHARIF</a>
-<nav>
-<a href="/#services">Services</a>
-<a href="/#articles">Articles</a>
-<a href="/#about">About</a>
-<a href="/#contact">Contact</a>
-</nav>
-</div>
-</header>
+<a class="skip-link" href="#main">Skip to content</a><header><div class="wrap"><a class="brand" href="/index.html">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav aria-label="Main navigation"><a href="/about.html">About</a><a href="/articles.html">Technical articles</a><a href="/index.html#services">Areas of focus</a><a href="/contact.html">Contact</a></nav></div></header>
 
-<main class="doc">
+<main id="main" class="doc">
 <span class="meta">October 22, 2026 &middot; Linux & Systems Architecture</span>
 <h1>Linux Kernel Performance Tuning: Low-Latency Systems & High-Throughput Architecture</h1>
 <p>Default Linux kernel distributions are deliberately engineered for generic desktop computing and light cloud workloads. Distributions such as Ubuntu, Debian, RHEL, and Rocky Linux prioritize conservative memory utilization and broad hardware compatibility over specialized, extreme performance. When running mission-critical workloads—such as high-frequency trading engines, reverse proxies handling over 100,000 requests per second, distributed database clusters, and massive AI/ML model inference pipelines—unmodified kernel configurations choke under heavy socket pressure and resource contention.</p>
