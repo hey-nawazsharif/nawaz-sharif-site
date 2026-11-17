@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build a Spam Classifier with Python: Machine Learning Tutorial | Nawaz Sharif</title>
+<meta name="description" content="Build a beginner-friendly machine learning spam classifier with Python and scikit-learn. Learn TF-IDF, Naive Bayes, data splitting and honest model evaluation.">
+<meta name="author" content="Nawaz Sharif">
+<link rel="canonical" href="https://nawazsharif.in/machine-learning-spam-classifier-python-tutorial.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Build a Spam Classifier with Python: Machine Learning Tutorial">
+<meta property="og:description" content="A complete Python text-classification lab with synthetic data, a working model, metrics and common mistakes.">
+<meta property="og:url" content="https://nawazsharif.in/machine-learning-spam-classifier-python-tutorial.html">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="/style.css">
+<style>
+.ml-lab .intro{font-size:1.12rem;line-height:1.8}
+.ml-lab section{border:0;padding:0;margin-top:40px;scroll-margin-top:28px}
+.ml-lab .lab-panel{padding:22px 26px;border:1px solid var(--line);background:var(--panel);margin:25px 0}
+.ml-lab .lab-panel ul{margin-bottom:0}
+.ml-lab .lab-steps{display:flex;flex-wrap:wrap;gap:10px;padding:0;list-style:none;margin:20px 0}
+.ml-lab .lab-steps li{padding:9px 12px;border:1px solid var(--line);background:var(--codebg);font-size:.86rem}
+.ml-lab .lab-kicker{display:block;font-size:.75rem;letter-spacing:.13em;text-transform:uppercase;color:var(--acc);font-weight:700;margin-bottom:8px}
+.ml-lab .lab-note{border-left:3px solid var(--acc);padding:14px 19px;background:var(--codebg);margin:22px 0}
+.ml-lab pre{overflow-x:auto;white-space:pre;tab-size:4;line-height:1.55}
+.ml-lab pre code{font-size:.82rem}
+.ml-lab h3{color:var(--head);font-size:1.12rem;margin-top:23px}
+.ml-lab .related{border-top:1px solid var(--line);margin-top:44px;padding-top:22px}
+@media(max-width:600px){.ml-lab .lab-panel{padding:17px}.ml-lab pre{font-size:.8rem}.ml-lab .lab-steps{display:block}.ml-lab .lab-steps li{margin:7px 0}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header><div class="wrap"><a class="brand" href="/index.html">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav aria-label="Main navigation"><a href="/about.html">About</a><a href="/articles.html">Technical articles</a><a href="/index.html#services">Areas of focus</a><a href="/contact.html">Contact</a></nav></div></header>
+<main class="doc ml-lab" id="main">
+<p class="meta">November 17, 2026 &middot; Machine Learning / Python / Hands-on Tutorial &middot; By Nawaz Sharif</p>
+<h1>Build a Spam Classifier with Python: Your First Machine Learning Project</h1>
+<p class="intro">How does software distinguish a suspicious promotional message from an ordinary email? In this tutorial, you will train a small <strong>text classification</strong> model, test its predictions and learn why a good-looking accuracy score is only the beginning.</p>
+<p>This is Part 2 of the beginner series. If features, labels and training sets are new to you, start with <a href="/machine-learning-beginners-python-guide.html">Machine Learning Explained: A Beginner's Guide</a>.</p>
+<div class="lab-panel"><strong>At a glance</strong>
+<ul><li><strong>Level:</strong> Beginner with basic Python familiarity</li>
+<li><strong>Cost:</strong> Free; runs locally, no account or cloud GPU needed</li>
+<li><strong>Tools:</strong> Python 3, scikit-learn and a text editor</li>
+<li><strong>Project:</strong> Classify <em>spam</em> versus <em>ham</em> (normal messages)</li>
+<li><strong>Privacy:</strong> Uses only invented example messages</li></ul></div>
+<section id="workflow"><span class="lab-kicker">01 / Understand the project</span><h2>How a text classifier works</h2>
+<p>A supervised model learns from examples that already have labels. Here, each training example contains a message and its label: <code>spam</code> or <code>ham</code>. When it receives an unseen message, it predicts the more likely label based on patterns it learned.</p>
+<ol class="lab-steps"><li>Label examples</li><li>Split data</li><li>Convert words to numbers</li><li>Train</li><li>Evaluate</li></ol>
+<h3>Two ingredients you will use</h3>
+<p><strong>TF-IDF</strong> converts text into numerical features, placing weight on terms according to how informative they are across the training messages. <strong>Multinomial Naive Bayes</strong> is a simple probabilistic classifier frequently used as a baseline for text classification. It is fast and works well for small experiments, but is not guaranteed to be the best model.</p>
+<p>We combine the two in a <code>Pipeline</code>. This matters because text features must be learned from the training portion only, not from the held-out test messages.</p>
+</section>
+<section id="setup"><span class="lab-kicker">02 / Set up your environment</span><h2>Install Python and scikit-learn</h2>
+<p>Install a current supported version of Python from <a href="https://www.python.org/downloads/" rel="noopener noreferrer">python.org</a>. In a new folder, create a file named <code>spam_classifier.py</code>, then follow the commands below in a terminal.</p>
+<h3>macOS or Linux</h3>
+<pre><code>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install scikit-learn
+python spam_classifier.py</code></pre>
+<h3>Windows PowerShell</h3>
+<pre><code>py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install scikit-learn
+.\.venv\Scripts\python.exe spam_classifier.py</code></pre>
+<p class="lab-note">Save the Python script shown in the next section <strong>before</strong> running the final command. The Windows example invokes the virtual environment's Python directly, so activation is not required. You do not need to install anything globally.</p>
+</section>
+<section id="code"><span class="lab-kicker">03 / Build it</span><h2>Complete Python code: spam_classifier.py</h2>
+<p>Copy the full script below into <code>spam_classifier.py</code>. The 40 short, deliberately simple examples are included in the code, so there is no dataset download and no real inbox is accessed.</p>
+<pre><code>from sklearn.dummy import DummyClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+
+# Tiny, synthetic examples for learning only. Do not use private inbox data.
+examples = [
+    [
+        "Win a cash prize claim your reward now",
+        "spam"
+    ],
+    [
+        "Free gift card waiting click to collect",
+        "spam"
+    ],
+    [
+        "Limited offer earn cash fast today",
+        "spam"
+    ],
+    [
+        "Exclusive prize winner claim your money",
+        "spam"
+    ],
+    [
+        "Congratulations you won a free voucher",
+        "spam"
+    ],
+    [
+        "Urgent reward waiting tap this link",
+        "spam"
+    ],
+    [
+        "Get rich quick with this special offer",
+        "spam"
+    ],
+    [
+        "Claim your bonus cash before midnight",
+        "spam"
+    ],
+    [
+        "Free vacation prize enter your details",
+        "spam"
+    ],
+    [
+        "You have won a shopping reward",
+        "spam"
+    ],
+    [
+        "Instant cash deal join today",
+        "spam"
+    ],
+    [
+        "Amazing discount click for free gifts",
+        "spam"
+    ],
+    [
+        "Lottery winner verify to receive prize",
+        "spam"
+    ],
+    [
+        "Collect your guaranteed cash reward",
+        "spam"
+    ],
+    [
+        "Earn money instantly through this offer",
+        "spam"
+    ],
+    [
+        "Claim a free phone in our giveaway",
+        "spam"
+    ],
+    [
+        "Special bonus deal only available today",
+        "spam"
+    ],
+    [
+        "Congratulations claim your lucky prize",
+        "spam"
+    ],
+    [
+        "You are selected for a cash giveaway",
+        "spam"
+    ],
+    [
+        "Redeem your reward with this link",
+        "spam"
+    ],
+    [
+        "Can we move the team meeting to Friday",
+        "ham"
+    ],
+    [
+        "Here are the notes from our last meeting",
+        "ham"
+    ],
+    [
+        "Please review the attached project report",
+        "ham"
+    ],
+    [
+        "I will send the updated document tomorrow",
+        "ham"
+    ],
+    [
+        "Your appointment is confirmed for Monday",
+        "ham"
+    ],
+    [
+        "Thanks for helping with the printer issue",
+        "ham"
+    ],
+    [
+        "The server maintenance window begins tonight",
+        "ham"
+    ],
+    [
+        "Let us discuss the project schedule",
+        "ham"
+    ],
+    [
+        "Please confirm the delivery address",
+        "ham"
+    ],
+    [
+        "I have uploaded the final presentation",
+        "ham"
+    ],
+    [
+        "Can you check the meeting invitation",
+        "ham"
+    ],
+    [
+        "The invoice was received by accounting",
+        "ham"
+    ],
+    [
+        "Our support ticket has been resolved",
+        "ham"
+    ],
+    [
+        "Please join the training session at ten",
+        "ham"
+    ],
+    [
+        "The weekly report is ready for review",
+        "ham"
+    ],
+    [
+        "We updated the software on your laptop",
+        "ham"
+    ],
+    [
+        "Can you send me the network diagram",
+        "ham"
+    ],
+    [
+        "I will be working from home tomorrow",
+        "ham"
+    ],
+    [
+        "Your order has been shipped this afternoon",
+        "ham"
+    ],
+    [
+        "Thank you for your feedback on the draft",
+        "ham"
+    ]
+]
+
+texts, labels = zip(*examples)
+
+# Stratify to keep both classes in the training and testing portions.
+X_train, X_test, y_train, y_test = train_test_split(
+    texts, labels, test_size=0.25, random_state=42, stratify=labels
+)
+
+# A simple baseline: always predict the most common class.
+baseline = DummyClassifier(strategy="most_frequent")
+baseline.fit(X_train, y_train)
+
+# Pipeline prevents the text vectorizer from seeing held-out test messages.
+model = make_pipeline(
+    TfidfVectorizer(ngram_range=(1, 2)),
+    MultinomialNB()
+)
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+baseline_predictions = baseline.predict(X_test)
+print("Training examples:", len(X_train))
+print("Test examples:", len(X_test))
+print("Baseline accuracy:", round(accuracy_score(y_test, baseline_predictions), 2))
+print("Model accuracy:", round(accuracy_score(y_test, predictions), 2))
+print("Confusion matrix (ham, spam):")
+print(confusion_matrix(y_test, predictions, labels=["ham", "spam"]))
+print(classification_report(
+    y_test, predictions, labels=["ham", "spam"], zero_division=0
+))
+
+# Try two invented messages, not real personal or workplace email.
+new_messages = [
+    "Free reward claim your prize",
+    "Can we meet on Friday for the report"
+]
+for message, predicted_label in zip(new_messages, model.predict(new_messages)):
+    print(f"{predicted_label}: {message}")</code></pre>
+<p><strong>What the code does:</strong> It keeps 25% of the labelled messages for testing, fits TF-IDF and Naive Bayes on the other 75%, compares against a majority-class baseline, then predicts labels for two new example messages.</p>
+</section>
+<section id="results"><span class="lab-kicker">04 / Read the results</span><h2>Accuracy is not the whole story</h2>
+<p>Run the script and examine the printed scores. <strong>Accuracy</strong> is the proportion of correctly predicted test messages; the <strong>confusion matrix</strong> shows which classes were confused; <strong>precision</strong> describes how often a predicted class is correct, and <strong>recall</strong> describes how many actual examples of that class were found.</p>
+<p>Because this dataset is tiny and uses deliberately repetitive phrases, the sample run may produce an unusually high test score—even 100%. <strong>That is not evidence that this model can safely filter real emails.</strong> A real evaluation needs representative data, more examples, deduplication, hard cases and checks for changes over time.</p>
+<div class="lab-note"><strong>Important:</strong> Misclassifying a legitimate email as spam can be costly. A learning project must not silently delete, block or act on real messages. Keep a human in the loop.</div>
+<h3>Why compare against a baseline?</h3>
+<p>A model should improve on a simple starting point. Here, <code>DummyClassifier</code> always predicts the most common training label. If your trained model cannot improve on that baseline using appropriate evaluation data, adding complexity has not demonstrated value.</p>
+</section>
+<section id="improve"><span class="lab-kicker">05 / Continue learning</span><h2>Five ways to improve this project</h2>
+<ol>
+<li><strong>Collect better data:</strong> Use a properly licensed, de-identified dataset and document where it came from. Never upload private emails or credentials.</li>
+<li><strong>Remove near-duplicates:</strong> Similar messages across training and testing can inflate scores.</li>
+<li><strong>Study false positives:</strong> Inspect cases where legitimate messages are wrongly labelled as spam.</li>
+<li><strong>Compare models:</strong> Try a linear classifier such as <code>LogisticRegression</code> with the same train/test split.</li>
+<li><strong>Validate fairly:</strong> Use cross-validation for model selection and reserve a truly untouched test set for final evaluation.</li>
+</ol>
+<p>For a realistic next exercise, build a small helpdesk-ticket category classifier using fictional tickets. The approach is similar, but the labels and quality checks differ.</p>
+</section>
+<section id="faq"><span class="lab-kicker">06 / Common questions</span><h2>Frequently asked questions</h2>
+<h3>Does this need a paid AI API or GPU?</h3>
+<p>No. The project runs locally using free Python packages and a very small synthetic dataset.</p>
+<h3>Is this the same as training a large language model?</h3>
+<p>No. This is classical supervised machine learning, using numerical text features and a lightweight classifier.</p>
+<h3>Can I use this to protect a production email inbox?</h3>
+<p>Not as written. Real spam filtering needs extensive testing, security review, privacy controls, monitoring, suitable data and operational safeguards.</p>
+</section>
+<section id="references"><span class="lab-kicker">07 / Further reading</span><h2>Official documentation</h2>
+<ul>
+<li><a href="https://docs.python.org/3/library/venv.html" rel="noopener noreferrer">Python: Virtual environments</a></li>
+<li><a href="https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction" rel="noopener noreferrer">Scikit-learn: Text feature extraction</a></li>
+<li><a href="https://scikit-learn.org/stable/modules/naive_bayes.html" rel="noopener noreferrer">Scikit-learn: Naive Bayes</a></li>
+<li><a href="https://scikit-learn.org/stable/common_pitfalls.html" rel="noopener noreferrer">Scikit-learn: Common pitfalls and data leakage</a></li>
+<li><a href="https://scikit-learn.org/stable/modules/model_evaluation.html" rel="noopener noreferrer">Scikit-learn: Model evaluation</a></li>
+</ul></section>
+<p class="related"><a href="/machine-learning-beginners-python-guide.html">&larr; Part 1: Machine learning fundamentals</a> &nbsp;·&nbsp; <a href="/articles.html">All technical articles &rarr;</a></p>
+</main>
+<footer><div class="wrap"><div class="footer-inner"><a class="brand" href="/index.html">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="/about.html">About</a><a href="/articles.html">Articles</a><a href="/faq.html">FAQ</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy</a><a href="/terms.html">Terms</a></nav></div><div class="footer-bottom"><span>© 2026 Nawaz Sharif. All rights reserved.</span><span>Independent notes on technology and IT systems.</span></div></div></footer>
+</body></html>
