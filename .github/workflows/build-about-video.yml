@@ -1,0 +1,45 @@
+name: Build About introduction video
+on:
+  push:
+    paths:
+      - 'tools/generate_about_video.py'
+      - '.github/workflows/build-about-video.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out site
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install free video rendering dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-inter fonts-dejavu-core
+          python -m pip install --disable-pip-version-check "pillow>=10,<12" "numpy>=1.26,<3"
+      - name: Render video and poster
+        run: python tools/generate_about_video.py
+      - name: Verify media
+        run: |
+          test -s media/about-intro.mp4
+          test -s media/about-poster.jpg
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 media/about-intro.mp4
+      - name: Commit website media
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add media/about-intro.mp4 media/about-poster.jpg
+          if ! git diff --cached --quiet; then
+            git commit -m "Add rendered About introduction media"
+            git push origin HEAD:main
+          fi
