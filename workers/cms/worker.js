@@ -1,3 +1,4 @@
+import {renderSections,builderCSS} from './builder-render.js';
 /*
  * Nawaz CMS — public read-only preview Worker.
  * Preserves the existing GitHub Pages HTML, scripts, forms, and URL structure.
@@ -59,19 +60,31 @@ export default {
   headers.set('X-Robots-Tag','noindex,nofollow');
   const wrapper=new Response(origin.body,{status:200,headers});
   if(request.method==='HEAD')return new Response(null,{status:200,headers});
-  let rows=[],settings=[];
+  let rows=[],settings=[],sections=[],palette={};
   try{
    const results=await env.DB.batch([
     env.DB.prepare('SELECT block_key,label,selector,kind,published_text FROM site_blocks WHERE page_path=? AND published_override=1').bind(path),
-    env.DB.prepare('SELECT key,published_json FROM site_settings WHERE published_override=1')
+    env.DB.prepare('SELECT key,published_json FROM site_settings WHERE published_override=1'),
+    env.DB.prepare('SELECT published_json FROM site_documents WHERE page_path=?').bind(path),
+    env.DB.prepare("SELECT published_json FROM site_design WHERE key='main'")
    ]);
    rows=results[0]?.results||[];
    settings=results[1]?.results||[];
+   const doc=results[2]?.results?.[0];const design=results[3]?.results?.[0];
+   if(doc){
+    try { sections=JSON.parse(doc.published_json||'[]'); }catch(e){sections=[];}
+   }
+   if(design){
+    try { palette=JSON.parse(design.published_json||'{}'); }catch(e){palette={};}
+   }
   }catch(e){
    console.error('CMS database temporarily unavailable, returning original');
    // Fail open for public rendering: original GitHub Pages HTML still works.
   }
-  let rw=new HTMLRewriter().on('head',{element(e){e.prepend('<meta name="robots" content="noindex,nofollow">',{html:true});}});
+  const injected=renderSections(sections,palette);
+  let rw=new HTMLRewriter().on('head',{element(e){e.prepend('<meta name="robots" content="noindex,nofollow">',{html:true});e.append('<style id="nawaz-cms-builder">'+builderCSS()+'</style>',{html:true});}});
+  if(injected&&injected.top)rw=rw.on('main#main',{element(e){e.prepend(injected.top,{html:true});}});
+  if(injected&&injected.bottom)rw=rw.on('main#main',{element(e){e.append(injected.bottom,{html:true});}});
   for(const row of rows){
    if(!row.selector||!['text','title','meta','answer'].includes(row.kind))continue;
    const v=String(row.published_text||'').slice(0,row.kind==='answer'?8000:1200);
