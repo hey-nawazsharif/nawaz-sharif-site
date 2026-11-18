@@ -1,0 +1,47 @@
+name: Nawaz Visual Builder checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workers/cms/**"
+      - "workers/shared/builder-render.js"
+      - "workers/admin/builder-**"
+      - "workers/admin/worker.js"
+      - "tests/cms-builder.test.mjs"
+      - ".github/workflows/cms-builder-test.yml"
+  workflow_dispatch:
+jobs:
+  builder-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify frontend and Workers JS syntax
+        run: |
+          set -euo pipefail
+          node --input-type=module --check < workers/admin/builder-api.js
+          node --input-type=module --check < workers/admin/builder-client.txt
+          node --input-type=module --check < workers/shared/builder-render.js
+          node --input-type=module --check < workers/cms/worker.js
+          node --input-type=module --check < workers/admin/worker.js
+      - name: Check Markdown escaping, section limits and theme rendering
+        run: node --experimental-default-type=module tests/cms-builder.test.mjs
+      - name: Verify public preview and private admin
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="https://cms-preview.nawazsharif.in"
+          for path in /index.html /about.html /faq.html /contact.html /articles.html; do
+            code="$(curl -sSL --retry 2 --retry-delay 2 --max-time 30 -o /tmp/cms.html -w '%{http_code}' "$target$path")"
+            test "$code" = 200 || { echo "Bad HTTP $code for $path"; exit 1; }
+            grep -Fq 'id="main"' /tmp/cms.html || { echo "Missing original main in $path"; exit 1; }
+          done
+          curl -fsSL --max-time 30 "$target/contact.html" | grep -Fq 'https://formspree.io/f/'
+          curl -fsSL --max-time 30 "$target/contact.html" | grep -Fq 'g-recaptcha'
+          curl -fsSI --max-time 30 "$target/index.html" | grep -iq 'x-robots-tag: noindex'
+          admin_code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 'https://nawaz-site-admin.nawaz-site-observer.workers.dev/admin/builder')"
+          test "$admin_code" != 200 || { echo 'Critical: admin accessible anonymously'; exit 1; }
+          echo "PASS: preview pages, Formspree markup, CAPTCHA markup, noindex and owner gate."

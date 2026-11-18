@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {validateSections,renderSections,renderSectionHTML,builderCSS} from '../workers/shared/builder-render.js';
+import {renderMarkdown} from '../workers/shared/markdown.js';
+
+const one={id:'section-demo-one',type:'text',title:'Sample heading',body:'A **bold** paragraph and [link](/articles.html).',image_url:'',image_alt:'',button_label:'Articles',button_url:'/articles.html',position:'bottom'};
+const valid=validateSections([one]);
+assert.equal(valid.error,undefined,'valid section should pass');
+const rendered=renderSections([one],{theme:'slate',spacing:'compact'});
+assert.ok(rendered.bottom.includes('cms-slate cms-compact'),'theme/spacing classes');
+assert.ok(rendered.bottom.includes('Sample heading'),'title rendered');
+assert.ok(rendered.bottom.includes('<strong>bold</strong>'),'Markdown emphasis');
+assert.ok(rendered.bottom.includes('href="/articles.html"'),'relative link supported');
+assert.ok(rendered.bottom.includes('cms-action'),'button rendered');
+assert.ok(!rendered.top,'bottom-only should have no top component');
+
+const malicious={...one,id:'section-attacker-two',title:'<script>alert(1)</script>',body:'<img src=x onerror=alert(1)>',button_url:'javascript:alert(1)'};
+assert.equal(validateSections([malicious]).error,'Button links must be HTTPS or a website path');
+const safeMarkup=renderSectionHTML({...malicious,button_url:''});
+assert.ok(!safeMarkup.includes('<script>'),'raw HTML must never render');
+assert.ok(!safeMarkup.includes('<img src=x'),'raw tags must be escaped');
+assert.ok(safeMarkup.includes('&lt;script&gt;'),'HTML escaped');
+const maliciousImage={...one,id:'section-bad-img',type:'image',image_url:'javascript:alert(1)'};
+assert.ok(validateSections([maliciousImage]).error,'reject unsafe image');
+const repeated=[one,{...one}];
+assert.ok(validateSections(repeated).error,'reject repeated id');
+const tooMany=Array.from({length:21},(_,i)=>({...one,id:'section-number-'+i}));
+assert.ok(validateSections(tooMany).error,'limit sections');
+const top=renderSections([{...one,position:'top'}],{theme:'sand',spacing:'comfortable'});
+assert.ok(top.top.includes('cms-sand')&&!top.bottom,'top positioning');
+assert.ok(renderMarkdown('**Bold** and <script>alert(2)</script>').includes('&lt;script&gt;'),'Markdown HTML escaping');
+assert.ok(builderCSS().includes('@media'),'mobile responsive styles');
+console.log('PASS: visual builder safe rendering, validations, themes, positioning and responsive layout');
