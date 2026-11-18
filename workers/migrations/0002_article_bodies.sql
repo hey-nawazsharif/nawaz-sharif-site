@@ -13,3 +13,4 @@ CREATE TABLE IF NOT EXISTS article_revisions(
  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_article_revisions_slug ON article_revisions(slug,created_at DESC,id DESC);
+ALTER TABLE articles ADD COLUMN published_snapshot TEXT NOT NULL DEFAULT '';

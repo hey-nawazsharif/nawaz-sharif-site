@@ -36,7 +36,7 @@
   mode:'cors',credentials:'omit',signal:controller.signal,headers:{'Accept':'application/json'}
  }).then(function(r){if(!r.ok)throw Error('API unavailable');return r.json();}).then(function(body){
   if(!body||!Array.isArray(body.articles)||!body.articles.length)throw Error('No articles');
-  list=body.articles.filter(function(a){return a&&typeof a.title==='string'&&typeof a.url==='string'&&/^\/[a-zA-Z0-9/_-]+\.html$/.test(a.url);});
+  list=body.articles.filter(function(a){return a&&typeof a.title==='string'&&typeof a.url==='string'&&(/^\/[a-zA-Z0-9/_-]+\.html$/.test(a.url)||/^https:\/\/blog\.nawazsharif\.in\/[a-z0-9-]{3,100}$/.test(a.url));});
   if(!list.length)throw Error('No valid articles');
   staticGrid.hidden=true;liveGrid.hidden=false;draw();
  }).catch(function(){list=null;liveGrid.hidden=true;staticGrid.hidden=false;draw();})

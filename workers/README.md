@@ -1,26 +1,24 @@
-# Publishing Studio (Phase 2)
+# Dynamic publishing — Nawaz Sharif website
 
-Cloudflare Workers + D1 Free allowances, with no paid storage subscription or third-party CMS.
+Production content consists of two types:
+- **Original HTML** (23 existing articles) remains on GitHub Pages at the same URLs. Files are not overwritten by the editor. An optional HTML replacement can be switched on after manually reviewing Markdown; the original page remains the JavaScript-disabled and SEO fallback.
+- **New articles** are stored in D1 and rendered by Cloudflare Workers at **https://blog.nawazsharif.in/{slug}**. The static archive lists both types through the read-only article API and falls back to original HTML cards if the API fails.
 
-## Public routes
-- https://blog.nawazsharif.in/slug — dynamic articles, SEO meta, canonical link and BlogPosting JSON-LD, generated server-side.
-- https://blog.nawazsharif.in/sitemap.xml — dynamic article sitemap.
-- https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles — article metadata for original archive.
-- https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/overrides/slug — optional sanitized Markdown body for original GitHub Pages articles.
+Cloudflare Workers: `nawaz-site-admin` (Cloudflare Access, owner-only), `nawaz-site-api` (public read-only).
+D1: `nawaz_site_content` (separate from private visitor logs).
+Admin: https://nawaz-site-admin.nawaz-site-observer.workers.dev/admin
+Blog: https://blog.nawazsharif.in/
+API: https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles
 
-## Secure editing
-- https://nawaz-site-admin.nawaz-site-observer.workers.dev/admin
-- Cloudflare Access policy: exact owner email contact@nawazsharif.in
-- Identity checked server-side through ctx.access.getIdentity(). No passwords in JavaScript.
-- CSRF protection: same-origin JSON writes. Inputs validated on Worker.
-- Markdown content with formatting toolbar and live server-rendered preview, not arbitrary HTML.
-- New articles can be saved as drafts and published; publishing requires at least 160 characters.
-- The original 23 HTML articles remain intact and their URLs unchanged. Optional body replacement occurs only when explicitly enabled. This is a client-side override; for full server-rendered SEO on the original URLs, hosting migration would be required.
-- Previous article versions are retained before updates and can be loaded into editor for a controlled restore.
-- Images are supported via existing HTTPS URLs; uploads unavailable until storage is separately approved (Cloudflare R2 not enabled).
+### Safety controls
+- No public write endpoints. Admin authenticates via Cloudflare runtime ctx.access and checks the owner email server-side.
+- Both Origin and Sec-Fetch-Site checked for writes; JSON payload capped at 145 KB.
+- Raw HTML is escaped and Markdown has safe link/image URLs; no arbitrary HTML or JavaScript publishing.
+- **Save draft never changes the published snapshot.** Publish explicitly updates the published snapshot.
+- Revisions are archived on edits.
+- Blog pages use canonical URLs, meta description, JSON-LD BlogPosting, and sitemap.xml.
+- Images are linked by HTTPS URLs. R2 is not enabled, and no paid storage added.
+- Do not expose drafts publicly, disable Cloudflare Access, commit API tokens, or change original URLs.
+- Avoid zero-day external HTML import: manual Markdown migration for complex code examples needs review.
 
-## Deploy
-- Public Worker: workers/api/worker.js and workers/shared/markdown.js
-- Admin Worker: workers/admin/worker.js, workers/admin/index.html, workers/admin/client.txt, workers/admin/admin-css.txt, and shared renderer
-- Both Workers bind D1 name DB to nawaz_site_content; private visitor logs remain separate.
-- No paid upgrades or changes to root DNS or email DNS. Keep within Free plan quotas.
+Schema: `workers/migrations/0001_articles.sql` and `0002_article_bodies.sql`, plus `published_snapshot` column. Production migrations already applied. ALTER statements are non-idempotent; inspect PRAGMA table_info before rerunning.
