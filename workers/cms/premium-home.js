@@ -1,5 +1,5 @@
 /* Original editorial homepage for the CMS preview. No copied external assets or company claims. */
-import {escapeHTML} from './markdown.js';
+function escapeHTML(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 const MAIN='https://nawazsharif.in';
 const defaults={
  main_headline:'Linux. Systems. Practical technology.',
