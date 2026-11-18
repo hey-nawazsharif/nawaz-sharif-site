@@ -6,6 +6,10 @@ import siteHTML from './site-page.html';
 import siteJS from './site-client.txt';
 import siteCSS from './site-style.txt';
 import {handleSiteAPI} from './site-api.js';
+import builderHTML from './builder-page.html';
+import builderCSS from './builder-style.txt';
+import builderJS from './builder-client.txt';
+import {handleBuilder} from './builder-api.js';
 import {renderMarkdown} from './markdown.js';
 const OWNER='contact@nawazsharif.in';
 const BLOG='https://blog.nawazsharif.in';
@@ -60,6 +64,10 @@ export default {
   if(request.method==='GET'&&path==='/admin/site/client.js')return asset(siteJS,'text/javascript; charset=utf-8');
   if(request.method==='GET'&&path==='/admin/site/style.css')return asset(siteCSS,'text/css; charset=utf-8');
   if(path.startsWith('/admin/api/site/'))return handleSiteAPI(request,env);
+  if(request.method==='GET'&&(path==='/admin/builder'||path==='/admin/builder/'))return asset(builderHTML,'text/html; charset=utf-8');
+  if(request.method==='GET'&&path==='/admin/builder/client.js')return asset(builderJS,'text/javascript; charset=utf-8');
+  if(request.method==='GET'&&path==='/admin/builder/style.css')return asset(builderCSS,'text/css; charset=utf-8');
+  if(path.startsWith('/admin/api/builder/'))return handleBuilder(request,env);
   try{
    if(request.method==='GET'&&path==='/admin/api/articles'){
     const result=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,content_type,body_md,seo_title,seo_description,cover_url,content_override,published_snapshot,published_at,created_at,updated_at FROM articles ORDER BY id DESC LIMIT 400').all();
