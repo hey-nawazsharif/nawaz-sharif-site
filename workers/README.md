@@ -1,11 +1,26 @@
-# Dynamic Site — Phase 1 (No Paid Hosting)
+# Publishing Studio (Phase 2)
 
-- Public Cloudflare Worker: nawaz-site-api (read-only).
-- D1 database: nawaz_site_content, binding DB.
-- Public API: https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles
-- Health: https://nawaz-site-api.nawaz-site-observer.workers.dev/health
-- Data currently contains article metadata, not article bodies.
-- Original HTML article links, GitHub Pages hosting, Formspree and cookie choices remain unchanged.
-- The archive uses database-backed cards only when the API responds successfully; static HTML cards are retained for SEO and offline fallback.
+Cloudflare Workers + D1 Free allowances, with no paid storage subscription or third-party CMS.
 
-Admin editing remains locked until Cloudflare Zero Trust Access Free is enabled and an owner-only policy is configured. No public write API, passwords, tokens or paid components are included. The next phase implements authenticated authoring and renders full article bodies from D1.
+## Public routes
+- https://blog.nawazsharif.in/slug — dynamic articles, SEO meta, canonical link and BlogPosting JSON-LD, generated server-side.
+- https://blog.nawazsharif.in/sitemap.xml — dynamic article sitemap.
+- https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles — article metadata for original archive.
+- https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/overrides/slug — optional sanitized Markdown body for original GitHub Pages articles.
+
+## Secure editing
+- https://nawaz-site-admin.nawaz-site-observer.workers.dev/admin
+- Cloudflare Access policy: exact owner email contact@nawazsharif.in
+- Identity checked server-side through ctx.access.getIdentity(). No passwords in JavaScript.
+- CSRF protection: same-origin JSON writes. Inputs validated on Worker.
+- Markdown content with formatting toolbar and live server-rendered preview, not arbitrary HTML.
+- New articles can be saved as drafts and published; publishing requires at least 160 characters.
+- The original 23 HTML articles remain intact and their URLs unchanged. Optional body replacement occurs only when explicitly enabled. This is a client-side override; for full server-rendered SEO on the original URLs, hosting migration would be required.
+- Previous article versions are retained before updates and can be loaded into editor for a controlled restore.
+- Images are supported via existing HTTPS URLs; uploads unavailable until storage is separately approved (Cloudflare R2 not enabled).
+
+## Deploy
+- Public Worker: workers/api/worker.js and workers/shared/markdown.js
+- Admin Worker: workers/admin/worker.js, workers/admin/index.html, workers/admin/client.txt, workers/admin/admin-css.txt, and shared renderer
+- Both Workers bind D1 name DB to nawaz_site_content; private visitor logs remain separate.
+- No paid upgrades or changes to root DNS or email DNS. Keep within Free plan quotas.

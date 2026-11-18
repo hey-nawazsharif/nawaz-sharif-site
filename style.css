@@ -481,3 +481,12 @@ header nav a{margin:0}
 .archive-search p{margin:0;font-size:12px;color:var(--mute)}
 #dynamic-article-grid[hidden],#static-article-grid[hidden],#static-article-grid .card[hidden]{display:none!important}
 @media(max-width:540px){.archive-search{align-items:stretch;flex-direction:column;gap:9px}.archive-search input{max-width:none;width:100%;min-width:0}}
+
+/* Optional full-content legacy article replacement. */
+.legacy-replacement{font-size:1.03rem;line-height:1.85;overflow-wrap:anywhere}
+.legacy-replacement h2{margin-top:34px;line-height:1.3}
+.legacy-replacement h3{margin-top:26px;line-height:1.35}
+.legacy-replacement pre{padding:16px;background:#0e1c18;color:#e9f4ed;border-radius:4px;overflow-x:auto;white-space:pre;font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+.legacy-replacement :not(pre)>code{overflow-wrap:anywhere}
+.legacy-replacement img,.legacy-cover{max-width:100%;height:auto}
+.legacy-replacement blockquote{border-left:3px solid #71b693;padding:9px 18px;background:var(--panel)}
