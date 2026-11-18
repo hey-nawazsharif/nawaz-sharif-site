@@ -1,62 +1,115 @@
-/* Private metadata admin Worker. Denies all access unless Worker-level Cloudflare Access is configured. */
-const OWNER_EMAIL = 'contact@nawazsharif.in';
-const CLIENT = "(function () {\n  'use strict';\n  var form = document.getElementById('article-form');\n  var info = document.getElementById('info');\n  var records = document.getElementById('records');\n  var editSlug = null;\n  var fields = ['slug','title','summary','category','url'];\n  function message(text) { info.textContent = text; }\n  function clear() {\n    form.reset();\n    editSlug = null;\n    form.elements.slug.disabled = false;\n    document.getElementById('save').textContent = 'Create article record';\n  }\n  async function call(path, options) {\n    var res = await fetch(path, Object.assign({ credentials:'same-origin',headers:{'Accept':'application/json'} },options || {}));\n    var data = await res.json();\n    if (!res.ok) throw new Error(data.error || 'Request failed');\n    return data;\n  }\n  async function reload() {\n    var result = await call('/admin/api/articles');\n    records.replaceChildren();\n    result.articles.forEach(function (article) {\n      var item = document.createElement('button');\n      item.type = 'button';\n      item.className = 'article-row';\n      item.textContent = article.title + (article.is_published ? ' · Published' : ' · Draft');\n      item.addEventListener('click', function () {\n        editSlug = article.slug;\n        fields.forEach(function (field) { form.elements[field].value = article[field] || ''; });\n        form.elements.is_published.checked = !!article.is_published;\n        form.elements.slug.disabled = true;\n        document.getElementById('save').textContent = 'Save changes';\n        message('Editing ' + article.slug);\n        form.elements.title.focus();\n      });\n      records.appendChild(item);\n    });\n    if (!result.articles.length) message('No article records yet.');\n  }\n  form.addEventListener('submit', async function (event) {\n    event.preventDefault();\n    var body = {};\n    fields.forEach(function (field) { body[field] = form.elements[field].value.trim(); });\n    body.is_published = form.elements.is_published.checked;\n    message('Saving…');\n    try {\n      await call(editSlug ? '/admin/api/articles/' + encodeURIComponent(editSlug) : '/admin/api/articles', {\n        method: editSlug ? 'PUT' : 'POST',\n        headers:{'Content-Type':'application/json','Accept':'application/json'},\n        body:JSON.stringify(body)\n      });\n      clear();await reload();message('Saved successfully.');\n    } catch (error) { message('Could not save: ' + error.message); }\n  });\n  document.getElementById('reset').addEventListener('click', clear);\n  reload().catch(function (error) { message('Unable to load articles: ' + error.message); });\n})();";
-const HTML = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Article Admin | nawazsharif.in</title><style>\n:root{font-family:system-ui,-apple-system,sans-serif;color-scheme:dark}\nbody{max-width:1100px;margin:0 auto;padding:22px;background:#101a1b;color:#eef5f2}\nh1{font-size:1.6rem;letter-spacing:-.03em;margin:0 0 10px}h2{font-size:1.1rem}p{color:#b5c9be;line-height:1.6}\nmain{display:grid;grid-template-columns:1.2fr 1fr;gap:26px;margin-top:23px}\narticle{background:#162523;border:1px solid #355148;border-radius:7px;padding:20px}\nlabel{display:block;font-size:13px;font-weight:650;margin:13px 0 5px}\ninput,textarea{width:100%;box-sizing:border-box;background:#0f1b19;color:#edf3f0;border:1px solid #516d60;padding:11px;border-radius:4px;font:inherit}\ntextarea{min-height:80px;resize:vertical}input[type=checkbox]{width:auto}\n.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}\nbutton{cursor:pointer;border:1px solid #83bfa4;border-radius:4px;background:#82c4a5;color:#102319;padding:11px 14px;font-weight:650}\nbutton.secondary{background:none;color:#d0e9db}\n.article-row{display:block;width:100%;border:0;border-bottom:1px solid #355148;padding:12px 7px;text-align:left;border-radius:0;background:none;color:#eaf3ee;font-weight:450}\n.article-row:hover{background:#263a34}#info{min-height:1.5em}\n@media(max-width:720px){main{grid-template-columns:1fr}article{padding:15px}}\n</style></head><body><header><h1>Article administration</h1><p>Private dashboard · Cloudflare Access required · Metadata only. Publish full HTML articles separately before linking them here.</p></header><main>\n<article><h2>Article record</h2><form id=\"article-form\"><label for=\"slug\">URL slug</label><input id=\"slug\" name=\"slug\" required maxlength=\"110\" pattern=\"[a-zA-Z0-9_-]+\" placeholder=\"your-article-title\">\n<label for=\"title\">Title</label><input id=\"title\" name=\"title\" required maxlength=\"180\">\n<label for=\"summary\">Summary</label><textarea id=\"summary\" name=\"summary\" maxlength=\"500\"></textarea>\n<label for=\"category\">Category</label><input id=\"category\" name=\"category\" maxlength=\"48\" value=\"Technology\">\n<label for=\"url\">Existing HTML article URL</label><input id=\"url\" name=\"url\" required placeholder=\"/your-article-title.html\">\n<label><input name=\"is_published\" type=\"checkbox\"> Published (visible on archive)</label>\n<div class=\"actions\"><button id=\"save\" type=\"submit\">Create article record</button><button id=\"reset\" type=\"button\" class=\"secondary\">Clear</button></div></form>\n<p id=\"info\" role=\"status\" aria-live=\"polite\"></p></article>\n<article><h2>Existing records</h2><div id=\"records\"></div></article></main><script defer src=\"/admin/client.js\"></script></body></html>";
-const head = { 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff',
- 'Referrer-Policy':'no-referrer', 'X-Frame-Options':'DENY' };
-function json(body,status=200){return new Response(JSON.stringify(body),{status,headers:{...head,'Content-Type':'application/json; charset=utf-8'}});}
-function page(body,type){return new Response(body,{status:200,headers:{...head,'Content-Type':type,'Content-Security-Policy':"default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"}});}
-function clean(data) {
- if(!data||typeof data!=='object')return null;
- const value={};
- for(const key of ['slug','title','summary','category','url'])value[key]=typeof data[key]==='string'?data[key].trim():'';
- if(!/^[a-zA-Z0-9_-]{1,110}$/.test(value.slug))return null;
- if(value.title.length<3||value.title.length>180||value.summary.length>500||value.category.length>48)return null;
- if(!/^\/[a-zA-Z0-9/_-]+\.html$/.test(value.url))return null;
- value.category=value.category||'Technology';
- value.is_published=data.is_published===true?1:0;
- return value;
+/* Owner-only full article publishing. Never trusts browser-supplied identity. */
+import adminHTML from './index.html';
+import adminJS from './client.txt';
+import adminCSS from './admin-css.txt';
+import {renderMarkdown} from './markdown.js';
+const OWNER='contact@nawazsharif.in';
+const BLOG='https://blog.nawazsharif.in';
+const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','X-Frame-Options':'DENY'};
+function json(data,status=200){return new Response(JSON.stringify(data),{status,headers:{...headers,'Content-Type':'application/json; charset=utf-8'}});}
+function asset(body,type){return new Response(body,{headers:{...headers,'Content-Type':type,'Content-Security-Policy':"default-src 'none'; script-src 'self'; style-src 'self'; img-src https: data:; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"}});}
+async function owner(ctx){
+ if(!ctx?.access||typeof ctx.access.getIdentity!=='function')return false;
+ try {const identity=await ctx.access.getIdentity();return identity?.email?.toLowerCase()===OWNER;}catch(e){return false;}
 }
-async function isOwner(ctx) {
- if(!ctx||!ctx.access||typeof ctx.access.getIdentity!=='function')return false;
- try {const person=await ctx.access.getIdentity();return person&&typeof person.email==='string'&&person.email.toLowerCase()===OWNER_EMAIL;} catch(e){return false;}
+async function inputJSON(request){
+ const ct=request.headers.get('Content-Type')||'';
+ if(!ct.toLowerCase().startsWith('application/json'))throw Error('JSON content type required');
+ const length=parseInt(request.headers.get('Content-Length')||'0',10);
+ if(length>145000)throw Error('Request is too large');
+ const text=await request.text();
+ if(text.length>145000)throw Error('Request is too large');
+ try{return JSON.parse(text);}catch(e){throw Error('Invalid JSON');}
 }
+function clean(data,kind){
+ if(!data||typeof data!=='object'||Array.isArray(data))return {error:'Missing article data'};
+ const out={};
+ for(const key of ['slug','title','summary','category','body_md','seo_title','seo_description','cover_url']){
+  out[key]=typeof data[key]==='string'?data[key].trim():'';
+ }
+ if(!/^[a-zA-Z0-9_-]{1,110}$/.test(out.slug))return {error:'Invalid slug'};
+ if(kind==='dynamic'&&!/^[a-z0-9](?:[a-z0-9-]{1,98})[a-z0-9]$/.test(out.slug))return {error:'Slug needs 3-100 lowercase letters, digits or hyphens'};
+ if(['api','health','admin','sitemap','robots'].includes(out.slug))return {error:'Reserved slug'};
+ if(out.title.length<3||out.title.length>180)return {error:'Title must be 3-180 characters'};
+ if(out.summary.length>500||out.category.length>48||out.seo_title.length>180||out.seo_description.length>320)return {error:'Summary or SEO field is too long'};
+ if(out.body_md.length>100000)return {error:'Article body is too long'};
+ if(out.cover_url){
+  try{const u=new URL(out.cover_url);if(u.protocol!=='https:'||u.username||u.password||out.cover_url.length>1500)throw Error();}catch(e){return {error:'Cover must be an HTTPS image URL'};}
+ }
+ out.category=out.category||'Technology';
+ out.is_published=data.is_published===true?1:0;
+ out.content_override=kind==='legacy'&&data.content_override===true?1:0;
+ if(kind==='dynamic'&&out.is_published&&out.body_md.length<160)return {error:'Write at least 160 characters before publishing'};
+ if(kind==='legacy'&&out.content_override&&out.body_md.length<160)return {error:'Write at least 160 characters to replace the original article'};
+ if(kind==='legacy'&&out.content_override&&!out.is_published)return {error:'Publish the article before activating replacement content'};
+ return out;
+}
+async function saveRevision(db,old) {
+ await db.prepare('INSERT INTO article_revisions(slug,snapshot) VALUES(?,?)').bind(old.slug,JSON.stringify(old)).run();
+}
+function validOrigin(request,u){return request.headers.get('Origin')===u.origin && (request.headers.get('Sec-Fetch-Site')||'same-origin')==='same-origin';}
 export default {
  async fetch(request,env,ctx){
-   // Do not trust spoofable headers. The identity comes exclusively from
-   // the Cloudflare Access runtime integration attached to this Worker.
-   if(!(await isOwner(ctx)))return json({error:'Access required'},403);
-   const u=new URL(request.url),path=u.pathname;
-   try{
-     if(request.method==='GET'&&path==='/admin')return page(HTML,'text/html; charset=utf-8');
-     if(request.method==='GET'&&path==='/admin/client.js')return page(CLIENT,'text/javascript; charset=utf-8');
-     if(request.method==='GET'&&path==='/admin/api/articles'){
-       const rows=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,created_at,updated_at FROM articles ORDER BY id DESC LIMIT 300').all();
-       return json({articles:rows.results||[]});
-     }
-     if((request.method==='POST'||request.method==='PUT')&&path.startsWith('/admin/api/articles')){
-       // JSON + same-origin requirement to prevent cross-origin form/CSRF requests.
-       if(request.headers.get('Origin')!==u.origin)return json({error:'Origin rejected'},403);
-       if(!request.headers.get('Content-Type')?.toLowerCase().startsWith('application/json'))return json({error:'JSON required'},415);
-       let payload;
-       try{payload=await request.json();}catch(e){return json({error:'Invalid JSON'},400);}
-       const value=clean(payload);
-       if(!value)return json({error:'Invalid article fields'},400);
-       if(request.method==='POST'&&path==='/admin/api/articles'){
-         try{
-           await env.DB.prepare('INSERT INTO articles(slug,title,summary,category,url,is_published) VALUES(?,?,?,?,?,?)')
-             .bind(value.slug,value.title,value.summary,value.category,value.url,value.is_published).run();
-           return json({saved:true,slug:value.slug},201);
-         }catch(e){return json({error:'Slug already exists or database unavailable'},409);}
-       }
-       const m=path.match(/^\/admin\/api\/articles\/([a-zA-Z0-9_-]{1,110})$/);
-       if(request.method==='PUT'&&m&&m[1]===value.slug){
-         const result=await env.DB.prepare('UPDATE articles SET title=?,summary=?,category=?,url=?,is_published=?,updated_at=CURRENT_TIMESTAMP WHERE slug=?')
-           .bind(value.title,value.summary,value.category,value.url,value.is_published,value.slug).run();
-         return result.meta?.changes?json({saved:true,slug:value.slug}):json({error:'Article not found'},404);
-       }
-     }
-     return json({error:'Not found'},404);
-   }catch(e){console.error('Admin backend error',e?.name||'unknown');return json({error:'Service unavailable'},503);}
+  if(!(await owner(ctx)))return json({error:'Access required'},403);
+  const u=new URL(request.url),path=u.pathname;
+  if(request.method==='GET'&&(path==='/admin'||path==='/admin/'))return asset(adminHTML,'text/html; charset=utf-8');
+  if(request.method==='GET'&&path==='/admin/client.js')return asset(adminJS,'text/javascript; charset=utf-8');
+  if(request.method==='GET'&&path==='/admin/style.css')return asset(adminCSS,'text/css; charset=utf-8');
+  try{
+   if(request.method==='GET'&&path==='/admin/api/articles'){
+    const result=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,content_type,body_md,seo_title,seo_description,cover_url,content_override,published_at,created_at,updated_at FROM articles ORDER BY id DESC LIMIT 400').all();
+    return json({articles:result.results||[]});
+   }
+   const rev=path.match(/^\/admin\/api\/articles\/([a-zA-Z0-9_-]{1,110})\/revisions$/);
+   if(request.method==='GET'&&rev){
+    const r=await env.DB.prepare('SELECT id,created_at FROM article_revisions WHERE slug=? ORDER BY id DESC LIMIT 15').bind(rev[1]).all();
+    return json({revisions:r.results||[]});
+   }
+   const revItem=path.match(/^\/admin\/api\/articles\/([a-zA-Z0-9_-]{1,110})\/revisions\/(\d{1,15})$/);
+   if(request.method==='GET'&&revItem){
+    const r=await env.DB.prepare('SELECT snapshot FROM article_revisions WHERE slug=? AND id=?').bind(revItem[1],Number(revItem[2])).first();
+    return r?json({article:JSON.parse(r.snapshot)}):json({error:'Revision not found'},404);
+   }
+   if(request.method==='POST'&&path==='/admin/api/preview'){
+    if(!validOrigin(request,u))return json({error:'Origin rejected'},403);
+    const payload=await inputJSON(request);
+    if(typeof payload.body_md!=='string'||payload.body_md.length>100000)return json({error:'Invalid body'},400);
+    return json({html:renderMarkdown(payload.body_md)});
+   }
+   if(request.method!=='POST'&&request.method!=='PUT')return json({error:'Not found'},404);
+   if(!validOrigin(request,u))return json({error:'Origin rejected'},403);
+   const payload=await inputJSON(request);
+   if(request.method==='POST'&&path==='/admin/api/articles'){
+    const cleanValue=clean(payload,'dynamic');
+    if(cleanValue.error)return json({error:cleanValue.error},400);
+    const x=cleanValue;
+    const existing=await env.DB.prepare('SELECT 1 FROM articles WHERE slug=? OR url=? LIMIT 1').bind(x.slug,BLOG+'/'+x.slug).first();
+    if(existing)return json({error:'Slug already exists'},409);
+    await env.DB.prepare('INSERT INTO articles(slug,title,summary,category,url,is_published,body_md,content_type,seo_title,seo_description,cover_url,content_override) VALUES(?,?,?,?,?,?,?, ?,?,?,?,0)')
+      .bind(x.slug,x.title,x.summary,x.category,BLOG+'/'+x.slug,x.is_published,x.body_md,'dynamic',x.seo_title,x.seo_description,x.cover_url).run();
+    return json({saved:true,slug:x.slug,url:BLOG+'/'+x.slug},201);
+   }
+   const match=path.match(/^\/admin\/api\/articles\/([a-zA-Z0-9_-]{1,110})$/);
+   if(request.method==='PUT'&&match){
+    const old=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,content_type,body_md,seo_title,seo_description,cover_url,content_override,published_at FROM articles WHERE slug=?').bind(match[1]).first();
+    if(!old)return json({error:'Article not found'},404);
+    const x=clean(payload,old.content_type);
+    if(x.error)return json({error:x.error},400);
+    if(x.slug!==match[1])return json({error:'Existing article slug cannot change'},400);
+    // Legacy original URLs and HTML stay untouched. Dynamic URLs use the blog subdomain.
+    await env.DB.batch([
+      env.DB.prepare('INSERT INTO article_revisions(slug,snapshot) VALUES(?,?)').bind(old.slug,JSON.stringify(old)),
+      env.DB.prepare('UPDATE articles SET title=?,summary=?,category=?,is_published=?,body_md=?,seo_title=?,seo_description=?,cover_url=?,content_override=?,updated_at=CURRENT_TIMESTAMP WHERE slug=?')
+        .bind(x.title,x.summary,x.category,x.is_published,x.body_md,x.seo_title,x.seo_description,x.cover_url,x.content_override,x.slug)
+    ]);
+    return json({saved:true,slug:x.slug,url:old.url});
+   }
+   return json({error:'Not found'},404);
+  }catch(e){
+   const msg=e instanceof Error?e.message:'Unexpected error';
+   if(['JSON content type required','Request is too large','Invalid JSON'].includes(msg))return json({error:msg},400);
+   console.error('Admin editor error',e?.name||'unknown');
+   return json({error:'Database or service unavailable'},503);
+  }
  }
 };
