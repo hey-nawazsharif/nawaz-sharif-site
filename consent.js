@@ -1,3 +1,17 @@
+/* Keep old bookmarks working while showing the preferred extensionless page URL.
+   The equivalent path is verified on GitHub Pages; replaceState does not reload. */
+(function () {
+  'use strict';
+  try {
+    var path = window.location.pathname;
+    if (!/^\/[a-zA-Z0-9_-]+\.html$/.test(path)) return;
+    var clean = path === '/index.html' ? '/' : path.slice(0, -5);
+    window.history.replaceState(window.history.state, '', clean + window.location.search + window.location.hash);
+  } catch (_) {
+    // URL display is cosmetic; never interrupt the page or privacy preferences.
+  }
+})();
+
 /* Minimal privacy choice panel. Optional site tracking runs only after opt-in. */
 (function () {
   'use strict';

@@ -6,6 +6,7 @@ on:
       - "index.html"
       - "articles.html"
       - "articles-dynamic.js"
+      - "consent.js"
       - ".github/workflows/cms-browser-check.yml"
   push:
     branches: [main]

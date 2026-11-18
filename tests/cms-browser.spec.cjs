@@ -20,7 +20,7 @@ async function inspectPage(page, path, width, screenshot = false) {
   await expect(page.locator('main#main')).toHaveCount(1);
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('h1')).not.toBeEmpty();
-  await expect(page.locator('a[href="/about.html"]').first()).toHaveAttribute('href', '/about.html');
+  await expect(page.locator('a[href^="/about"]').first()).toHaveAttribute('href', /^\/about(?:\.html)?$/);
   await expect(page.locator('link[rel="stylesheet"][href="/style.css"]')).toHaveCount(1);
   await expect(page.locator('script[src="/consent.js"]')).toHaveCount(1);
   await expect(page.locator('footer')).toHaveCount(1);
@@ -172,4 +172,23 @@ test('CMS preview dynamically loaded articles open a separate tab', async ({ pag
   expect(newTab.url()).not.toBe('about:blank');
   expect(page.url()).toBe(originalURL);
   await newTab.close();
+});
+
+
+test('CMS preview accepts clean URLs for primary site pages', async ({ request }) => {
+  for (const slug of ['/articles', '/about', '/contact', '/faq']) {
+    const response = await request.get(PREVIEW + slug);
+    expect(response.status(), slug).toBe(200);
+    expect(response.headers()['x-robots-tag'] || '', slug).toContain('noindex');
+  }
+});
+
+
+test('legacy .html bookmark displays clean URL without reloading the page', async ({ page }) => {
+  const result = await page.goto(PRODUCTION + '/articles.html', { waitUntil: 'domcontentloaded' });
+  expect(result.status()).toBe(200);
+  // Execute the committed shared script directly, avoiding a Pages-deployment race on PRs.
+  await page.addScriptTag({ path: 'consent.js' });
+  await expect.poll(() => page.url()).toBe(PRODUCTION + '/articles');
+  await expect(page.locator('main#main')).toHaveCount(1);
 });

@@ -36,10 +36,12 @@ export default {
   const url=new URL(request.url);
   if(request.method!=='GET'&&request.method!=='HEAD')return new Response('Method not allowed',{status:405,headers:{Allow:'GET, HEAD'}});
   if(url.pathname==='/robots.txt')return new Response('User-agent: *\nDisallow: /\n',{headers:{'Content-Type':'text/plain','Cache-Control':'public, max-age=300'}});
-  let path=url.pathname==='/'?'/index.html':url.pathname;
+  const requested=url.pathname==='/'?'/index.html':url.pathname;
+  // Accept clean URLs on the preview while keeping D1 page identifiers unchanged.
+  let path=/^\/[a-zA-Z0-9_-]+$/.test(requested)?requested+'.html':requested;
   if(!PAGES.has(path)){
    if(SAFE_ASSET.test(path)&&!path.includes('..'))return originAsset(request,url);
-   if(/^\/[a-zA-Z0-9_-]+\.html$/.test(path))return Response.redirect(ORIGIN+path,302);
+   if(/^\/[a-zA-Z0-9_-]+\.html$/.test(path))return Response.redirect(ORIGIN+url.pathname+url.search,302);
    return new Response('Not found',{status:404,headers:{'X-Robots-Tag':'noindex'}});
   }
   let origin;
