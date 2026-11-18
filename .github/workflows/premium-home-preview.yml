@@ -1,0 +1,53 @@
+name: Nawaz Premium Homepage Preview
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workers/cms/worker.js"
+      - "workers/cms/premium-home.js"
+      - "workers/cms/premium-home-css.txt"
+      - "tests/premium-home.test.mjs"
+      - ".github/workflows/premium-home-preview.yml"
+  workflow_dispatch:
+jobs:
+  verify-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax and safe homepage generation
+        run: |
+          set -euo pipefail
+          node --input-type=module --check < workers/cms/worker.js
+          node --input-type=module --check < workers/cms/premium-home.js
+          node --experimental-default-type=module tests/premium-home.test.mjs
+      - name: Check premium homepage, original contact and privacy
+        run: |
+          set -euo pipefail
+          url="https://cms-preview.nawazsharif.in"
+          for i in 1 2 3 4; do
+            if curl -fsSL --max-time 30 "$url/index.html" -o /tmp/premium.html; then break; fi
+            sleep 5
+          done
+          grep -Fq 'class="px-hero"' /tmp/premium.html
+          grep -Fq 'class="px-service-grid"' /tmp/premium.html
+          grep -Fq 'class="px-article-grid"' /tmp/premium.html
+          grep -Fq 'class="px-block px-about"' /tmp/premium.html
+          grep -Fq 'id="nawaz-premium-home"' /tmp/premium.html
+          grep -Fq 'id="home-contact-form"' /tmp/premium.html
+          grep -Fq 'action="https://formspree.io/f/xqpergwz"' /tmp/premium.html
+          grep -Fq 'g-recaptcha' /tmp/premium.html
+          grep -Fq 'src="/consent.js"' /tmp/premium.html
+          grep -Fq 'src="/form-home.js"' /tmp/premium.html
+          grep -Fq 'id="main"' /tmp/premium.html
+          if grep -Fq 'Principal Systems &amp; Cybersecurity Architect' /tmp/premium.html; then
+            echo 'Premium homepage still shows old original headline'
+            exit 1
+          fi
+          curl -fsSI --max-time 30 "$url/index.html" | grep -iq 'x-robots-tag: noindex'
+          curl -fsSL --max-time 30 "$url/about.html" | grep -Fq 'profile-doc'
+          curl -fsSL --max-time 30 "$url/articles.html" | grep -Fq 'dynamic-article-grid'
+          echo 'PASS: premium homepage, forms preserved, noindex, other pages intact'
