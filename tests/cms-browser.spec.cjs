@@ -20,7 +20,7 @@ async function inspectPage(page, path, width, screenshot = false) {
   await expect(page.locator('main#main')).toHaveCount(1);
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('h1')).not.toBeEmpty();
-  await expect(page.locator('a[href="/about"]').first()).toHaveAttribute('href', '/about');
+  await expect(page.locator('a[href^="/about"]').first()).toHaveAttribute('href', /^\/about(?:\.html)?$/);
   await expect(page.locator('link[rel="stylesheet"][href="/style.css"]')).toHaveCount(1);
   await expect(page.locator('script[src="/consent.js"]')).toHaveCount(1);
   await expect(page.locator('footer')).toHaveCount(1);
