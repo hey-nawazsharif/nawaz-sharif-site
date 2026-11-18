@@ -18,6 +18,8 @@
     shown++;
     var card=element('div','card'),link=element('a');
     link.href=article.url;
+    link.target='_blank';
+    link.rel='noopener noreferrer';
     link.appendChild(element('span','category',article.category||'Technology'));
     link.appendChild(element('h3','',article.title.replace(/\s*\|\s*Nawaz Sharif\s*$/i,'')));
     link.appendChild(element('p','',article.summary||'Read the full guide.'));

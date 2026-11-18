@@ -115,3 +115,61 @@ test('preview article archive uses dynamic content API, not static fallback', as
   await expect(page.locator('#static-article-grid')).toBeHidden();
   expect(await page.locator('#dynamic-article-grid .card').count()).toBeGreaterThan(0);
 });
+
+
+test('article links have safe new-tab markup in committed source', () => {
+  const home = fs.readFileSync('index.html', 'utf8');
+  const archive = fs.readFileSync('articles.html', 'utf8');
+  const dynamicJS = fs.readFileSync('articles-dynamic.js', 'utf8');
+
+  const featured = [...home.matchAll(/<a\b[^>]*class="feature-story"[^>]*>/g)].map(m => m[0]);
+  const staticCards = [...archive.matchAll(/<div class="card"><a\b[^>]*>/g)].map(m => m[0]);
+  expect(featured.length).toBeGreaterThanOrEqual(8);
+  expect(staticCards.length).toBeGreaterThanOrEqual(20);
+  for (const tag of [...featured, ...staticCards]) {
+    expect(tag).toContain('target="_blank"');
+    expect(tag).toContain('rel="noopener noreferrer"');
+  }
+  expect(dynamicJS).toContain("link.target='_blank'");
+  expect(dynamicJS).toContain("link.rel='noopener noreferrer'");
+  // Navigation links must remain same-tab.
+  expect(home).not.toMatch(/<a href="\/articles\.html" target="_blank"/);
+  expect(archive).not.toMatch(/<a href="\/index\.html" target="_blank"/);
+});
+
+test('homepage featured article opens a separate browser tab', async ({ page }) => {
+  // On PRs, the remote live site still has the old code; source markup is checked above.
+  test.skip(process.env.GITHUB_EVENT_NAME === 'pull_request', 'Browser validation runs after deployment');
+  await page.goto(PRODUCTION + '/index.html', { waitUntil: 'domcontentloaded' });
+  const reject = page.locator('#ns-privacy-reject');
+  if (await reject.isVisible()) await reject.click();
+  const link = page.locator('a.feature-story').first();
+  await expect(link).toHaveAttribute('target', '_blank');
+  await expect(link).toHaveAttribute('rel', /noopener noreferrer/);
+  const [newTab] = await Promise.all([page.waitForEvent('popup'), link.click()]);
+  await newTab.waitForLoadState('domcontentloaded');
+  expect(new URL(newTab.url()).pathname).toBe(new URL(await link.getAttribute('href'), PRODUCTION).pathname);
+  expect(page.url()).toContain('/index.html');
+  await newTab.close();
+});
+
+test('CMS preview dynamically loaded articles open a separate tab', async ({ page }) => {
+  test.skip(process.env.GITHUB_EVENT_NAME === 'pull_request', 'Browser validation runs after deployment');
+  await page.goto(PREVIEW + '/articles.html', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#dynamic-article-grid')).toBeVisible({ timeout: 18000 });
+  const reject = page.locator('#ns-privacy-reject');
+  if (await reject.isVisible()) await reject.click();
+  const links = page.locator('#dynamic-article-grid .card a');
+  expect(await links.count()).toBeGreaterThan(0);
+  await expect(links.first()).toHaveAttribute('target', '_blank');
+  await expect(links.first()).toHaveAttribute('rel', /noopener noreferrer/);
+  for (const tag of await page.locator('#static-article-grid .card a').all()) {
+    await expect(tag).toHaveAttribute('target', '_blank');
+  }
+  const originalURL = page.url();
+  const [newTab] = await Promise.all([page.waitForEvent('popup'), links.first().click()]);
+  await newTab.waitForLoadState('domcontentloaded');
+  expect(newTab.url()).not.toBe('about:blank');
+  expect(page.url()).toBe(originalURL);
+  await newTab.close();
+});

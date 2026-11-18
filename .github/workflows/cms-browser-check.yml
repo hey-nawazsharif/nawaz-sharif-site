@@ -3,11 +3,17 @@ on:
   pull_request:
     paths:
       - "tests/cms-browser.spec.cjs"
+      - "index.html"
+      - "articles.html"
+      - "articles-dynamic.js"
       - ".github/workflows/cms-browser-check.yml"
   push:
     branches: [main]
     paths:
       - "tests/cms-browser.spec.cjs"
+      - "index.html"
+      - "articles.html"
+      - "articles-dynamic.js"
       - ".github/workflows/cms-browser-check.yml"
   workflow_dispatch:
 jobs:
