@@ -10,6 +10,7 @@ import builderHTML from './builder-page.html';
 import builderCSS from './builder-style.txt';
 import builderJS from './builder-client.txt';
 import {handleBuilder} from './builder-api.js';
+import {builderCSS as renderBuilderCSS} from './builder-render.js';
 import {renderMarkdown} from './markdown.js';
 const OWNER='contact@nawazsharif.in';
 const BLOG='https://blog.nawazsharif.in';
@@ -67,6 +68,7 @@ export default {
   if(request.method==='GET'&&(path==='/admin/builder'||path==='/admin/builder/'))return asset(builderHTML,'text/html; charset=utf-8');
   if(request.method==='GET'&&path==='/admin/builder/client.js')return asset(builderJS,'text/javascript; charset=utf-8');
   if(request.method==='GET'&&path==='/admin/builder/style.css')return asset(builderCSS,'text/css; charset=utf-8');
+  if(request.method==='GET'&&path==='/admin/builder/preview.css')return asset(renderBuilderCSS(),'text/css; charset=utf-8');
   if(path.startsWith('/admin/api/builder/'))return handleBuilder(request,env);
   try{
    if(request.method==='GET'&&path==='/admin/api/articles'){

@@ -94,7 +94,7 @@ function schedulePreview(){
  previewTimer=setTimeout(function(){
   var design={theme:qs('theme').value,spacing:qs('spacing').value};
   req('/admin/api/builder/preview',{sections:sections,design:design})
-  .then(function(d){if(version!==previewReq)return;var style=qs('builder-preview-css');if(!style){style=el('style');style.id='builder-preview-css';document.head.appendChild(style);}style.textContent=d.css||'';
+  .then(function(d){if(version!==previewReq)return;
    var target=qs('render-preview');target.replaceChildren();
    if(d.html){target.innerHTML=d.html;}else target.appendChild(el('p','muted','Add sections to preview them here.'));
   }).catch(function(e){if(version!==previewReq)return;qs('render-preview').textContent='Preview unavailable: '+e.message;});
