@@ -1,0 +1,44 @@
+name: Nawaz CMS smoke checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workers/cms/**"
+      - "workers/admin/site-**"
+      - ".github/workflows/cms-smoke-test.yml"
+  workflow_dispatch:
+
+jobs:
+  public-cms-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Check preview pages, contacts, SEO and Access gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="https://cms-preview.nawazsharif.in"
+          get_page() {
+            local path="$1" dest="$2"
+            for i in 1 2 3 4; do
+              if curl -fsSL --max-time 25 "$target$path" -o "$dest"; then return 0; fi
+              sleep 7
+            done
+            return 1
+          }
+          get_page /index.html /tmp/site-home.html
+          get_page /about.html /tmp/site-about.html
+          get_page /faq.html /tmp/site-faq.html
+          get_page /contact.html /tmp/site-contact.html
+          get_page /articles.html /tmp/site-articles.html
+          grep -Fq 'id="hero-title"' /tmp/site-home.html
+          grep -Fq 'profile-doc' /tmp/site-about.html
+          grep -Fq 'faq-answer' /tmp/site-faq.html
+          grep -Fq 'https://formspree.io/f/' /tmp/site-contact.html
+          grep -Fq 'g-recaptcha' /tmp/site-contact.html
+          grep -Fq 'dynamic-article-grid' /tmp/site-articles.html
+          curl -fsSI --max-time 20 "$target/index.html" | grep -iq 'x-robots-tag: noindex'
+          curl -fsSL --max-time 20 "$target/robots.txt" | grep -Fq 'Disallow: /'
+          code="$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' 'https://nawaz-site-admin.nawaz-site-observer.workers.dev/admin/site')"
+          test "$code" != "200" || { echo 'SECURITY ERROR: private CMS accessible without authentication'; exit 1; }
+          echo "CMS preview pages, reCAPTCHA markup, SEO robots and admin access check passed."
