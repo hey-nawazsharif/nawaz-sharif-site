@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Publishing Studio · Nawaz Sharif</title>
+<link rel="stylesheet" href="/admin/style.css"></head>
+<body>
+<header class="topbar"><div class="top-inner"><div><span class="eyebrow">NAWAZSHARIF.IN / PRIVATE</span><h1>Publishing studio<span class="dot">.</span></h1></div><span class="tag"><span class="lock"></span> Cloudflare Access</span></div></header>
+<div class="layout">
+<aside class="sidebar" aria-label="Article archive">
+ <div class="side-top"><div><p class="eyebrow">CONTENT LIBRARY</p><h2>Articles</h2></div><button class="btn btn-dark" id="new-article" type="button">+ New article</button></div>
+ <input id="filter-articles" type="search" aria-label="Search article records" placeholder="Search articles…" autocomplete="off">
+ <div class="summary-row"><span id="count">Loading…</span><span>Drafts & published</span></div>
+ <div id="article-list" class="article-list"><p>Loading your articles…</p></div>
+</aside>
+<main class="workspace">
+ <div class="edit-top"><div><p class="eyebrow" id="editor-label">NEW ARTICLE</p><h2 id="editor-title">Write a new article</h2><p class="subtle" id="editor-context">Save drafts privately, then publish on your blog.</p></div><span id="editor-status" class="status-tag">Draft</span></div>
+ <form id="editor-form" autocomplete="off">
+  <div class="field-grid">
+   <div class="field"><label for="title">Article title <span class="required">*</span></label><input required minlength="3" maxlength="180" id="title" name="title" placeholder="A clear, specific headline"></div>
+   <div class="field"><label for="slug">URL slug <span class="required">*</span></label><input required pattern="[a-zA-Z0-9_-]+" maxlength="110" id="slug" name="slug" placeholder="your-article-title"><small id="url-preview">blog.nawazsharif.in/your-article-title</small></div>
+  </div>
+  <div class="field-grid">
+   <div class="field"><label for="category">Category</label><input id="category" name="category" maxlength="48" value="Technology" placeholder="Linux, Python, Cybersecurity…"></div>
+   <div class="field"><label for="cover_url">Cover image (HTTPS URL)</label><input type="url" id="cover_url" name="cover_url" maxlength="1500" placeholder="https://example.com/image.jpg"><small>External image URL; file uploads are not enabled.</small></div>
+  </div>
+  <div class="field"><label for="summary">Article summary</label><textarea id="summary" name="summary" maxlength="500" rows="3" placeholder="Two or three useful sentences summarizing the article."></textarea></div>
+  <div class="editor-section"><div class="editor-heading"><div><h3>Article content</h3><p class="subtle">Write in Markdown. The toolbar inserts formatting; Preview shows the result.</p></div><button id="show-preview" type="button" class="btn btn-quiet">Preview <span aria-hidden="true">↗</span></button></div>
+   <div class="toolbar" aria-label="Article formatting">
+    <button type="button" data-wrap="**" title="Bold text">B</button>
+    <button type="button" data-wrap="*" title="Italic text"><em>I</em></button>
+    <button type="button" data-prefix="## " title="Heading level 2">H2</button>
+    <button type="button" data-prefix="### " title="Heading level 3">H3</button>
+    <button type="button" data-prefix="- " title="Bulleted list">• List</button>
+    <button type="button" data-prefix="1. " title="Numbered list">1. List</button>
+    <button type="button" data-wrap-code="true" title="Code block">Code</button>
+    <button type="button" data-insert-link="true" title="Insert HTTPS link">Link</button>
+    <button type="button" data-insert-image="true" title="Insert image by HTTPS URL">Image</button>
+   </div>
+   <div class="editor-columns"><div class="field field-body"><label for="body_md" class="sr-only">Markdown article content</label><textarea id="body_md" name="body_md" spellcheck="true" rows="21" placeholder="## Start with a clear heading&#10;&#10;Explain the topic, then add examples and code."></textarea><small id="word-count">0 words</small></div>
+    <div id="preview-pane" class="preview-pane"><p class="preview-heading">LIVE PREVIEW</p><div id="preview-content" class="article-preview"><p class="subtle">Your article preview appears here.</p></div></div></div>
+  </div>
+  <details class="seo-panel"><summary>Search & sharing settings <span class="subtle">SEO</span></summary>
+   <div class="field"><label for="seo_title">SEO page title</label><input id="seo_title" name="seo_title" maxlength="180" placeholder="Leave blank to use the article title"></div>
+   <div class="field"><label for="seo_description">SEO description</label><textarea id="seo_description" name="seo_description" maxlength="320" rows="2" placeholder="Leave blank to use the article summary"></textarea></div>
+  </details>
+  <div id="legacy-note" class="legacy-note" hidden><strong>Existing HTML article</strong><p>Your original GitHub Pages HTML remains intact. Metadata changes are managed here. To replace the visible body, paste Markdown, review its preview and enable the replacement below.</p><label class="checkbox"><input type="checkbox" id="content_override" name="content_override"> Replace original article body with this Markdown after saving</label><small>Do not enable until the replacement content is complete. Disabling restores the original HTML article.</small></div>
+  <div class="actions"><div><button class="btn btn-primary" type="submit" id="save-draft" data-action="draft">Save draft</button><button class="btn btn-outline" type="submit" id="publish" data-action="publish">Publish article</button><button class="btn btn-quiet" id="reset-form" type="button">Clear editor</button></div><p id="message" role="status" aria-live="polite"></p></div>
+ </form>
+ <details id="revisions-panel" class="revisions-panel" hidden><summary>Version history</summary><div id="revisions-list"></div></details>
+ <footer class="footer-note">Published entries are public. Drafts remain private. <a href="https://nawazsharif.in/articles.html" target="_blank" rel="noopener noreferrer">View article archive</a></footer>
+</main></div>
+<script defer src="/admin/client.js"></script></body></html>
