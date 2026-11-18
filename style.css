@@ -472,3 +472,12 @@ header nav a{margin:0}
   .ns-privacy-panel .ns-privacy-footnote{margin-top:11px;font-size:10.5px}
 }
 @media(max-width:350px){.ns-privacy-panel .ns-privacy-buttons:not(.ns-privacy-save-actions){grid-template-columns:1fr 1fr}.ns-privacy-panel #ns-privacy-accept{grid-column:1/-1}}
+
+/* D1-backed searchable archive with static HTML fallback. */
+.archive-search{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:23px 0 25px;padding:15px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.archive-search label{font-size:13px;font-weight:650;color:var(--head)}
+.archive-search input{min-width:210px;flex:1;max-width:420px;padding:11px 13px;border:1px solid var(--line2);border-radius:4px;background:var(--panel);color:var(--text);font:inherit;font-size:14px}
+.archive-search input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.archive-search p{margin:0;font-size:12px;color:var(--mute)}
+#dynamic-article-grid[hidden],#static-article-grid[hidden],#static-article-grid .card[hidden]{display:none!important}
+@media(max-width:540px){.archive-search{align-items:stretch;flex-direction:column;gap:9px}.archive-search input{max-width:none;width:100%;min-width:0}}
