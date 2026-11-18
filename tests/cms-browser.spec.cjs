@@ -182,3 +182,13 @@ test('CMS preview accepts clean URLs for primary site pages', async ({ request }
     expect(response.headers()['x-robots-tag'] || '', slug).toContain('noindex');
   }
 });
+
+
+test('legacy .html bookmark displays clean URL without reloading the page', async ({ page }) => {
+  const result = await page.goto(PRODUCTION + '/articles.html', { waitUntil: 'domcontentloaded' });
+  expect(result.status()).toBe(200);
+  // Execute the committed shared script directly, avoiding a Pages-deployment race on PRs.
+  await page.addScriptTag({ path: 'consent.js' });
+  await expect.poll(() => page.url()).toBe(PRODUCTION + '/articles');
+  await expect(page.locator('main#main')).toHaveCount(1);
+});

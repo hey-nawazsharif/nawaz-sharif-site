@@ -6,6 +6,8 @@ const pages = readdirSync(root).filter(name => name.endsWith('.html'));
 assert.ok(pages.length >= 30, 'Unexpectedly incomplete website checkout');
 
 let changedLinks = 0;
+const cleanScript = readFileSync('consent.js','utf8');
+assert.ok(cleanScript.includes('window.history.replaceState(window.history.state'), 'Old .html bookmarks must display clean URLs');
 for (const page of pages) {
   const html = readFileSync(page, 'utf8');
   const hrefs = [...html.matchAll(/\bhref=(["'])(.*?)\1/gi)].map(x => x[2]);

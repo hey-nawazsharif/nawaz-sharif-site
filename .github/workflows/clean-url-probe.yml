@@ -5,6 +5,7 @@ on:
       - '*.html'
       - 'sitemap.xml'
       - 'articles-dynamic.js'
+      - 'consent.js'
       - 'workers/cms/worker.js'
       - 'tests/clean-urls.test.mjs'
       - 'tests/cms-browser.spec.cjs'
