@@ -17,7 +17,8 @@
     if(!matches(article.title+' '+article.summary+' '+article.category))return;
     shown++;
     var card=element('div','card'),link=element('a');
-    link.href=article.url;
+    // First-party legacy file names are still valid but display a clean public URL.
+    link.href=article.url.startsWith('/')?article.url.replace(/\.html$/i,''):article.url;
     link.target='_blank';
     link.rel='noopener noreferrer';
     link.appendChild(element('span','category',article.category||'Technology'));
