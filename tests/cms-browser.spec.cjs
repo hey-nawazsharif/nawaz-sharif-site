@@ -90,3 +90,28 @@ test('privacy choices appear; rejecting optional analytics does not enable track
   expect(choice).toMatchObject({ version: 1, analytics: false });
   await expect(page.locator('.ns-privacy-footer-link')).toHaveCount(1);
 });
+
+
+test('article API is readable from the CMS preview with explicit CORS', async ({ request }) => {
+  const url = 'https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles?limit=50';
+  const response = await request.get(url, { headers: { Origin: PREVIEW } });
+  expect(response.status()).toBe(200);
+  expect(response.headers()['access-control-allow-origin']).toBe(PREVIEW);
+  const body = await response.json();
+  expect(Array.isArray(body.articles)).toBe(true);
+  expect(body.articles.length).toBeGreaterThan(0);
+  const preflight = await request.fetch(url, { method: 'OPTIONS', headers: { Origin: PREVIEW } });
+  expect(preflight.status()).toBe(204);
+  expect(preflight.headers()['access-control-allow-origin']).toBe(PREVIEW);
+  // Public read-only API: anonymous writes must continue to be rejected.
+  const denied = await request.post(url, { data: { title: 'do not publish' } });
+  expect(denied.status()).toBe(405);
+});
+
+test('preview article archive uses dynamic content API, not static fallback', async ({ page }) => {
+  const response = await page.goto(PREVIEW + '/articles.html', { waitUntil: 'domcontentloaded' });
+  expect(response.status()).toBe(200);
+  await expect(page.locator('#dynamic-article-grid')).toBeVisible({ timeout: 18000 });
+  await expect(page.locator('#static-article-grid')).toBeHidden();
+  expect(await page.locator('#dynamic-article-grid .card').count()).toBeGreaterThan(0);
+});

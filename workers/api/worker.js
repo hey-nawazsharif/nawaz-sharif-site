@@ -2,7 +2,7 @@
 import { renderMarkdown, escapeHTML, safeURL } from './markdown.js';
 const MAIN='https://nawazsharif.in';
 const BLOG='https://blog.nawazsharif.in';
-const allowed=new Set([MAIN,'https://www.nawazsharif.in']);
+const allowed=new Set([MAIN,'https://www.nawazsharif.in','https://cms-preview.nawazsharif.in']);
 const select='slug,title,summary,category,url,published_at,updated_at,content_type,seo_title,seo_description,cover_url';
 const allFields=select+',published_snapshot';
 function publicRow(row) {
