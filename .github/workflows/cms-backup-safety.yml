@@ -1,0 +1,27 @@
+name: Nawaz CMS offline backup verifier
+on:
+  pull_request:
+    paths:
+      - "tools/verify-cms-backup.mjs"
+      - "tests/cms-backup-verify.test.mjs"
+      - ".github/workflows/cms-backup-safety.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/verify-cms-backup.mjs"
+      - "tests/cms-backup-verify.test.mjs"
+      - ".github/workflows/cms-backup-safety.yml"
+  workflow_dispatch:
+jobs:
+  backup-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check local backup verifier syntax
+        run: node --check tools/verify-cms-backup.mjs
+      - name: Test safe backup validation with fake data
+        run: node tests/cms-backup-verify.test.mjs
