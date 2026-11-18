@@ -4,6 +4,17 @@ const MAIN='https://nawazsharif.in';
 const BLOG='https://blog.nawazsharif.in';
 const allowed=new Set([MAIN,'https://www.nawazsharif.in']);
 const select='slug,title,summary,category,url,published_at,updated_at,content_type,seo_title,seo_description,cover_url';
+const allFields=select+',published_snapshot';
+function publicRow(row) {
+ if(!row)return null;
+ let published={};
+ try {published=row.published_snapshot?JSON.parse(row.published_snapshot):{};}catch(e){published={};}
+ if(row.content_type==='dynamic'&&!published.body_md)return null;
+ const allowed=['slug','title','summary','category','url','published_at','updated_at','content_type','seo_title','seo_description','cover_url'];
+ const result={};
+ allowed.forEach(key=>{result[key]=(key in published&&typeof published[key]==='string')?published[key]:row[key]});
+ return result;
+}
 function json(value,status=200,origin='',cache=0){
  const headers=new Headers({'Content-Type':'application/json; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Cache-Control':cache?'public, max-age='+cache:'no-store','Vary':'Origin'});
  if(allowed.has(origin)){headers.set('Access-Control-Allow-Origin',origin);headers.set('Access-Control-Allow-Methods','GET, OPTIONS');headers.set('Access-Control-Allow-Headers','Accept');}
@@ -38,7 +49,13 @@ function blogPage(row){
  '<span><a href="'+MAIN+'/privacy-policy.html">Privacy</a> · <a href="'+MAIN+'/contact.html">Contact</a></span></div></footer></body></html>';
 }
 async function published(env,slug){
- return env.DB.prepare('SELECT '+select+',body_md FROM articles WHERE slug=? AND content_type=? AND is_published=1 AND LENGTH(body_md)>=160').bind(slug,'dynamic').first();
+ const row=await env.DB.prepare('SELECT '+allFields+' FROM articles WHERE slug=? AND content_type=? AND is_published=1 AND LENGTH(published_snapshot)>160').bind(slug,'dynamic').first();
+ if(!row)return null;
+ try {
+  const snapshot=JSON.parse(row.published_snapshot);
+  if(typeof snapshot.body_md!=='string'||snapshot.body_md.length<160)return null;
+  return {...row,...snapshot};
+ } catch(e){return null;}
 }
 export default {
  async fetch(request,env){
@@ -51,26 +68,31 @@ export default {
     return json({status:'ok',service:'nawaz-site-api',publishedArticles:count?.total||0},200,origin);
    }
    if(path==='/api/v1/articles'){
-    const q=(u.searchParams.get('q')||'').trim().slice(0,70);
+    const q=(u.searchParams.get('q')||'').trim().slice(0,70).toLowerCase();
     const limit=Math.max(1,Math.min(parseInt(u.searchParams.get('limit')||'50',10)||50,50));
-    const where="is_published=1 AND (content_type='legacy' OR LENGTH(body_md)>=160)"+(q?' AND (title LIKE ? OR summary LIKE ?)':'');
-    const params=q?['%'+q+'%','%'+q+'%',limit]:[limit];
-    const result=await env.DB.prepare('SELECT '+select+' FROM articles WHERE '+where+' ORDER BY id DESC LIMIT ?').bind(...params).all();
-    return json({articles:result.results||[],count:(result.results||[]).length},200,origin,30);
+    const rows=await env.DB.prepare('SELECT '+allFields+" FROM articles WHERE is_published=1 AND (content_type='legacy' OR LENGTH(published_snapshot)>160) ORDER BY id DESC LIMIT 500").all();
+    const items=(rows.results||[]).map(publicRow).filter(Boolean).filter(x=>!q||(x.title+' '+x.summary+' '+x.category).toLowerCase().includes(q)).slice(0,limit);
+    return json({articles:items,count:items.length},200,origin,30);
    }
    const one=path.match(/^\/api\/v1\/articles\/([a-zA-Z0-9_-]{1,110})$/);
    if(one){
-    const row=await env.DB.prepare('SELECT '+select+' FROM articles WHERE slug=? AND is_published=1 AND (content_type=? OR LENGTH(body_md)>=160)').bind(one[1],'legacy').first();
-    return row?json({article:row},200,origin,30):json({error:'Not found'},404,origin);
+    const row=await env.DB.prepare('SELECT '+allFields+' FROM articles WHERE slug=? AND is_published=1').bind(one[1]).first();
+    const item=publicRow(row);
+    return item?json({article:item},200,origin,30):json({error:'Not found'},404,origin);
    }
    const override=path.match(/^\/api\/v1\/overrides\/([a-zA-Z0-9_-]{1,110})$/);
    if(override){
-    const row=await env.DB.prepare('SELECT title,summary,seo_title,seo_description,cover_url,body_md FROM articles WHERE slug=? AND is_published=1 AND content_type=? AND content_override=1 AND LENGTH(body_md)>=160').bind(override[1],'legacy').first();
-    return row?json({active:true,title:row.title,summary:row.summary,seo_title:row.seo_title,seo_description:row.seo_description,cover_url:row.cover_url,html:renderMarkdown(row.body_md)},200,origin,30):json({active:false},200,origin,30);
+    const row=await env.DB.prepare("SELECT published_snapshot FROM articles WHERE slug=? AND is_published=1 AND content_type='legacy' AND content_override=1 AND LENGTH(published_snapshot)>160").bind(override[1]).first();
+    if(!row)return json({active:false},200,origin,30);
+    try {
+     const data=JSON.parse(row.published_snapshot);
+     if(typeof data.body_md!=='string'||data.body_md.length<160)return json({active:false},200,origin,30);
+     return json({active:true,title:data.title||'',summary:data.summary||'',seo_title:data.seo_title||'',seo_description:data.seo_description||'',cover_url:data.cover_url||'',html:renderMarkdown(data.body_md)},200,origin,30);
+    }catch(e){return json({active:false},200,origin,30);}
    }
    if(path==='/robots.txt')return textResponse('User-agent: *\nAllow: /\nSitemap: '+BLOG+'/sitemap.xml\n','text/plain; charset=utf-8');
    if(path==='/sitemap.xml'){
-    const rows=await env.DB.prepare("SELECT slug,updated_at FROM articles WHERE content_type='dynamic' AND is_published=1 AND LENGTH(body_md)>=160 ORDER BY id DESC LIMIT 500").all();
+    const rows=await env.DB.prepare("SELECT slug,updated_at FROM articles WHERE content_type='dynamic' AND is_published=1 AND LENGTH(published_snapshot)>160 ORDER BY id DESC LIMIT 500").all();
     const urls=(rows.results||[]).map(row=>'<url><loc>'+BLOG+'/'+encodeURIComponent(row.slug)+'</loc><lastmod>'+iso(row.updated_at)+'</lastmod></url>').join('');
     return textResponse('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls+'</urlset>','application/xml; charset=utf-8');
    }
