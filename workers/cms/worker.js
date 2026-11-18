@@ -1,4 +1,6 @@
 import {renderSections,builderCSS} from './builder-render.js';
+import {premiumHome} from './premium-home.js';
+import premiumHomeCSS from './premium-home-css.txt';
 /*
  * Nawaz CMS — public read-only preview Worker.
  * Preserves the existing GitHub Pages HTML, scripts, forms, and URL structure.
@@ -60,10 +62,10 @@ export default {
   headers.set('X-Robots-Tag','noindex,nofollow');
   const wrapper=new Response(origin.body,{status:200,headers});
   if(request.method==='HEAD')return new Response(null,{status:200,headers});
-  let rows=[],settings=[],sections=[],palette={};
+  let rows=[],settings=[],sections=[],palette={},homeArticles=[];
   try{
    const results=await env.DB.batch([
-    env.DB.prepare('SELECT block_key,label,selector,kind,published_text FROM site_blocks WHERE page_path=? AND published_override=1').bind(path),
+    env.DB.prepare('SELECT block_key,label,selector,kind,published_text,published_override FROM site_blocks WHERE page_path=? AND published_override=1').bind(path),
     env.DB.prepare('SELECT key,published_json FROM site_settings WHERE published_override=1'),
     env.DB.prepare('SELECT published_json FROM site_documents WHERE page_path=?').bind(path),
     env.DB.prepare("SELECT published_json FROM site_design WHERE key='main'")
@@ -77,12 +79,38 @@ export default {
    if(design){
     try { palette=JSON.parse(design.published_json||'{}'); }catch(e){palette={};}
    }
+   if(path==='/index.html'){
+    try {
+     const latest=await env.DB.prepare("SELECT published_snapshot FROM articles WHERE is_published=1 AND LENGTH(published_snapshot)>30 ORDER BY id DESC LIMIT 24").all();
+     homeArticles=(latest.results||[]).map(x=>{try{return JSON.parse(x.published_snapshot);}catch(e){return null;}}).filter(Boolean);
+    }catch(e){console.error('Homepage article list unavailable; using safe defaults');}
+   }
   }catch(e){
    console.error('CMS database temporarily unavailable, returning original');
    // Fail open for public rendering: original GitHub Pages HTML still works.
   }
   const injected=renderSections(sections,palette);
-  let rw=new HTMLRewriter().on('head',{element(e){e.prepend('<meta name="robots" content="noindex,nofollow">',{html:true});e.append('<style id="nawaz-cms-builder">'+builderCSS()+'</style>',{html:true});}});
+  const isPremiumHome=path==='/index.html';
+  const home=isPremiumHome?premiumHome(rows,homeArticles):null;
+  const homeSeoTitle=rows.find(x=>x.block_key==='seo_title')?.published_text||'Nawaz Sharif | Linux, IT Operations & Technical Articles';
+  const homeSeoDescription=rows.find(x=>x.block_key==='seo_description')?.published_text||'Independent practical technology notes covering Linux, everyday IT operations, troubleshooting, Python and cybersecurity learning.';
+  let rw=new HTMLRewriter().on('head',{element(e){
+   e.prepend('<meta name="robots" content="noindex,nofollow">',{html:true});
+   e.append('<style id="nawaz-cms-builder">'+builderCSS()+'</style>',{html:true});
+   if(isPremiumHome)e.append('<style id="nawaz-premium-home">'+premiumHomeCSS+'</style><meta name="theme-color" content="#07162b">',{html:true});
+  }});
+  if(isPremiumHome){
+   rw=rw.on('body',{element(e){e.setAttribute('class',((e.getAttribute('class')||'')+' ns-premium').trim());}});
+   rw=rw.on('main#main > div.wrap',{element(e){e.replace(home.hero,{html:true});}});
+   rw=rw.on('section.section-competencies',{element(e){e.replace(home.services,{html:true});}});
+   rw=rw.on('section.section-articles',{element(e){e.replace(home.articles,{html:true});}});
+   rw=rw.on('section.about-expanded',{element(e){e.replace(home.about,{html:true});}});
+   rw=rw.on('section.section-partnerships',{element(e){e.replace(home.collaborations,{html:true});}});
+   rw=rw.on('title',{element(e){e.setInnerContent(homeSeoTitle);}});
+   rw=rw.on('meta[name="description"]',{element(e){e.setAttribute('content',homeSeoDescription);}});
+   rw=rw.on('meta[property="og:title"]',{element(e){e.setAttribute('content',homeSeoTitle);}});
+   rw=rw.on('meta[property="og:description"]',{element(e){e.setAttribute('content',homeSeoDescription);}});
+  }
   if(injected&&injected.top)rw=rw.on('main#main',{element(e){e.prepend(injected.top,{html:true});}});
   if(injected&&injected.bottom)rw=rw.on('main#main',{element(e){e.append(injected.bottom,{html:true});}});
   for(const row of rows){
