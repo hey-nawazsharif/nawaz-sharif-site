@@ -36,12 +36,12 @@
   var isLegacy=!!(active&&active.content_type==='legacy');
   document.getElementById('editor-label').textContent=isLegacy?'EXISTING HTML ARTICLE':active?'EDITING ARTICLE':'NEW DYNAMIC ARTICLE';
   document.getElementById('editor-title').textContent=active?'Edit: '+active.title:'Write a new article';
-  document.getElementById('editor-context').textContent=isLegacy?'Original HTML remains intact unless you enable content replacement.':'Drafts remain private until you publish.';
+  document.getElementById('editor-context').textContent=isLegacy?'Original HTML stays as fallback. Save draft does not change live content.':'Save draft without changing your published article.';
   status.textContent=active&&active.is_published?'Published':'Draft';
   status.className='status-tag'+(active&&active.is_published?'':' draft');
   note.hidden=!isLegacy;
   field('slug').disabled=!!active;
-  draftButton.textContent=isLegacy?'Save changes':'Save draft';
+  draftButton.textContent='Save draft';
   publishButton.textContent=isLegacy?'Save & publish':'Publish article';
   revisionPanel.hidden=!active;
   setUrl();
@@ -112,7 +112,7 @@
   var entry={};
   fieldNames.forEach(function(name){entry[name]=field(name).value.trim();});
   entry.content_override=!!field('content_override').checked;
-  entry.is_published=publish;
+  entry.intent=publish?'publish':'draft';
   return entry;
  }
  function onSave(event){
@@ -121,8 +121,7 @@
   var submit=event.submitter || document.activeElement;
   var wantPublish=submit&&submit.id==='publish';
   var isLegacy=active&&active.content_type==='legacy';
-  var pub=isLegacy&&!wantPublish?!!active.is_published:wantPublish;
-  var item=readForm(pub);
+  var item=readForm(wantPublish);
   if(!item.title||!item.slug){inform('Title and slug are required.',true);return;}
   if(!isLegacy&&!active&&!/^[a-z0-9][a-z0-9-]{1,98}[a-z0-9]$/.test(item.slug)){inform('Use a lowercase, hyphenated slug of at least 3 characters.',true);return;}
   if(wantPublish&&!isLegacy&&item.body_md.length<160){inform('Write at least 160 characters before publishing.',true);return;}
@@ -130,7 +129,7 @@
   busy=true;draftButton.disabled=true;publishButton.disabled=true;inform('Saving article…');
   var path=active?'/admin/api/articles/'+encodeURIComponent(active.slug):'/admin/api/articles';
   api(path,{method:active?'PUT':'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(item)})
-   .then(function(r){return refresh(r.slug).then(function(){inform(r.saved?(wantPublish?'Article published successfully.':'Saved successfully.'):'Saved');});})
+   .then(function(r){return refresh(r.slug).then(function(){inform(r.saved?(wantPublish?'Published version updated.':'Draft saved; published version unchanged.'):'Saved');});})
    .catch(function(e){inform('Could not save: '+e.message,true);})
    .finally(function(){busy=false;draftButton.disabled=false;publishButton.disabled=false;});
  }

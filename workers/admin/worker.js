@@ -39,9 +39,6 @@ function clean(data,kind){
  out.category=out.category||'Technology';
  out.is_published=data.is_published===true?1:0;
  out.content_override=kind==='legacy'&&data.content_override===true?1:0;
- if(kind==='dynamic'&&out.is_published&&out.body_md.length<160)return {error:'Write at least 160 characters before publishing'};
- if(kind==='legacy'&&out.content_override&&out.body_md.length<160)return {error:'Write at least 160 characters to replace the original article'};
- if(kind==='legacy'&&out.content_override&&!out.is_published)return {error:'Publish the article before activating replacement content'};
  return out;
 }
 async function saveRevision(db,old) {
@@ -57,7 +54,7 @@ export default {
   if(request.method==='GET'&&path==='/admin/style.css')return asset(adminCSS,'text/css; charset=utf-8');
   try{
    if(request.method==='GET'&&path==='/admin/api/articles'){
-    const result=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,content_type,body_md,seo_title,seo_description,cover_url,content_override,published_at,created_at,updated_at FROM articles ORDER BY id DESC LIMIT 400').all();
+    const result=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,content_type,body_md,seo_title,seo_description,cover_url,content_override,published_snapshot,published_at,created_at,updated_at FROM articles ORDER BY id DESC LIMIT 400').all();
     return json({articles:result.results||[]});
    }
    const rev=path.match(/^\/admin\/api\/articles\/([a-zA-Z0-9_-]{1,110})\/revisions$/);
@@ -80,29 +77,35 @@ export default {
    if(!validOrigin(request,u))return json({error:'Origin rejected'},403);
    const payload=await inputJSON(request);
    if(request.method==='POST'&&path==='/admin/api/articles'){
-    const cleanValue=clean(payload,'dynamic');
-    if(cleanValue.error)return json({error:cleanValue.error},400);
-    const x=cleanValue;
-    const existing=await env.DB.prepare('SELECT 1 FROM articles WHERE slug=? OR url=? LIMIT 1').bind(x.slug,BLOG+'/'+x.slug).first();
-    if(existing)return json({error:'Slug already exists'},409);
-    await env.DB.prepare('INSERT INTO articles(slug,title,summary,category,url,is_published,body_md,content_type,seo_title,seo_description,cover_url,content_override) VALUES(?,?,?,?,?,?,?, ?,?,?,?,0)')
-      .bind(x.slug,x.title,x.summary,x.category,BLOG+'/'+x.slug,x.is_published,x.body_md,'dynamic',x.seo_title,x.seo_description,x.cover_url).run();
-    return json({saved:true,slug:x.slug,url:BLOG+'/'+x.slug},201);
+     const x=clean(payload,'dynamic');
+     if(x.error)return json({error:x.error},400);
+     const publish=payload.intent==='publish';
+     if(publish&&x.body_md.length<160)return json({error:'Write at least 160 characters before publishing'},400);
+     const existing=await env.DB.prepare('SELECT 1 FROM articles WHERE slug=? OR url=? LIMIT 1').bind(x.slug,BLOG+'/'+x.slug).first();
+     if(existing)return json({error:'Slug already exists'},409);
+     const snapshot=publish?JSON.stringify({...x,url:BLOG+'/'+x.slug}):'';
+     await env.DB.prepare('INSERT INTO articles(slug,title,summary,category,url,is_published,body_md,content_type,seo_title,seo_description,cover_url,content_override,published_snapshot) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
+       .bind(x.slug,x.title,x.summary,x.category,BLOG+'/'+x.slug,publish?1:0,x.body_md,'dynamic',x.seo_title,x.seo_description,x.cover_url,0,snapshot).run();
+     return json({saved:true,slug:x.slug,url:BLOG+'/'+x.slug,published:publish},201);
    }
    const match=path.match(/^\/admin\/api\/articles\/([a-zA-Z0-9_-]{1,110})$/);
    if(request.method==='PUT'&&match){
-    const old=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,content_type,body_md,seo_title,seo_description,cover_url,content_override,published_at FROM articles WHERE slug=?').bind(match[1]).first();
-    if(!old)return json({error:'Article not found'},404);
-    const x=clean(payload,old.content_type);
-    if(x.error)return json({error:x.error},400);
-    if(x.slug!==match[1])return json({error:'Existing article slug cannot change'},400);
-    // Legacy original URLs and HTML stay untouched. Dynamic URLs use the blog subdomain.
-    await env.DB.batch([
-      env.DB.prepare('INSERT INTO article_revisions(slug,snapshot) VALUES(?,?)').bind(old.slug,JSON.stringify(old)),
-      env.DB.prepare('UPDATE articles SET title=?,summary=?,category=?,is_published=?,body_md=?,seo_title=?,seo_description=?,cover_url=?,content_override=?,updated_at=CURRENT_TIMESTAMP WHERE slug=?')
-        .bind(x.title,x.summary,x.category,x.is_published,x.body_md,x.seo_title,x.seo_description,x.cover_url,x.content_override,x.slug)
-    ]);
-    return json({saved:true,slug:x.slug,url:old.url});
+     const old=await env.DB.prepare('SELECT slug,title,summary,category,url,is_published,content_type,body_md,seo_title,seo_description,cover_url,content_override,published_snapshot,published_at FROM articles WHERE slug=?').bind(match[1]).first();
+     if(!old)return json({error:'Article not found'},404);
+     const x=clean(payload,old.content_type);
+     if(x.error)return json({error:x.error},400);
+     if(x.slug!==match[1])return json({error:'Existing article slug cannot change'},400);
+     const publish=payload.intent==='publish';
+     if(publish&&old.content_type==='dynamic'&&x.body_md.length<160)return json({error:'Write at least 160 characters before publishing'},400);
+     if(publish&&old.content_type==='legacy'&&x.content_override&&x.body_md.length<160)return json({error:'Complete the replacement Markdown before publishing'},400);
+     const snapshot=publish?JSON.stringify({...x,url:old.url}):'';
+     // Saving a draft must never change an already published article.
+     await env.DB.batch([
+       env.DB.prepare('INSERT INTO article_revisions(slug,snapshot) VALUES(?,?)').bind(old.slug,JSON.stringify(old)),
+       env.DB.prepare('UPDATE articles SET title=?,summary=?,category=?,body_md=?,seo_title=?,seo_description=?,cover_url=?,is_published=CASE WHEN ?=1 THEN 1 ELSE is_published END,content_override=CASE WHEN ?=1 THEN ? ELSE content_override END,published_snapshot=CASE WHEN ?=1 THEN ? ELSE published_snapshot END,updated_at=CURRENT_TIMESTAMP WHERE slug=?')
+         .bind(x.title,x.summary,x.category,x.body_md,x.seo_title,x.seo_description,x.cover_url,publish?1:0,publish?1:0,x.content_override,publish?1:0,snapshot,x.slug)
+     ]);
+     return json({saved:true,slug:x.slug,url:old.url,published:publish});
    }
    return json({error:'Not found'},404);
   }catch(e){
