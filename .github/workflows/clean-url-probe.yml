@@ -1,0 +1,24 @@
+name: Verify clean URLs on existing website
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/clean-url-probe.yml"
+  workflow_dispatch:
+jobs:
+  route-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check live extensionless URL behavior without changing live site
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://nawazsharif.in'
+          for route in /articles /about /contact /faq /what-is-ai-history-and-evolution /articles.html; do
+            echo "::group::Checking $route"
+            code="$(curl -sS --retry 2 --max-time 30 -o /tmp/probe.html -w '%{http_code}' "$base$route")"
+            resolved="$(curl -sSL --retry 2 --max-time 30 -o /dev/null -w '%{url_effective}' "$base$route")"
+            echo "INITIAL_STATUS=$code FINAL_URL=$resolved"
+            if grep -Fq '<html' /tmp/probe.html; then echo 'HTML_DOCUMENT=yes'; else echo 'HTML_DOCUMENT=no'; fi
+            echo "::endgroup::"
+          done
