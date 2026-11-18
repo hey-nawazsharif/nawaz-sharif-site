@@ -35,12 +35,18 @@ export async function handleSiteAPI(request,env){
   if(method==='GET'&&path==='/admin/api/site/pages'){
    const page=u.searchParams.get('page')||'';
    if(!PAGES.has(page))return json({error:'Invalid page'},400);
-   const rows=await env.DB.prepare('SELECT block_key,label,kind,original_text,draft_text,published_override,updated_at FROM site_blocks WHERE page_path=? ORDER BY CASE block_key WHEN ? THEN 0 WHEN ? THEN 1 WHEN ? THEN 2 ELSE 3 END,block_key').bind(page,'main_headline','seo_title','seo_description').all();
-   return json({page,fields:rows.results||[]});
+   const result=await env.DB.batch([
+    env.DB.prepare('SELECT block_key,label,kind,original_text,draft_text,published_override,updated_at FROM site_blocks WHERE page_path=? ORDER BY CASE block_key WHEN ? THEN 0 WHEN ? THEN 1 WHEN ? THEN 2 ELSE 3 END,block_key').bind(page,'main_headline','seo_title','seo_description'),
+    env.DB.prepare('SELECT version FROM site_page_versions WHERE page_path=?').bind(page)
+   ]);
+   return json({page,fields:result[0]?.results||[],version:result[1]?.results?.[0]?.version??null});
   }
   if(method==='GET'&&path==='/admin/api/site/settings'){
-   const r=await env.DB.prepare('SELECT key,label,original_json,draft_json,published_override FROM site_settings ORDER BY key').all();
-   return json({settings:r.results||[]});
+   const result=await env.DB.batch([
+    env.DB.prepare('SELECT key,label,original_json,draft_json,published_override FROM site_settings ORDER BY key'),
+    env.DB.prepare("SELECT version FROM site_page_versions WHERE page_path='settings'")
+   ]);
+   return json({settings:result[0]?.results||[],version:result[1]?.results?.[0]?.version??null});
   }
   if(method==='GET'&&path==='/admin/api/site/revisions'){
    const page=u.searchParams.get('page')||'';
@@ -61,10 +67,12 @@ export async function handleSiteAPI(request,env){
   const data=await payload(request);
   if(!data||typeof data!=='object'||Array.isArray(data)||!['draft','publish'].includes(data.intent)||!data.values||typeof data.values!=='object'||Array.isArray(data.values))return json({error:'Invalid request data'},400);
   const publish=data.intent==='publish';
+  const expected=data.expected_version;
+  if(!Number.isInteger(expected)||expected<0||expected>2147483647)return json({error:'Invalid editor version. Refresh before saving.'},400);
   if(path==='/admin/api/site/pages'){
    const page=data.page_path;
    if(!PAGES.has(page))return json({error:'Invalid page'},400);
-   const rows=(await env.DB.prepare('SELECT block_key,kind,original_text,draft_text FROM site_blocks WHERE page_path=? ORDER BY block_key').bind(page).all()).results||[];
+   const rows=(await env.DB.prepare('SELECT block_key,label,kind,original_text,draft_text FROM site_blocks WHERE page_path=? ORDER BY block_key').bind(page).all()).results||[];
    if(!rows.length)return json({error:'Page fields unavailable'},404);
    const keys=Object.keys(data.values);
    if(keys.length!==rows.length||keys.some(k=>!rows.some(r=>r.block_key===k)))return json({error:'Field list changed. Refresh the editor and try again.'},409);
@@ -77,13 +85,15 @@ export async function handleSiteAPI(request,env){
     if(clean.length>max)return json({error:'Field too long: '+row.label},400);
     if(publish&&(row.kind==='title'||row.block_key==='main_headline')&&clean.length<3)return json({error:'Heading or SEO title cannot be blank'},400);
     before[row.block_key]=row.draft_text;
-    updates.push(env.DB.prepare('UPDATE site_blocks SET draft_text=?,published_text=CASE WHEN ?=1 THEN ? ELSE published_text END,published_override=CASE WHEN ?=1 THEN ? ELSE published_override END,updated_at=CURRENT_TIMESTAMP WHERE page_path=? AND block_key=?').bind(clean,publish?1:0,clean,publish?1:0,clean===row.original_text?0:1,page,row.block_key));
+    updates.push(env.DB.prepare('UPDATE site_blocks SET draft_text=?,published_text=CASE WHEN ?=1 THEN ? ELSE published_text END,published_override=CASE WHEN ?=1 THEN ? ELSE published_override END,updated_at=CURRENT_TIMESTAMP WHERE page_path=? AND block_key=? AND EXISTS(SELECT 1 FROM site_page_versions WHERE page_path=? AND version=?)').bind(clean,publish?1:0,clean,publish?1:0,clean===row.original_text?0:1,page,row.block_key,page,expected));
    }
-   await env.DB.batch([
-    env.DB.prepare('INSERT INTO site_revisions(page_path,snapshot) VALUES(?,?)').bind(page,JSON.stringify(before)),
-    ...updates
+   const result=await env.DB.batch([
+    env.DB.prepare('INSERT INTO site_revisions(page_path,snapshot) SELECT ?,? WHERE EXISTS(SELECT 1 FROM site_page_versions WHERE page_path=? AND version=?)').bind(page,JSON.stringify(before),page,expected),
+    ...updates,
+    env.DB.prepare('UPDATE site_page_versions SET version=version+1,updated_at=CURRENT_TIMESTAMP WHERE page_path=? AND version=?').bind(page,expected)
    ]);
-   return json({saved:true,published:publish,page});
+   if(result[result.length-1]?.meta?.changes!==1)return json({error:'This page changed in another tab. Refresh to avoid overwriting edits.'},409);
+   return json({saved:true,published:publish,page,version:expected+1});
   }
   if(data.page_path!=='settings')return json({error:'Invalid settings page'},400);
   const rows=(await env.DB.prepare('SELECT key,original_json,draft_json FROM site_settings ORDER BY key').all()).results||[];
@@ -93,14 +103,16 @@ export async function handleSiteAPI(request,env){
   for(const row of rows){
    const fresh=stringifySettings(row.key,data.values[row.key]);
    before[row.key]=settingsForEditor(row);
-   updates.push(env.DB.prepare('UPDATE site_settings SET draft_json=?,published_json=CASE WHEN ?=1 THEN ? ELSE published_json END,published_override=CASE WHEN ?=1 THEN ? ELSE published_override END,updated_at=CURRENT_TIMESTAMP WHERE key=?')
-    .bind(fresh,publish?1:0,fresh,publish?1:0,fresh===row.original_json?0:1,row.key));
+   updates.push(env.DB.prepare("UPDATE site_settings SET draft_json=?,published_json=CASE WHEN ?=1 THEN ? ELSE published_json END,published_override=CASE WHEN ?=1 THEN ? ELSE published_override END,updated_at=CURRENT_TIMESTAMP WHERE key=? AND EXISTS(SELECT 1 FROM site_page_versions WHERE page_path='settings' AND version=?)")
+    .bind(fresh,publish?1:0,fresh,publish?1:0,fresh===row.original_json?0:1,row.key,expected));
   }
-  await env.DB.batch([
-   env.DB.prepare('INSERT INTO site_revisions(page_path,snapshot) VALUES(?,?)').bind('settings',JSON.stringify(before)),
-   ...updates
+  const result=await env.DB.batch([
+   env.DB.prepare("INSERT INTO site_revisions(page_path,snapshot) SELECT 'settings',? WHERE EXISTS(SELECT 1 FROM site_page_versions WHERE page_path='settings' AND version=?)").bind(JSON.stringify(before),expected),
+   ...updates,
+   env.DB.prepare("UPDATE site_page_versions SET version=version+1,updated_at=CURRENT_TIMESTAMP WHERE page_path='settings' AND version=?").bind(expected)
   ]);
-  return json({saved:true,published:publish,page:'settings'});
+  if(result[result.length-1]?.meta?.changes!==1)return json({error:'Settings changed in another tab. Refresh to avoid overwriting edits.'},409);
+  return json({saved:true,published:publish,page:'settings',version:expected+1});
  }catch(e){
   if(e.message&&/Invalid|too large|Unrecognized|content type/i.test(e.message))return json({error:e.message},400);
   console.error('CMS backend failed',e?.name||'unknown');
