@@ -1,0 +1,51 @@
+name: Verify smartphone article and all diagrams are live
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/smartphone-article-live-checks.yml'
+      - 'how-smartphone-chips-5g-internet-ai-apps-work.html'
+      - 'assets/smartphone-chip-hardware-anatomy.svg'
+      - 'assets/smartphone-5g-internet-data-path.svg'
+      - 'assets/smartphone-on-device-vs-cloud-ai.svg'
+      - 'assets/smartphone-wifi-vs-cellular-network.svg'
+      - 'articles.html'
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check production article, original images, sitemap and archive API
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://nawazsharif.in'
+          SLUG='how-smartphone-chips-5g-internet-ai-apps-work'
+          found=0
+          for attempt in $(seq 1 18); do
+            if curl --fail --silent --show-error --location --max-time 18 "$BASE/$SLUG" -o /tmp/phone.html && grep -Fq 'Inside a Smartphone:' /tmp/phone.html && grep -Fq '12.5 MB' /tmp/phone.html; then
+              found=1
+              break
+            fi
+            echo "Article propagation attempt $attempt"
+            sleep 6
+          done
+          test "$found" -eq 1 || { echo "Public smartphone article unavailable"; exit 1; }
+          echo 'PASS: live article with mobile networking and maths content'
+          for asset in smartphone-chip-hardware-anatomy smartphone-5g-internet-data-path smartphone-on-device-vs-cloud-ai smartphone-wifi-vs-cellular-network; do
+            curl --fail --silent --show-error --location --max-time 25 "$BASE/assets/$asset.svg" -o "/tmp/$asset.svg"
+            grep -Fq '<svg' "/tmp/$asset.svg" || { echo "Invalid SVG $asset"; exit 1; }
+            grep -Fq '<title' "/tmp/$asset.svg" || { echo "SVG accessible title missing $asset"; exit 1; }
+            grep -Fq "/assets/$asset.svg" /tmp/phone.html || { echo "Article image reference missing $asset"; exit 1; }
+            echo "PASS: $asset.svg"
+          done
+          curl --fail --silent --show-error --location --max-time 20 "$BASE/articles" -o /tmp/article-list.html
+          grep -Fq "/$SLUG" /tmp/article-list.html || { echo 'Static articles card missing'; exit 1; }
+          echo 'PASS: homepage articles card'
+          curl --fail --silent --show-error --location --max-time 20 "$BASE/sitemap.xml" -o /tmp/sitemap.xml
+          grep -Fq "$BASE/$SLUG" /tmp/sitemap.xml || { echo 'Sitemap entry missing'; exit 1; }
+          echo 'PASS: canonical sitemap entry'
+          curl --fail --silent --show-error --location --max-time 25 'https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles?limit=50' -o /tmp/public-api.json
+          grep -Fq '"slug":"how-smartphone-chips-5g-internet-ai-apps-work"' /tmp/public-api.json || { echo 'Public article API entry missing'; exit 1; }
+          echo 'PASS: public archive search API'
