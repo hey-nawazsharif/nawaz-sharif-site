@@ -1,0 +1,35 @@
+name: EV touchscreen and digital cockpit article checks
+on:
+  pull_request:
+    paths:
+      - 'ev-car-touchscreen-digital-cockpit-ai-chips-software-explained.html'
+      - 'assets/ev-*.svg'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ev_digital_cockpit_article.py'
+      - 'workers/migrations/0009_ev_digital_cockpit_article.sql'
+      - '.github/workflows/ev-digital-cockpit-article-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ev-car-touchscreen-digital-cockpit-ai-chips-software-explained.html'
+      - 'assets/ev-*.svg'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ev_digital_cockpit_article.py'
+      - 'workers/migrations/0009_ev_digital_cockpit_article.sql'
+      - '.github/workflows/ev-digital-cockpit-article-checks.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate cockpit article and original SVG diagrams
+        run: python tests/test_ev_digital_cockpit_article.py
