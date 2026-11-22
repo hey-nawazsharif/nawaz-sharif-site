@@ -1,54 +1,35 @@
-# Nawaz Sharif — Official Website
+# FleetOps Lite – Infrastructure Monitoring & Automation Lab
 
-**Enterprise IT Infrastructure · Linux Engineering · Cybersecurity · Cloud Architecture**
+**Personal learning project. No affiliation with Amazon or any employer. Not a production deployment.**
 
-The source repository for [nawazsharif.in](https://nawazsharif.in), my professional website and technical knowledge archive.
+Offline-first Python 3.10+ lab for mini fleet inventory, host-health monitoring, incident detection, CSV/JSON reports, and operational documentation. Uses Python standard library and Bash; no paid APIs, credentials, or cloud account.
 
-The site brings together a professional profile, articles on systems and infrastructure, and a direct way to get in touch. Its focus is clear technical writing, reliable site functionality, and a straightforward experience across devices.
+## Run on macOS or Linux
 
-## Explore the website
+1. Clone this branch, or download the source files.
+2. In the repository directory, run: `bash run_demo.sh`
+3. To run tests: `python3 -m unittest discover -s tests -v`
+4. Inspect the generated `demo_data/reports/` folder.
 
-| Section | Purpose |
-| --- | --- |
-| [Home](https://nawazsharif.in/) | Profile, areas of technical focus, and featured writing |
-| [About](https://nawazsharif.in/about.html) | Background and professional interests |
-| [Articles](https://nawazsharif.in/articles.html) | Technical guides and architecture discussions |
-| [FAQ](https://nawazsharif.in/faq.html) | Common questions about the website and its content |
-| [Contact](https://nawazsharif.in/contact.html) | General enquiries and feedback |
-| [Privacy Policy](https://nawazsharif.in/privacy-policy.html) | Information on privacy practices |
-| [Terms](https://nawazsharif.in/terms.html) | Conditions for using the website |
+## Capabilities
 
-## Technical foundation
+- Four **fictional** fleet devices are generated in the demo, three active and one retired.
+- Reports disk-usage, memory, patch metadata, stale telemetry, missing ownership, and recorded down services.
+- Seven synthetic alerts are generated in the standard demonstration.
+- Local machine collection: `python3 fleetops.py collect --data-dir ./local_data --asset-id my-machine`
+- Generate a local report: `python3 fleetops.py report --data-dir ./local_data`
+- Local collection is read-only. On macOS memory/uptime remain unknown; CPU load pressure is not CPU utilization.
+- Includes seven unit tests for threshold alerts, stale data, retired assets, latest snapshot and safe demo behavior.
 
-- **Frontend:** HTML, CSS, and JavaScript
-- **Hosting:** GitHub Pages with a custom domain
-- **Contact:** Formspree for form submissions
-- **Spam protection:** Google reCAPTCHA integration
-- **Content:** Static pages and technical articles maintained in this repository
+## Important limitations
 
-The website is intentionally lightweight, with no mandatory visitor account.
+- Fleet inventory and remote-device data in the demo are synthetic; no remote agents or real production systems.
+- Patch age and service status are manually recorded demonstration fields.
+- Does not use AWS EC2, Lambda, CloudWatch, S3 or Systems Manager. These are possible future integrations only.
+- Not evidence of multi-year Linux or systems engineering employment.
 
-## Repository branches
+## Interview explanation
 
-- **`main`** — Production website source, published through GitHub Pages.
-- **`website-v2-editorial`** — Ongoing editorial and design redesign. **Not published to production.** Changes are reviewed and tested before any merge.
+"I built FleetOps Lite as a personal infrastructure operations lab. It tracks a small sample asset fleet, processes local/synthetic health observations, checks thresholds, and generates incident reports. I wrote Python and Bash scripts and included tests and a runbook. It is a lab prototype, not production deployment."
 
-A newer design or a successful local test should not be mistaken for a production deployment.
-
-## Editorial and security principles
-
-Articles are provided for learning and technical reference. Commands, configuration examples, security guidance and architectural suggestions should be independently reviewed and tested before use in any production environment.
-
-Sensitive credentials, private keys, customer information and other confidential material must not be committed to this public repository or sent through the general contact form. Security concerns can be reported through the contact address below.
-
-## Contact
-
-For professional enquiries, feedback, or corrections:
-
-**[contact@nawazsharif.in](mailto:contact@nawazsharif.in)**
-
-Official website: **[nawazsharif.in](https://nawazsharif.in)**
-
----
-
-© 2026 Nawaz Sharif. Website content and branding are reserved unless a page or file expressly specifies otherwise. Third-party names and materials retain their respective owners' rights.
+Project source prepared for technical learning and interview demonstration. Please evaluate code and limitations together.

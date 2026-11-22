@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+local_data/
+fleet_data/
+.DS_Store

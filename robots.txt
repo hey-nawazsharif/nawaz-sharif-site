@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://nawazsharif.in/sitemap.xml
