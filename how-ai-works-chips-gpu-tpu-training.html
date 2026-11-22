@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Is AI Made from Chips? How CPUs, GPUs and TPUs Power Artificial Intelligence | Nawaz Sharif</title>
+<meta name="description" content="Is artificial intelligence made from chips? Learn how AI models are trained, why GPUs and TPUs matter, what silicon chips actually do, and whether a laptop can build AI.">
+<meta name="author" content="Nawaz Sharif">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Is AI Made from Chips? How CPUs, GPUs and TPUs Power Artificial Intelligence">
+<meta property="og:description" content="Is artificial intelligence made from chips? Learn how AI models are trained, why GPUs and TPUs matter, what silicon chips actually do, and whether a laptop can build AI.">
+<meta property="og:url" content="https://nawazsharif.in/how-ai-works-chips-gpu-tpu-training">
+<meta name="twitter:card" content="summary">
+<meta property="article:published_time" content="2026-11-22">
+<link rel="canonical" href="https://nawazsharif.in/how-ai-works-chips-gpu-tpu-training">
+<link rel="stylesheet" href="/style.css">
+<style>
+.ai-chip-article{padding-bottom:72px}
+.ai-chip-article .intro{font-size:1.14rem;line-height:1.85;color:var(--soft)}
+.ai-chip-article .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--acc)}
+.ai-chip-article .short-answer{background:var(--panel);border:1px solid var(--line);padding:22px 25px;margin:26px 0}
+.ai-chip-article .short-answer strong{color:var(--head)}
+.ai-chip-article h2{scroll-margin-top:90px}
+.ai-chip-article .flow{display:flex;align-items:stretch;gap:7px;margin:20px 0 12px;flex-wrap:wrap}
+.ai-chip-article .flowbox{flex:1 1 125px;min-width:0;padding:18px 12px;background:var(--panel);border:1px solid var(--line);text-align:center}
+.ai-chip-article .flowbox strong{display:block;font-size:15px;color:var(--head)}
+.ai-chip-article .flowbox span{display:block;font-size:13px;color:var(--mute);line-height:1.45;margin-top:6px}
+.ai-chip-article .arrow{align-self:center;font-weight:800;color:var(--acc)}
+.ai-chip-article .diagram-caption{font-size:13px;color:var(--mute);margin:8px 0 25px}
+.ai-chip-article .compare{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:23px 0 28px}
+.ai-chip-article .compare section{border:1px solid var(--line);background:var(--panel);padding:17px}
+.ai-chip-article .compare h3{margin:0 0 8px;font-size:20px}
+.ai-chip-article .compare p{font-size:14px;line-height:1.6;margin:0}
+.ai-chip-article .scroll{overflow-x:auto;margin:24px 0}
+.ai-chip-article table{width:100%;border-collapse:collapse;min-width:600px}
+.ai-chip-article th,.ai-chip-article td{padding:13px 15px;border:1px solid var(--line);text-align:left;vertical-align:top}
+.ai-chip-article th{background:var(--panel)}
+.ai-chip-article pre{overflow-x:auto;background:var(--codebg);color:var(--text);border:1px solid var(--line);padding:20px;border-radius:5px;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.ai-chip-article :not(pre)>code{padding:2px 5px;background:var(--codebg)}
+.ai-chip-article .notice{border-left:3px solid var(--acc);padding:16px 20px;background:var(--panel);margin:22px 0}
+.ai-chip-article .sources{border-top:1px solid var(--line);margin-top:40px;padding-top:16px}
+.ai-chip-article .sources li{margin:8px 0;overflow-wrap:anywhere}
+.ai-chip-article details{border-bottom:1px solid var(--line);padding:14px 0}
+.ai-chip-article summary{font-weight:700;cursor:pointer}
+.ai-chip-article .related{border-top:1px solid var(--line);padding-top:18px;margin-top:34px}
+@media(max-width:650px){.ai-chip-article .compare{grid-template-columns:1fr}.ai-chip-article .arrow{display:none}.ai-chip-article .flowbox{flex-basis:42%}.ai-chip-article .short-answer{padding:17px}.ai-chip-article pre{padding:13px;font-size:12px}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is AI Made from Chips? How CPUs, GPUs and TPUs Power Artificial Intelligence","description":"Is artificial intelligence made from chips? Learn how AI models are trained, why GPUs and TPUs matter, what silicon chips actually do, and whether a laptop can build AI.","datePublished":"2026-11-22","dateModified":"2026-11-22","author":{"@type":"Person","name":"Nawaz Sharif","url":"https://nawazsharif.in/about"},"mainEntityOfPage":"https://nawazsharif.in/how-ai-works-chips-gpu-tpu-training","inLanguage":"en","publisher":{"@type":"Person","name":"Nawaz Sharif"}}</script>
+<script defer src="/consent.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav aria-label="Main navigation"><a href="/about">About</a><a href="/articles">Technical articles</a><a href="/#services">Areas of focus</a><a href="/contact">Contact</a></nav></div></header>
+<main id="main" class="doc ai-chip-article">
+<p class="meta">November 22, 2026 &middot; AI Hardware / Semiconductors / Machine Learning &middot; By Nawaz Sharif</p>
+<p class="eyebrow">AI explained · Hardware deep dive</p>
+<h1>Is AI Made from Chips? How CPUs, GPUs and TPUs Power Artificial Intelligence</h1>
+<p class="intro">When you ask an AI assistant a question and receive an answer in seconds, an invisible chain of software, mathematics and computer hardware is at work. But is artificial intelligence actually made from chips? Why are GPUs so important, and how does a piece of silicon help a computer recognise images, understand language or generate text?</p>
+<div class="short-answer"><strong>The short answer:</strong> AI is not simply a chip. An AI system combines algorithms, software, data and learned parameters. Computer chips perform the calculations that train and run those models. Powerful chips make demanding AI workloads faster and more practical, but a beginner can create smaller AI models on an ordinary CPU.</div>
+
+<h2 id="what-is-ai">1. What is artificial intelligence?</h2>
+<p><strong>Artificial intelligence (AI)</strong> refers to computer systems designed to perform tasks that we associate with capabilities such as prediction, language processing, pattern recognition, planning and decision support. Not every AI system learns from data: some use rules and search algorithms, while modern machine learning systems learn statistical patterns through training.</p>
+<p>A <strong>machine learning model</strong> is typically a mathematical function whose parameters are adjusted using examples. For a language model, those learned numerical parameters help determine which text tokens to generate in response to a prompt. This is computational prediction—not a tiny human brain hidden inside a processor.</p>
+<p>For the broader difference between AI, machine learning and deep learning, see <a href="/ai-vs-machine-learning-vs-deep-learning-guide">our previous explainer</a>. This guide focuses on the hardware that makes AI computation possible.</p>
+
+<h2 id="chip">2. What is a computer chip, and what does it actually do?</h2>
+<p>A computer chip is an integrated circuit: a tiny piece of semiconductor material, commonly silicon, containing many electronic components, including transistors. Transistors act as electrical switches and help build circuits that store, move and process digital information.</p>
+<p>By combining these circuits into a processor, engineers create hardware capable of performing arithmetic and logical instructions. AI workloads often involve very large numbers of <strong>multiply-and-add operations</strong> on collections of numbers called vectors and matrices. A chip executes this arithmetic; the model's software and learned values determine what is being calculated.</p>
+<div class="notice"><strong>Important distinction:</strong> A chip is the machine doing the arithmetic. The AI model is the mathematical structure and learned values being executed. Replacing a chip does not automatically create intelligence or improve the quality of training data.</div>
+
+<h2 id="how-built">3. How is an AI model actually built?</h2>
+<p>Consider creating a system that identifies whether a customer message is likely to be spam. A realistic development process might look like this:</p>
+<figure aria-label="Five stages in a simplified AI model development cycle">
+<div class="flow" role="img" aria-label="Define task then prepare data then train on processors then evaluate results then deploy for inference">
+<div class="flowbox"><strong>1. Define</strong><span>Choose the problem and success measures</span></div><span class="arrow" aria-hidden="true">→</span>
+<div class="flowbox"><strong>2. Data</strong><span>Collect, label and prepare suitable examples</span></div><span class="arrow" aria-hidden="true">→</span>
+<div class="flowbox"><strong>3. Train</strong><span>Adjust model parameters using computation</span></div><span class="arrow" aria-hidden="true">→</span>
+<div class="flowbox"><strong>4. Evaluate</strong><span>Test on examples not used for training</span></div><span class="arrow" aria-hidden="true">→</span>
+<div class="flowbox"><strong>5. Deploy</strong><span>Use the model to process new inputs</span></div>
+</div>
+<figcaption class="diagram-caption">An original, simplified model-development diagram. Real projects involve repeated testing, security reviews, monitoring and ongoing improvements.</figcaption></figure>
+<ol>
+<li><strong>Define a clear task.</strong> Specify the inputs, outputs, acceptable error rates and privacy requirements.</li>
+<li><strong>Prepare data.</strong> Gather legitimately usable examples, clean them and separate training from evaluation data.</li>
+<li><strong>Choose a method.</strong> For a small classifier, a simple statistical or machine learning algorithm may be enough; a chatbot requires a different architecture.</li>
+<li><strong>Train.</strong> Run calculations on a CPU, GPU or another suitable processor to adjust numerical parameters.</li>
+<li><strong>Evaluate.</strong> Check accuracy, failure cases, bias, reliability and whether the system generalises to unfamiliar inputs.</li>
+<li><strong>Deploy and monitor.</strong> Save the trained model and make it available to an app, website or local device.</li>
+</ol>
+<p>Notice that the chip appears at the <em>computation</em> stages, but good data, design and evaluation remain essential. More chips cannot fix fundamentally incorrect or unrepresentative data.</p>
+
+<h2 id="hardware">4. CPU vs GPU vs TPU vs NPU: which chips are used for AI?</h2>
+<div class="compare">
+<section><h3>CPU</h3><p>A flexible general-purpose processor. Excellent for preparing data, managing software, everyday computing and small machine learning tasks.</p></section>
+<section><h3>GPU</h3><p>A highly parallel processor. Often efficient for the massive matrix operations used to train or run neural networks.</p></section>
+<section><h3>TPU / NPU</h3><p>Specialised accelerators designed for particular machine learning operations. TPUs appear in Google's AI infrastructure; NPUs commonly support efficient on-device AI.</p></section>
+</div>
+<div class="scroll"><table><thead><tr><th>Chip type</th><th>Strength</th><th>Typical AI role</th><th>Important limitation</th></tr></thead><tbody>
+<tr><td><strong>CPU</strong></td><td>Flexible instructions and software compatibility</td><td>Data processing, small models, application orchestration</td><td>Often less efficient for huge parallel neural-network operations</td></tr>
+<tr><td><strong>GPU</strong></td><td>Many parallel arithmetic operations</td><td>Training and serving many deep learning models</td><td>Memory, power and cost can constrain large workloads</td></tr>
+<tr><td><strong>TPU</strong></td><td>Custom ML-focused computation</td><td>Selected large-scale training and inference workloads</td><td>Depends on compatible frameworks and workload design</td></tr>
+<tr><td><strong>NPU</strong></td><td>Efficient neural-network processing on devices</td><td>Phone, laptop and embedded-device AI features</td><td>Supported models and operations vary by device</td></tr>
+</tbody></table></div>
+<p>These are not competing definitions of AI. They are different ways to perform AI computations. <a href="https://www.ibm.com/think/topics/ai-hardware" target="_blank" rel="noopener noreferrer">IBM's AI hardware explainer</a> describes the CPU, GPU and accelerator landscape; <a href="https://docs.cloud.google.com/tpu/docs/intro-to-tpu" target="_blank" rel="noopener noreferrer">Google Cloud's TPU documentation</a> describes its custom ML-specific processors.</p>
+
+<h2 id="gpu">5. Why do GPUs matter so much for modern AI?</h2>
+<p>Imagine one worker adding numbers one after another and a large team performing many independent additions at the same time. This is only an analogy, but it captures the advantage of <strong>parallel computation</strong>. Neural networks repeatedly multiply numbers in large matrices. GPUs can carry out many of these operations concurrently.</p>
+<p>That makes GPUs useful for both <strong>training</strong> large models and <strong>inference</strong>—using trained models to answer requests. Modern accelerators also depend heavily on fast memory and fast links between chips. If a processor waits for model parameters to arrive from memory, adding arithmetic capability alone may not remove the bottleneck.</p>
+<p>It is not accurate to say that every AI model needs an NVIDIA GPU. Small classifiers can train on ordinary processors, and larger workloads may use GPUs, TPUs or other accelerators depending on scale and software compatibility. For further context, see <a href="https://docs.cloud.google.com/docs/compute-area/gpus" target="_blank" rel="noopener noreferrer">Google Cloud's GPU workload guide</a>.</p>
+
+<h2 id="train-infer">6. Training versus inference: when are chips used?</h2>
+<p><strong>Training</strong> is the process of adjusting a model's parameters using data. It can involve many passes over a dataset and extensive numerical operations. <strong>Inference</strong> happens when a trained model processes new input: for example, answering a question, recognising speech or classifying a picture.</p>
+<div class="scroll"><table><thead><tr><th>Question</th><th>Training</th><th>Inference</th></tr></thead><tbody>
+<tr><td>What happens?</td><td>Model parameters are learned or updated</td><td>Existing parameters are used to produce a result</td></tr>
+<tr><td>When?</td><td>During model development or later fine-tuning</td><td>When a user or application makes a request</td></tr>
+<tr><td>Hardware?</td><td>CPU for small tasks; accelerators for demanding tasks</td><td>CPU, GPU, TPU or NPU depending on model and device</td></tr>
+<tr><td>Performance goal?</td><td>Efficient model improvement and validation</td><td>Low latency, good throughput and reasonable cost</td></tr>
+</tbody></table></div>
+<p>For example, a large cloud-hosted language model might be trained on many accelerators. Later, a user's prompt triggers inference on serving infrastructure. The phone displaying the answer does not necessarily perform that computation locally. IBM provides a detailed <a href="https://www.ibm.com/think/topics/ai-inference" target="_blank" rel="noopener noreferrer">explanation of AI inference</a>.</p>
+
+<h2 id="silicon">7. How are the chips that run AI manufactured?</h2>
+<p>The journey from a processor design to a physical chip is a specialised semiconductor engineering process. In broad terms:</p>
+<ol>
+<li><strong>Design:</strong> engineers specify circuits, chip architecture and electrical behaviour.</li>
+<li><strong>Wafer preparation:</strong> a silicon wafer provides the surface for many chip patterns.</li>
+<li><strong>Fabrication:</strong> materials are deposited, patterns are formed through photolithography, and layers are etched or otherwise processed.</li>
+<li><strong>Testing and packaging:</strong> manufactured dies are tested, connected and packaged; some advanced systems use sophisticated integration with high-bandwidth memory.</li>
+<li><strong>System assembly:</strong> chips are integrated with circuit boards, memory, cooling, networking and software.</li>
+</ol>
+<p>Photolithography uses precisely controlled light and optical systems to transfer circuit patterns onto photosensitive layers. It is one major step in a process involving many other techniques. <a href="https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made" target="_blank" rel="noopener noreferrer">ASML's manufacturing overview</a> explains the process and industry's different chip-design and fabrication roles.</p>
+<div class="notice"><strong>Another distinction:</strong> A semiconductor fabrication plant makes physical circuits, not a finished chatbot. AI developers build and train models using hardware. Chipmakers, equipment manufacturers, data centre operators and software teams contribute different parts of the overall system.</div>
+
+<h2 id="beyond">8. Why a powerful AI system needs more than just a fast chip</h2>
+<p>Real-world performance also depends on <strong>memory capacity and bandwidth, storage, network interconnects, cooling, electricity, system software and optimised algorithms</strong>. Model architecture, batch size, input length and the number of simultaneous users can also affect response time and serving costs.</p>
+<p>For large deployments, the questions are not simply “How many GPUs?” but also: Can the model fit in memory? Can chips exchange data quickly? What is the energy cost per useful result? Is the model sufficiently reliable for its intended use? A bigger accelerator is not automatically the correct choice for every task.</p>
+
+<h2 id="phone">9. Does AI run on a phone or in the cloud?</h2>
+<p><strong>On-device AI:</strong> a compatible model executes locally using a phone's or laptop's CPU, GPU and/or NPU. This can reduce network dependence and help protect privacy when data stays on the device, although exact behaviour depends on the app.</p>
+<p><strong>Cloud AI:</strong> the app sends a request over a network to servers hosting the model. Remote processors execute inference and return a result. Cloud systems can support larger models, but they introduce network, infrastructure and data-handling considerations.</p>
+<p><strong>Hybrid AI:</strong> some applications combine local processing with remote services, selecting where work happens based on capability, connectivity or privacy requirements.</p>
+
+<h2 id="build-own">10. Can you build AI without buying an expensive GPU?</h2>
+<p><strong>Yes.</strong> You can study AI and build useful small models using a normal computer. Start with Python, basic mathematics and carefully chosen toy datasets. A simple spam classifier, document categoriser or numerical prediction model can be developed without purchasing specialist AI hardware.</p>
+<p>Here is a tiny educational example. It learns a single numeric weight from three training examples using gradient descent. It is <em>not</em> a chatbot or foundation model, but it demonstrates the central idea: software changes model parameters based on numerical feedback while a processor performs the calculations.</p>
+<pre><code class="language-python"># A tiny learning example using only Python (runs on a CPU).
+# Goal: learn the relationship y = 2 * x from three examples.
+samples = [(1.0, 2.0), (2.0, 4.0), (3.0, 6.0)]
+weight = 0.0
+learning_rate = 0.05
+
+for epoch in range(200):
+    for x, target in samples:
+        prediction = weight * x
+        error = prediction - target
+        gradient = 2 * error * x
+        weight -= learning_rate * gradient
+
+prediction_for_4 = weight * 4
+print(round(weight, 3), round(prediction_for_4, 3))
+assert abs(prediction_for_4 - 8) &lt; 0.01</code></pre>
+<p>The weight approaches <code>2</code>, so the learned rule predicts a value close to <code>8</code> for input <code>4</code>. The loop runs on an ordinary Python installation and needs no cloud account, special GPU or paid service. It is deliberately simplified and should not be confused with the full training pipeline used by large neural networks.</p>
+<p>For a beginner-friendly next step, try <a href="/machine-learning-beginners-python-guide">machine learning fundamentals</a> or <a href="/machine-learning-spam-classifier-python-tutorial">building a text spam classifier</a>.</p>
+
+<h2 id="myths">11. Common misconceptions about AI chips</h2>
+<ul>
+<li><strong>“AI is inside a chip.”</strong> Chips execute instructions; models are represented through software and numerical parameters.</li>
+<li><strong>“More GPUs always mean smarter AI.”</strong> Hardware increases available compute, but data quality, architecture, training and evaluation determine outcomes.</li>
+<li><strong>“Every AI project needs a data centre.”</strong> Many useful ML applications run on a single laptop or phone.</li>
+<li><strong>“AI training and AI answering are the same task.”</strong> Training updates parameters; ordinary inference uses learned parameters to produce results.</li>
+<li><strong>“A newer chip guarantees a cheaper result.”</strong> Real cost depends on memory, utilisation, energy, software and workload.</li>
+</ul>
+
+<h2 id="conclusion">12. The bigger picture</h2>
+<p>AI is the product of <strong>mathematics, data, algorithms, software and compute</strong>. Silicon chips supply the physical computing capacity. CPUs make AI accessible on everyday computers, GPUs and dedicated accelerators make large parallel workloads practical, and on-device chips bring AI capabilities closer to users.</p>
+<p>So are chips important for AI? <strong>Absolutely—but a chip alone is not AI.</strong> Understanding that distinction makes it easier to evaluate everything from a small Python model to a modern cloud-based language system.</p>
+
+<h2 id="faq">Frequently asked questions</h2>
+<details><summary>Can AI work without a GPU?</summary><p>Yes. CPUs run many small machine learning models and even some neural networks. GPUs become especially useful when workloads contain large amounts of parallel arithmetic.</p></details>
+<details><summary>Are AI chips the same as ordinary computer chips?</summary><p>Both are electronic processors. The phrase “AI chip” usually refers to a chip or accelerator optimised for machine learning operations, while a general-purpose CPU can do a broader variety of tasks.</p></details>
+<details><summary>Is a TPU the same as an NPU?</summary><p>No. Both terms describe specialised machine learning hardware, but “TPU” is Google's specific family of tensor processors. “NPU” is a broader term commonly used for neural-network accelerators in devices or integrated systems.</p></details>
+<details><summary>Do companies manufacture AI inside semiconductor factories?</summary><p>No. Semiconductor factories fabricate physical chips. AI developers create and train model software and then execute it using those chips and other infrastructure.</p></details>
+<details><summary>Can a beginner make a small AI model on a laptop?</summary><p>Yes. Start with Python, simple datasets and a small model. You can learn training and inference without buying a GPU.</p></details>
+
+<section class="sources" aria-label="Further reading and sources">
+<h2>Further reading &amp; technical sources</h2>
+<p>This independent educational article uses primary technical explanations and avoids unverified claims about chip prices, model sizes or performance benchmarks.</p>
+<ol>
+<li><a href="https://www.ibm.com/think/topics/ai-hardware" target="_blank" rel="noopener noreferrer">IBM — What is AI hardware?</a></li>
+<li><a href="https://www.ibm.com/think/topics/ai-inference" target="_blank" rel="noopener noreferrer">IBM — What is AI inference?</a></li>
+<li><a href="https://docs.cloud.google.com/tpu/docs/intro-to-tpu" target="_blank" rel="noopener noreferrer">Google Cloud — Introduction to Cloud TPU</a></li>
+<li><a href="https://docs.cloud.google.com/docs/compute-area/gpus" target="_blank" rel="noopener noreferrer">Google Cloud — Understand GPUs</a></li>
+<li><a href="https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made" target="_blank" rel="noopener noreferrer">ASML — How microchips are made</a></li>
+</ol>
+</section>
+<section class="related" aria-label="Related educational articles">
+<h2>Continue reading</h2>
+<p><a href="/what-is-ai-history-and-evolution">History and evolution of AI</a> · <a href="/ai-vs-machine-learning-vs-deep-learning-guide">AI vs machine learning vs deep learning</a> · <a href="/articles">All technical articles</a></p>
+</section>
+<aside class="article-rights" aria-label="Article credits and reuse"><p class="rights-heading">Attribution &amp; reuse</p><p class="rights-credit">Written by <strong>Nawaz Sharif</strong> &middot; Published <time datetime="2026-11-22">22 November 2026</time></p><p>Original article &copy; 2026 Nawaz Sharif. You may share this page's link and quote short passages with attribution where permitted. For full republication, translations or commercial reuse, <a href="/contact">request permission</a>. Third-party material and code retain their own rights and licenses.</p><p class="rights-source">Original source: <a href="https://nawazsharif.in/how-ai-works-chips-gpu-tpu-training">nawazsharif.in/how-ai-works-chips-gpu-tpu-training</a></p></aside>
+</main>
+<footer><div class="wrap"><div class="footer-inner"><a class="brand" href="/">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="/about">About</a><a href="/articles">Articles</a><a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/privacy-policy">Privacy</a><a href="/terms">Terms</a></nav></div><div class="footer-bottom"><span>© 2026 Nawaz Sharif. All rights reserved.</span><span>Independent notes on technology and IT systems.</span></div></div></footer>
+</body></html>

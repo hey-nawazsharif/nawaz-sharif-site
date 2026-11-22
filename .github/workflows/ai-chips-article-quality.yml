@@ -1,0 +1,31 @@
+name: AI chip article quality checks
+on:
+  pull_request:
+    paths:
+      - 'how-ai-works-chips-gpu-tpu-training.html'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ai_chips_article.py'
+      - '.github/workflows/ai-chips-article-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'how-ai-works-chips-gpu-tpu-training.html'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ai_chips_article.py'
+      - '.github/workflows/ai-chips-article-quality.yml'
+  workflow_dispatch:
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate AI chip article and runnable Python learning example
+        run: python tests/test_ai_chips_article.py
