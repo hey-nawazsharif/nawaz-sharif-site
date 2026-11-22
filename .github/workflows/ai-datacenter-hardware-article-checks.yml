@@ -1,0 +1,35 @@
+name: AI data center RAM and SSD article checks
+on:
+  pull_request:
+    paths:
+      - 'ai-data-center-ram-hbm-nvme-ssd-explained.html'
+      - 'assets/ai-*.svg'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ai_datacenter_hardware_article.py'
+      - 'workers/migrations/0007_ai_datacenter_memory_ssd_article.sql'
+      - '.github/workflows/ai-datacenter-hardware-article-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ai-data-center-ram-hbm-nvme-ssd-explained.html'
+      - 'assets/ai-*.svg'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ai_datacenter_hardware_article.py'
+      - 'workers/migrations/0007_ai_datacenter_memory_ssd_article.sql'
+      - '.github/workflows/ai-datacenter-hardware-article-checks.yml'
+  workflow_dispatch:
+jobs:
+  article-quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify SVG illustrations, documentation, mathematical examples, SEO and links
+        run: python tests/test_ai_datacenter_hardware_article.py

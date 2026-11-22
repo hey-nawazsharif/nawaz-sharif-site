@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Data Center Hardware Explained: DDR5 ECC RAM, HBM GPU Memory & NVMe SSDs | Nawaz Sharif</title>
+<meta name="description" content="Understand AI data center hardware: DDR5 ECC server RAM, HBM GPU memory, NVMe SSDs, NVIDIA DGX B200/B300 specifications, memory maths and original architecture diagrams.">
+<meta name="author" content="Nawaz Sharif">
+<link rel="canonical" href="https://nawazsharif.in/ai-data-center-ram-hbm-nvme-ssd-explained">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI Data Center Hardware Explained: DDR5 ECC RAM, HBM GPU Memory & NVMe SSDs">
+<meta property="og:description" content="Understand AI data center hardware: DDR5 ECC server RAM, HBM GPU memory, NVMe SSDs, NVIDIA DGX B200/B300 specifications, memory maths and original architecture diagrams.">
+<meta property="og:url" content="https://nawazsharif.in/ai-data-center-ram-hbm-nvme-ssd-explained">
+<meta name="twitter:card" content="summary">
+<meta property="article:published_time" content="2026-11-22">
+<link rel="stylesheet" href="/style.css">
+<style>
+.hardware-article{padding-bottom:68px}
+.hardware-article .hd-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);font-weight:750}
+.hardware-article .hd-lead{font-size:1.13rem;line-height:1.85;color:var(--soft)}
+.hardware-article .hd-summary{background:var(--panel);border:1px solid var(--line);padding:20px 24px;margin:23px 0 29px}
+.hardware-article .hd-summary strong{color:var(--head)}
+.hardware-article .hd-visual{margin:30px 0 37px}
+.hardware-article .hd-visual a:first-child{display:block;overflow:hidden;background:#0b192c;border-radius:11px;border:1px solid var(--line)}
+.hardware-article .hd-visual img{display:block;max-width:100%;width:100%;height:auto;border:0}
+.hardware-article .hd-visual figcaption{margin:8px 0 0;color:var(--mute);font-size:13px;line-height:1.6}
+.hardware-article .hd-note{border-left:3px solid var(--acc);background:var(--panel);padding:15px 19px;margin:20px 0}
+.hardware-article .hd-scroll{overflow-x:auto;margin:20px 0 28px}
+.hardware-article table{width:100%;border-collapse:collapse;min-width:640px;font-size:14px}
+.hardware-article table th,.hardware-article table td{padding:12px 14px;border:1px solid var(--line);text-align:left;vertical-align:top;line-height:1.55}
+.hardware-article table th{background:var(--panel);color:var(--head)}
+.hardware-article .hd-formula{font:15px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--head);background:var(--codebg);padding:15px 20px;border:1px solid var(--line);overflow-x:auto}
+.hardware-article :not(pre)>code{padding:2px 5px;background:var(--codebg)}
+.hardware-article h2{scroll-margin-top:85px}
+.hardware-article .hd-related{border-top:1px solid var(--line);padding-top:18px;margin-top:35px}
+.hardware-article .hd-sources{border-top:1px solid var(--line);padding-top:16px;margin-top:36px}
+.hardware-article .hd-sources li{overflow-wrap:anywhere;margin:8px 0}
+.hardware-article details{padding:13px 0;border-bottom:1px solid var(--line)}
+.hardware-article summary{font-weight:700;cursor:pointer}
+@media(max-width:650px){.hardware-article .hd-summary{padding:16px 18px}.hardware-article table{font-size:13px}.hardware-article .hd-formula{font-size:13px}.hardware-article .hd-visual{margin:25px 0 31px}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI Data Center Hardware Explained: DDR5 ECC RAM, HBM GPU Memory & NVMe SSDs","description":"Understand AI data center hardware: DDR5 ECC server RAM, HBM GPU memory, NVMe SSDs, NVIDIA DGX B200/B300 specifications, memory maths and original architecture diagrams.","author":{"@type":"Person","name":"Nawaz Sharif","url":"https://nawazsharif.in/about"},"datePublished":"2026-11-22","dateModified":"2026-11-22","mainEntityOfPage":"https://nawazsharif.in/ai-data-center-ram-hbm-nvme-ssd-explained","inLanguage":"en","publisher":{"@type":"Person","name":"Nawaz Sharif"}}</script>
+<script defer src="/consent.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header><div class="wrap"><a class="brand" href="/">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav aria-label="Main navigation"><a href="/about">About</a><a href="/articles">Technical articles</a><a href="/#services">Areas of focus</a><a href="/contact">Contact</a></nav></div></header>
+<main id="main" class="doc hardware-article">
+<p class="meta">November 22, 2026 &middot; AI Infrastructure / RAM / GPU Memory / Storage &middot; By Nawaz Sharif</p>
+<p class="hd-eyebrow">AI hardware deep dive · with original diagrams</p>
+<h1>AI Data Center Hardware Explained: DDR5 ECC RAM, HBM GPU Memory &amp; NVMe SSDs</h1>
+<p class="hd-lead">A cloud AI system does not run on one “AI chip.” Inside its servers, CPUs, system RAM, GPU accelerators, high-bandwidth memory, enterprise SSDs and networking each perform different jobs. This visual guide explains exactly where data lives, which memory types are used, how they interact and how much memory a model may need.</p>
+<div class="hd-summary"><strong>Quick answer:</strong> A typical large AI server can have <strong>CPU-attached ECC DDR5 RDIMMs</strong> for host operations, <strong>HBM3e or another accelerator-specific high-bandwidth memory</strong> beside its GPUs for active model computation, and <strong>NVMe SSDs</strong> for persistent datasets, model files and checkpoints. These are different layers—not different names for the same RAM.</div>
+
+<h2 id="architecture">1. What happens when you ask cloud AI a question?</h2>
+<p>Your request travels to a hosted AI service. The server's CPU handles parts of the application and coordination, while its AI accelerator executes the model's numerical operations. Model files may be loaded or staged from storage into memory; the active weights and intermediate values needed by GPU inference generally live in accelerator memory. The generated output then returns through the application to your device.</p>
+<figure class="hd-visual"><a href="/assets/ai-datacenter-request-path.svg" target="_blank" rel="noopener noreferrer" title="Open full-size diagram"><img src="/assets/ai-datacenter-request-path.svg" loading="lazy" decoding="async" alt="Diagram: user request goes through the host CPU and DDR5 system RAM to a GPU with HBM for model computation, with enterprise NVMe storage used for model files and datasets." width="1200" height="500"></a><figcaption>Original illustration: simplified cloud-AI inference path. Actual data movement and inference placement depend on deployment design <a href="/assets/ai-datacenter-request-path.svg" target="_blank" rel="noopener noreferrer">View full-size diagram</a>.</figcaption></figure>
+<p>Not every AI request takes the exact same path. Some smaller models run entirely on a laptop CPU, mobile NPU or integrated GPU; large hosted language models often run on distributed accelerators. For the foundations, see <a href="/how-ai-works-chips-gpu-tpu-training">how AI models use chips</a>.</p>
+
+<h2 id="system-memory">2. Which RAM does the CPU use? DDR5 ECC RDIMM explained</h2>
+<p><strong>DDR5</strong> is a generation of dynamic random-access memory (DRAM). <strong>RDIMM</strong> refers to a registered DIMM design used in compatible servers to support reliable high-capacity memory configurations. <strong>ECC</strong> means error-correcting code: compatible hardware can detect and correct certain memory errors.</p>
+<p>Host RAM holds operating-system data, data loaders, preprocessing pipelines, application memory, CPU-side buffers and other processes. It is generally volatile—its data is not retained like SSD files after loss of power.</p>
+<p>Older data centres may still use <strong>DDR4 ECC RDIMMs</strong>. Modern systems commonly use <strong>DDR5 ECC RDIMMs</strong>, while some CPU/platform combinations support higher-bandwidth <strong>MRDIMMs</strong>. Lower-power options such as <strong>LPDDR5X-based SOCAMM</strong> also exist in certain architectures; they are not universal replacements for standard server DIMMs. All memory upgrades must match the CPU and platform's supported configuration.</p>
+<p>Micron's <a href="https://www.micron.com/products/memory/data-center-memory" target="_blank" rel="noopener noreferrer">data-centre memory documentation</a> discusses DDR5, MRDIMM, HBM and other form factors. It identifies MRDIMM as a high-bandwidth main-memory option on compatible Intel Xeon platforms.</p>
+
+<h2 id="gpu-memory">3. Which RAM does an AI GPU use? HBM3, HBM3e and newer HBM</h2>
+<p><strong>HBM</strong> stands for <em>High Bandwidth Memory</em>. HBM places multiple DRAM dies in stacked structures near the processor through advanced packaging, delivering high memory bandwidth for workloads such as neural-network matrix operations. Modern GPU accelerators may use HBM3, HBM3e or newer HBM generations depending on the product; not all AI accelerators use the same HBM type.</p>
+<p>GPU-attached memory typically holds model weights being used, activations and intermediate buffers, plus inference data structures such as the <strong>KV (key/value) cache</strong> for attention-based models. High bandwidth helps feed arithmetic units efficiently. GPU memory capacity also limits how much model state and how many concurrent requests fit without offloading or distributing data.</p>
+<p>For example, NVIDIA lists <strong>180 GB HBM3e per B200 GPU</strong> and <strong>288 GB per B300 GPU</strong> in its reference-architecture documentation. Those figures should not be confused with host DDR5 system RAM. See <a href="https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html" target="_blank" rel="noopener noreferrer">NVIDIA's GPU-memory specifications</a>.</p>
+
+<h2 id="three-layers">4. CPU RAM vs GPU HBM vs NVMe SSD: visual comparison</h2>
+<figure class="hd-visual"><a href="/assets/ai-memory-tiers-comparison.svg" target="_blank" rel="noopener noreferrer" title="Open full-size diagram"><img src="/assets/ai-memory-tiers-comparison.svg" loading="lazy" decoding="async" alt="Three original illustrated hardware panels comparing HBM accelerator memory, ECC DDR5 CPU-attached RAM and persistent NVMe SSD storage." width="1200" height="540"></a><figcaption>Original comparison diagram: GPU HBM for active model calculations, DDR5 ECC for CPU tasks and NVMe SSD for stored files <a href="/assets/ai-memory-tiers-comparison.svg" target="_blank" rel="noopener noreferrer">View full-size diagram</a>.</figcaption></figure>
+<div class="hd-scroll"><table><thead><tr><th>Technology</th><th>Connected to</th><th>Typical role in AI</th><th>Retains data without power?</th></tr></thead><tbody>
+<tr><td><strong>DDR5 ECC RDIMM</strong></td><td>Server CPU / motherboard</td><td>Operating system, data processing, CPU buffers, model staging</td><td>No</td></tr>
+<tr><td><strong>HBM3 / HBM3e / HBM4</strong></td><td>Compatible GPU / accelerator</td><td>Active model weights, KV cache and fast tensor operations</td><td>No</td></tr>
+<tr><td><strong>NVMe SSD</strong></td><td>Storage controller via PCIe / NVMe</td><td>OS files, datasets, model checkpoints, persistent cache</td><td>Yes</td></tr>
+<tr><td><strong>Distributed storage</strong></td><td>Networked storage servers</td><td>Shared datasets, snapshots and model artefacts across clusters</td><td>Yes, depending on system</td></tr>
+</tbody></table></div>
+<div class="hd-note"><strong>Important:</strong> The fastest type is not automatically the most suitable. HBM is expensive high-throughput working memory; SSDs store much larger volumes persistently. A 100 GB model file on SSD does not mean 100 GB of GPU memory is already available for inference.</div>
+
+<h2 id="ssd">5. Which SSDs are used in AI data centres?</h2>
+<p>Enterprise AI servers commonly use <strong>NVMe SSDs</strong> because NVMe communicates efficiently over PCIe and supports high throughput and parallel access. SSDs do not perform the model's calculations; they hold the files needed by the system and help load data fast enough to avoid starving accelerators.</p>
+<div class="hd-scroll"><table><thead><tr><th>SSD form factor</th><th>Common purpose</th><th>What to remember</th></tr></thead><tbody>
+<tr><td><strong>M.2 NVMe</strong></td><td>Operating system / boot drives in selected servers</td><td>Compact form factor; endurance and management features depend on the drive</td></tr>
+<tr><td><strong>U.2 / U.3 NVMe</strong></td><td>Hot-swappable local enterprise storage and caching</td><td>Server-friendly bays; actual PCIe generation and features vary</td></tr>
+<tr><td><strong>E1.S NVMe</strong></td><td>Dense enterprise caching and model/data storage</td><td>EDSFF form factor suited to space-constrained server designs</td></tr>
+<tr><td><strong>Networked / object storage</strong></td><td>Shared datasets and checkpoints beyond one server</td><td>Not simply a local SSD; performance depends on network and storage design</td></tr>
+</tbody></table></div>
+<p>Enterprise drives may offer features such as power-loss protection, endurance guarantees and remote management. The correct choice depends on read/write patterns, capacity, redundancy and service requirements, not simply peak advertised sequential speed. See <a href="https://semiconductor.samsung.com/ssd/enterprise-ssd/" target="_blank" rel="noopener noreferrer">Samsung enterprise SSD documentation</a> and <a href="https://product.skhynix.com/products/ssd/essd.go" target="_blank" rel="noopener noreferrer">SK hynix enterprise SSD form factors</a>.</p>
+
+<h2 id="inside-server">6. What is physically inside an AI server?</h2>
+<figure class="hd-visual"><a href="/assets/ai-server-system-layout.svg" target="_blank" rel="noopener noreferrer" title="Open full-size diagram"><img src="/assets/ai-server-system-layout.svg" loading="lazy" decoding="async" alt="Conceptual AI server parts drawing with dual CPUs, DDR5 ECC DIMMs, eight GPU/HBM modules, NVMe SSD bays, network adapters and power/cooling." width="1200" height="560"></a><figcaption>Original educational hardware layout: the number and arrangement of components are illustrative, not an exact manufacturer's internal blueprint <a href="/assets/ai-server-system-layout.svg" target="_blank" rel="noopener noreferrer">View full-size diagram</a>.</figcaption></figure>
+<p>An AI server may include one or more CPUs, many DIMM sockets, several GPU accelerators, high-speed interconnects, local SSDs, network cards, baseboard management controllers, redundant power supplies and powerful cooling. The arrangement differs substantially between server models. GPUs may connect through PCIe, NVLink or purpose-built backplanes, and the system may use air or liquid cooling.</p>
+<p>Because training and inference can use many machines, the broader data centre also needs networking, shared storage, electricity distribution, monitoring, security controls and cooling infrastructure.</p>
+
+<h2 id="dgx-b200">7. Real-world example: NVIDIA DGX B200 specifications</h2>
+<p>According to the <a href="https://docs.nvidia.com/dgx/dgxb200-user-guide/introduction-to-dgxb200.html" target="_blank" rel="noopener noreferrer">official NVIDIA DGX B200 User Guide</a>, the following configuration is published for the DGX B200 system. These are <strong>system specifications</strong>, not specifications for every AI data centre.</p>
+<div class="hd-scroll"><table><thead><tr><th>Component</th><th>Documented DGX B200 configuration</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>GPU processors</td><td><strong>8 × NVIDIA B200</strong></td><td>Accelerator processors for AI work</td></tr>
+<tr><td>GPU memory</td><td><strong>1,440 GB total</strong> (8 × 180 GB HBM3e)</td><td>GPU-attached memory distributed across eight GPUs</td></tr>
+<tr><td>CPU</td><td><strong>2 × Intel Xeon 8570</strong></td><td>Host processing and orchestration</td></tr>
+<tr><td>System RAM</td><td><strong>2 TB across 32 DIMMs</strong>, upgradable to 4 TB</td><td>CPU-side memory, distinct from GPU HBM</td></tr>
+<tr><td>OS drives</td><td><strong>2 × 1.92 TB NVMe M.2</strong>, RAID 1</td><td>Mirrored boot / system storage</td></tr>
+<tr><td>Local cache drives</td><td><strong>8 × 3.84 TB NVMe U.2</strong>, RAID 0</td><td>Local high-throughput data cache</td></tr>
+<tr><td>Networking</td><td>High-speed ConnectX-7 interfaces and BlueField-3 DPUs</td><td>Cluster and storage-network connectivity</td></tr>
+</tbody></table></div>
+<p><strong>Do not add system RAM to GPU memory</strong> and present the sum as a single pool of GPU working memory. The GPU total is spread across separate devices; applications need appropriate model parallelism, communication and runtime support to use memory across accelerators.</p>
+<p><strong>Storage maths:</strong> 8 × 3.84 TB = <strong>30.72 TB</strong> of manufacturer-rated raw cache-drive capacity. RAID 0 stripes data but does not provide drive-failure redundancy; filesystem and reserved-space overhead also affect usable capacity. A two-drive RAID 1 boot set has roughly one drive's logical capacity before filesystem overhead.</p>
+
+<h2 id="dgx-b300">8. What changes with NVIDIA DGX B300?</h2>
+<p>NVIDIA's <a href="https://docs.nvidia.com/dgx/dgxb300-user-guide/introduction-to-dgxb300.html" target="_blank" rel="noopener noreferrer">DGX B300 User Guide</a> describes eight B300 GPUs with <strong>288 GB GPU memory each (2,304 GB total by arithmetic)</strong>, default <strong>2 TB system RAM</strong> (up to 4 TB), <strong>8 × 3.84 TB E1.S NVMe cache SSDs</strong> and <strong>2 × 1.92 TB M.2 NVMe boot SSDs</strong>. Unlike the B200's U.2 cache drives, B300 uses E1.S for that internal cache configuration.</p>
+<p>This B200-versus-B300 comparison shows why precise model names matter. Memory technologies, SSD form factors and CPU platforms evolve; never assume every generation uses identical parts.</p>
+
+<h2 id="memory-math">9. Mathematics: how much RAM does an AI model need?</h2>
+<p>A simple starting estimate for <strong>model-weight storage only</strong> is:</p>
+<div class="hd-formula">Raw model weights (bytes) = parameter count × bytes per parameter</div>
+<p>Take a <em>hypothetical</em> model with <strong>70 billion parameters</strong>. At 16-bit storage, one parameter takes 2 bytes. The raw weight data requires:</p>
+<div class="hd-formula">70,000,000,000 × 2 = 140,000,000,000 bytes = 140 GB</div>
+<p>At an ideal 4 bits per parameter (half a byte), the lower-level theoretical weight data is:</p>
+<div class="hd-formula">70,000,000,000 × 0.5 = 35,000,000,000 bytes = 35 GB</div>
+<figure class="hd-visual"><a href="/assets/ai-model-memory-math.svg" target="_blank" rel="noopener noreferrer" title="Open full-size diagram"><img src="/assets/ai-model-memory-math.svg" loading="lazy" decoding="async" alt="Original educational bar chart: 70 billion parameter model uses 140 decimal gigabytes at 16-bit weight storage and an ideal 35 decimal gigabytes at 4-bit, plus runtime overhead." width="1200" height="480"></a><figcaption>Original model-memory diagram comparing raw 16-bit and ideal four-bit weight data, not a complete inference or training memory estimate <a href="/assets/ai-model-memory-math.svg" target="_blank" rel="noopener noreferrer">View full-size diagram</a>.</figcaption></figure>
+<p><strong>Decimal versus binary:</strong> These figures use decimal gigabytes (1 GB = 10<sup>9</sup> bytes). In binary units, 140 GB is about <strong>130.4 GiB</strong>, and 35 GB is about <strong>32.6 GiB</strong>. Real 4-bit formats require additional scales, metadata or padding, so their actual stored size can exceed the ideal 35 GB.</p>
+<p><strong>Crucial limitation:</strong> Raw model weights are not the whole memory requirement. During inference, software can need temporary buffers, KV cache, model metadata and framework overhead. Training may additionally need gradients, optimizer states and activations. Large models can be split across multiple GPUs, or partially offloaded, but that changes performance characteristics.</p>
+<div class="hd-note"><strong>One H200 has 141 GB HBM3e, so does a 140 GB weight file always fit?</strong> No. Even before differences between GB and GiB, actual inference needs overhead beyond weights. You must measure the model's complete working set and the inference runtime's memory allocation.</div>
+
+<h2 id="data-movement">10. How do datasets and weights move from SSD to RAM and GPUs?</h2>
+<ol>
+<li><strong>Persist:</strong> model checkpoints, datasets and executable files are kept in enterprise SSDs or shared storage.</li>
+<li><strong>Read:</strong> the storage subsystem moves required data into memory through software and I/O pathways.</li>
+<li><strong>Prepare:</strong> CPU-side software may decode, batch, tokenize or transform data using system RAM.</li>
+<li><strong>Stage:</strong> tensors and model parameters reach the accelerator's working memory, possibly through specialised paths.</li>
+<li><strong>Compute:</strong> the GPU or accelerator processes operations using local memory and communicates with other accelerators when necessary.</li>
+<li><strong>Save:</strong> in training or fine-tuning, checkpoints are written back to persistent storage.</li>
+</ol>
+<p>The exact path varies with hardware and software: GPUs can in some systems participate in direct storage transfers, and applications may use caching or memory-mapping. The simplified diagram is a learning aid rather than a universal wiring diagram.</p>
+
+<h2 id="electricity">11. RAM and SSD also affect electricity and cooling</h2>
+<p>AI server power does not come only from GPU chips. CPU sockets, memory modules, SSDs, networking adapters and cooling equipment also draw power. More memory capacity or faster I/O can change total system power, even if it reduces training delays or improves accelerator utilisation.</p>
+<p>The total facility impact depends on real workload draw and data-centre overhead—not simply the sum of component datasheet maxima. The companion <a href="/ai-chips-electricity-water-consumption-guide">AI chip electricity and water article</a> explains energy in kWh, facility PUE and site WUE with properly scoped examples.</p>
+
+<h2 id="checklist">12. What should you check when comparing AI-server specifications?</h2>
+<ul>
+<li><strong>Model and workload:</strong> training, inference or a smaller CPU-only task?</li>
+<li><strong>GPU memory:</strong> per-GPU capacity, memory bandwidth, total accelerators and communication links.</li>
+<li><strong>Host memory:</strong> total DDR5 ECC RAM, supported DIMM speeds, channel configuration, upgrade limits.</li>
+<li><strong>Storage:</strong> boot versus cache drives, NVMe generation, SSD endurance, protection and shared storage.</li>
+<li><strong>Networking:</strong> speed and topology for multi-GPU or multi-node training.</li>
+<li><strong>Operations:</strong> power envelope, cooling method, redundancy and management features.</li>
+</ul>
+
+<h2 id="faq">Frequently asked questions</h2>
+<details><summary>Does AI use normal RAM or special RAM?</summary><p>Both. CPUs can use ECC DDR5 system memory, while many AI GPUs use HBM for high-bandwidth working memory. Their jobs differ.</p></details>
+<details><summary>Is DDR5 RAM faster than HBM3e?</summary><p>They have different designs and intended uses. HBM typically provides far greater total bandwidth close to large accelerators, while DDR5 provides flexible system memory for CPUs. Direct comparisons require platform-specific capacity and bandwidth figures.</p></details>
+<details><summary>Can I run AI with only a regular SSD and 16 GB RAM?</summary><p>You can learn machine learning and run appropriately small CPU-based models, depending on your CPU, available memory, model size and other applications. Storage capacity alone does not guarantee that a large model can run.</p></details>
+<details><summary>Does 1,440 GB total GPU memory mean a single 1,440 GB pool?</summary><p>No. The B200 figure sums memory across eight GPUs. Using it for one model requires suitable distribution and software; not every program can automatically use all of it.</p></details>
+<details><summary>Are NVMe SSDs more important than HBM?</summary><p>They serve different purposes. Fast SSDs help load and retain large datasets and models, whereas HBM supplies active accelerator computation. Effective AI systems need an appropriate balance.</p></details>
+<details><summary>Does storing a model on an SSD mean it uses no GPU memory?</summary><p>No. During ordinary GPU inference, working model data and intermediate values require GPU memory or a designed offload strategy. An SSD is persistent storage, not a replacement for all GPU RAM.</p></details>
+
+<section class="hd-sources" aria-label="Technical sources and further reading">
+<h2>Verified manufacturer documentation</h2>
+<p>This article uses published hardware specifications and original diagrams. Product configurations may change; always consult the revision of the vendor's guide relevant to the system being deployed.</p>
+<ol>
+<li><a href="https://docs.nvidia.com/dgx/dgxb200-user-guide/introduction-to-dgxb200.html" target="_blank" rel="noopener noreferrer">NVIDIA — DGX B200 System Introduction and Hardware Specifications</a></li>
+<li><a href="https://docs.nvidia.com/dgx/dgxb300-user-guide/introduction-to-dgxb300.html" target="_blank" rel="noopener noreferrer">NVIDIA — DGX B300 System Introduction and Hardware Specifications</a></li>
+<li><a href="https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html" target="_blank" rel="noopener noreferrer">NVIDIA — HGX GPU and Memory Reference</a></li>
+<li><a href="https://www.micron.com/products/memory/data-center-memory" target="_blank" rel="noopener noreferrer">Micron — Data Center Memory: DDR5, MRDIMM and HBM</a></li>
+<li><a href="https://semiconductor.samsung.com/ssd/enterprise-ssd/" target="_blank" rel="noopener noreferrer">Samsung Semiconductor — Enterprise SSDs</a></li>
+<li><a href="https://product.skhynix.com/products/ssd/essd.go" target="_blank" rel="noopener noreferrer">SK hynix — Enterprise SSDs and Form Factors</a></li>
+</ol>
+</section>
+<section class="hd-related" aria-label="Related technical articles"><h2>Continue learning</h2><p><a href="/how-ai-works-chips-gpu-tpu-training">How AI models use chips</a> · <a href="/ai-chips-electricity-water-consumption-guide">AI electricity and water usage</a> · <a href="/articles">Browse all articles</a></p></section>
+<aside class="article-rights" aria-label="Article credits and reuse"><p class="rights-heading">Attribution &amp; reuse</p><p class="rights-credit">Written by <strong>Nawaz Sharif</strong> &middot; Published <time datetime="2026-11-22">22 November 2026</time></p><p>Original article and illustrations &copy; 2026 Nawaz Sharif. You may share the page's link and quote short passages with attribution where permitted. For full republication, translations or commercial reuse, <a href="/contact">request permission</a>. Third-party references remain the property of their owners.</p><p class="rights-source">Original source: <a href="https://nawazsharif.in/ai-data-center-ram-hbm-nvme-ssd-explained">nawazsharif.in/ai-data-center-ram-hbm-nvme-ssd-explained</a></p></aside>
+</main>
+<footer><div class="wrap"><div class="footer-inner"><a class="brand" href="/">NAWAZ SHARIF<span class="brand-dot">.</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="/about">About</a><a href="/articles">Articles</a><a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/privacy-policy">Privacy</a><a href="/terms">Terms</a></nav></div><div class="footer-bottom"><span>© 2026 Nawaz Sharif. All rights reserved.</span><span>Independent notes on technology and IT systems.</span></div></div></footer>
+</body>
+</html>
