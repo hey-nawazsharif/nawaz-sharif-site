@@ -1,0 +1,51 @@
+name: Verify server guide and three original diagrams are live
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/server-guide-live-checks.yml'
+      - 'what-is-server-types-hardware-installation-from-scratch.html'
+      - 'assets/server-hardware-anatomy.svg'
+      - 'assets/server-types-and-use-cases.svg'
+      - 'assets/server-zero-to-first-service.svg'
+      - 'articles.html'
+  workflow_dispatch:
+jobs:
+  verify-public-site:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check production article, diagrams, sitemap and public archive API
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://nawazsharif.in'
+          ARTICLE='/what-is-server-types-hardware-installation-from-scratch'
+          ready=0
+          for try in $(seq 1 18); do
+            if curl --fail --silent --show-error --location --max-time 18 "$BASE$ARTICLE" -o /tmp/article.html && grep -Fq 'What Is a Server?' /tmp/article.html && grep -Fq 'Install Ubuntu Server' /tmp/article.html; then
+              ready=1
+              break
+            fi
+            echo "Article not propagated yet: attempt $try"
+            sleep 6
+          done
+          test "$ready" -eq 1 || { echo 'Published article unavailable'; exit 1; }
+          echo 'PASS: clean production article URL and installation content'
+          for diagram in server-hardware-anatomy server-types-and-use-cases server-zero-to-first-service; do
+            url="$BASE/assets/$diagram.svg"
+            curl --fail --silent --show-error --location --max-time 25 "$url" -o "/tmp/$diagram.svg"
+            grep -Fq '<svg' "/tmp/$diagram.svg" || { echo "Invalid SVG: $diagram"; exit 1; }
+            grep -Fq '<title' "/tmp/$diagram.svg" || { echo "SVG missing title: $diagram"; exit 1; }
+            grep -Fq "src=\"/assets/$diagram.svg\"" /tmp/article.html || { echo "Diagram missing in article: $diagram"; exit 1; }
+            echo "PASS: $diagram.svg"
+          done
+          curl --fail --silent --show-error --location --max-time 25 "$BASE/articles" -o /tmp/archive.html
+          grep -Fq "$ARTICLE" /tmp/archive.html || { echo 'Archive fallback missing'; exit 1; }
+          echo 'PASS: articles archive fallback'
+          curl --fail --silent --show-error --location --max-time 25 "$BASE/sitemap.xml" -o /tmp/sitemap.xml
+          grep -Fq "$BASE$ARTICLE" /tmp/sitemap.xml || { echo 'Sitemap missing'; exit 1; }
+          echo 'PASS: canonical sitemap URL'
+          curl --fail --silent --show-error --location --max-time 25 'https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles?limit=50' -o /tmp/api.json
+          grep -Fq '"slug":"what-is-server-types-hardware-installation-from-scratch"' /tmp/api.json || { echo 'Dynamic archive API missing article'; exit 1; }
+          echo 'PASS: public published-article API'
