@@ -77,8 +77,9 @@ for url in ("www.nvidia.com/en-us/data-center/h200/",
     assert url in article, "Missing technical source " + url
 
 # Check independent numerical examples rather than trusting authored captions.
-assert 0.7 * 24 == 16.8
-assert 1.4 * 24 == 33.6
+from math import isclose
+assert isclose(0.7 * 24, 16.8, abs_tol=1e-9)
+assert isclose(1.4 * 24, 33.6, abs_tol=1e-9)
 assert round(8 * 0.7 * 24, 1) == 134.4
 assert round(14.3 * 24, 1) == 343.2
 assert 100 * 1.3 * 24 == 3120
