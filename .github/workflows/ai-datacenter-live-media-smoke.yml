@@ -1,0 +1,48 @@
+name: Verify AI data center article images are live
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ai-datacenter-live-media-smoke.yml'
+      - 'ai-data-center-ram-hbm-nvme-ssd-explained.html'
+      - 'assets/ai-datacenter-request-path.svg'
+      - 'assets/ai-memory-tiers-comparison.svg'
+      - 'assets/ai-server-system-layout.svg'
+      - 'assets/ai-model-memory-math.svg'
+      - 'articles.html'
+  workflow_dispatch:
+jobs:
+  verify-public-site:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify deployed article, diagrams and public archive API
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://nawazsharif.in'
+          ARTICLE='/ai-data-center-ram-hbm-nvme-ssd-explained'
+          ready=0
+          for try in $(seq 1 18); do
+            if curl --fail --silent --show-error --location --max-time 18 "$BASE$ARTICLE" -o /tmp/article.html && grep -Fq 'HBM GPU Memory' /tmp/article.html; then
+              ready=1
+              break
+            fi
+            echo "Article not propagated yet: attempt $try"
+            sleep 6
+          done
+          test "$ready" -eq 1 || { echo "Live article unavailable"; exit 1; }
+          echo "PASS: clean article URL serves HTML"
+          for img in ai-datacenter-request-path ai-memory-tiers-comparison ai-server-system-layout ai-model-memory-math; do
+            url="$BASE/assets/$img.svg"
+            curl --fail --silent --show-error --location --max-time 25 "$url" -o "/tmp/$img.svg"
+            grep -Fq '<svg' "/tmp/$img.svg" || { echo "Invalid SVG response for $img"; exit 1; }
+            grep -Fq '<title' "/tmp/$img.svg" || { echo "Missing accessible SVG title for $img"; exit 1; }
+            echo "PASS: $img.svg"
+          done
+          curl --fail --silent --show-error --location --max-time 25 "$BASE/articles" -o /tmp/archive.html
+          grep -Fq "$ARTICLE" /tmp/archive.html || { echo 'Article missing from public archive fallback'; exit 1; }
+          echo 'PASS: archive fallback link'
+          curl --fail --silent --show-error --location --max-time 25 'https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles?limit=50' -o /tmp/articles.json
+          grep -Fq '"slug":"ai-data-center-ram-hbm-nvme-ssd-explained"' /tmp/articles.json || { echo 'Article missing from published API listing'; exit 1; }
+          echo 'PASS: public published-article API'
