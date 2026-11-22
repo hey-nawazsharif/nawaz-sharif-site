@@ -1,0 +1,51 @@
+name: Verify EV digital cockpit article and diagrams are live
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ev-cockpit-live-media-check.yml'
+      - 'ev-car-touchscreen-digital-cockpit-ai-chips-software-explained.html'
+      - 'assets/ev-digital-cockpit-layout.svg'
+      - 'assets/ev-cockpit-software-data-flow.svg'
+      - 'assets/ev-battery-range-calculation.svg'
+      - 'assets/ev-ota-cybersecurity-boundaries.svg'
+      - 'articles.html'
+  workflow_dispatch:
+jobs:
+  verify-production:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Fetch deployed article, all image assets and public listing
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://nawazsharif.in'
+          SLUG='ev-car-touchscreen-digital-cockpit-ai-chips-software-explained'
+          ready=0
+          for attempt in $(seq 1 18); do
+            if curl --fail --silent --show-error --location --max-time 20 "$BASE/$SLUG" -o /tmp/ev.html && grep -Fq 'Inside an Electric Car:' /tmp/ev.html && grep -Fq 'Snapdragon 8295' /tmp/ev.html; then
+              ready=1
+              break
+            fi
+            echo "EV article not ready yet: attempt $attempt"
+            sleep 6
+          done
+          test "$ready" -eq 1 || { echo 'EV production article not available'; exit 1; }
+          echo 'PASS: EV article clean URL and content'
+          for asset in ev-digital-cockpit-layout ev-cockpit-software-data-flow ev-battery-range-calculation ev-ota-cybersecurity-boundaries; do
+            curl --fail --silent --show-error --location --max-time 20 "$BASE/assets/$asset.svg" -o "/tmp/$asset.svg"
+            grep -Fq '<svg' "/tmp/$asset.svg" || { echo "Invalid image response: $asset"; exit 1; }
+            grep -Fq '<title' "/tmp/$asset.svg" || { echo "Missing accessible SVG title: $asset"; exit 1; }
+            grep -Fq "/assets/$asset.svg" /tmp/ev.html || { echo "Article missing image reference: $asset"; exit 1; }
+            echo "PASS: $asset.svg"
+          done
+          curl --fail --silent --show-error --location --max-time 20 "$BASE/articles" -o /tmp/articles.html
+          grep -Fq "/$SLUG" /tmp/articles.html || { echo 'EV card missing from article archive'; exit 1; }
+          echo 'PASS: archive link'
+          curl --fail --silent --show-error --location --max-time 20 "$BASE/sitemap.xml" -o /tmp/sitemap.xml
+          grep -Fq "$BASE/$SLUG" /tmp/sitemap.xml || { echo 'EV sitemap missing'; exit 1; }
+          echo 'PASS: sitemap link'
+          curl --fail --silent --show-error --location --max-time 25 'https://nawaz-site-api.nawaz-site-observer.workers.dev/api/v1/articles?limit=50' -o /tmp/public-api.json
+          grep -Fq '"slug":"ev-car-touchscreen-digital-cockpit-ai-chips-software-explained"' /tmp/public-api.json || { echo 'EV article missing from public API'; exit 1; }
+          echo 'PASS: public article API'
