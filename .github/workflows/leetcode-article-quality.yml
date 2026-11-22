@@ -1,0 +1,31 @@
+name: LeetCode DSA article quality checks
+on:
+  pull_request:
+    paths:
+      - 'leetcode-dsa-practice-python-beginners.html'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_leetcode_article.py'
+      - '.github/workflows/leetcode-article-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'leetcode-dsa-practice-python-beginners.html'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_leetcode_article.py'
+      - '.github/workflows/leetcode-article-quality.yml'
+  workflow_dispatch:
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check Python examples and article discoverability
+        run: python tests/test_leetcode_article.py

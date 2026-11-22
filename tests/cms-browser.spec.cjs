@@ -149,7 +149,7 @@ test('homepage featured article opens a separate browser tab', async ({ page }) 
   const [newTab] = await Promise.all([page.waitForEvent('popup'), link.click()]);
   await newTab.waitForLoadState('domcontentloaded');
   expect(new URL(newTab.url()).pathname).toBe(new URL(await link.getAttribute('href'), PRODUCTION).pathname);
-  expect(page.url()).toContain('/index.html');
+  expect(new URL(page.url()).pathname).toBe('/'); // Clean URLs show '/' after legacy /index.html loads.
   await newTab.close();
 });
 
