@@ -91,7 +91,7 @@ for expected in ("16.8 kWh", "33.6 kWh", "134.4 kWh", "343.2 kWh",
 for anchor in ("types", "models", "power", "pue", "global", "water", "water-data",
                "wue", "comparison", "choices", "conclusion", "faq"):
     assert 'id="' + anchor + '"' in article
-assert 'water per AI question' in article.lower() or 'per AI question' in article.lower()
+assert 'how much water does one ai prompt use?' in article.lower()
 for source,kind in ((home,"featured"),(archive,"archive")):
     assert re.search(r'<a\b[^>]*href="/' + slug + r'"[^>]*target="_blank"[^>]*rel="noopener noreferrer"', source), \
         "New tab link missing in " + kind
