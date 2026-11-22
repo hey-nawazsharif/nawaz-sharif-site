@@ -1,0 +1,35 @@
+name: Smartphone chips internet and AI article quality checks
+on:
+  pull_request:
+    paths:
+      - 'how-smartphone-chips-5g-internet-ai-apps-work.html'
+      - 'assets/smartphone-*.svg'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_smartphone_internet_ai_article.py'
+      - 'workers/migrations/0010_smartphone_chips_5g_ai_article.sql'
+      - '.github/workflows/smartphone-internet-ai-article-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'how-smartphone-chips-5g-internet-ai-apps-work.html'
+      - 'assets/smartphone-*.svg'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_smartphone_internet_ai_article.py'
+      - 'workers/migrations/0010_smartphone_chips_5g_ai_article.sql'
+      - '.github/workflows/smartphone-internet-ai-article-checks.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check source references, original SVG XML, math, safety, SEO and site links
+        run: python tests/test_smartphone_internet_ai_article.py
