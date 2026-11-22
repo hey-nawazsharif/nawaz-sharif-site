@@ -1,0 +1,33 @@
+name: AI chips electricity and water article checks
+on:
+  pull_request:
+    paths:
+      - 'ai-chips-electricity-water-consumption-guide.html'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ai_energy_water_article.py'
+      - 'workers/migrations/0006_ai_chips_energy_water.sql'
+      - '.github/workflows/ai-energy-water-article-checks.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ai-chips-electricity-water-consumption-guide.html'
+      - 'index.html'
+      - 'articles.html'
+      - 'sitemap.xml'
+      - 'tests/test_ai_energy_water_article.py'
+      - 'workers/migrations/0006_ai_chips_energy_water.sql'
+      - '.github/workflows/ai-energy-water-article-checks.yml'
+  workflow_dispatch:
+jobs:
+  article-quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check sources, arithmetic, SEO, live-site link structure and migration
+        run: python tests/test_ai_energy_water_article.py
