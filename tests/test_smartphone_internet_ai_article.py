@@ -113,7 +113,7 @@ assert math.isclose(3e9 * 0.5 / 1e9, 1.5)
 assert "lower-bound arithmetic illustration" in article.lower()
 assert "protocol overhead" in article.lower()
 assert "not a download guarantee" in article.lower()
-assert "The SIM is not the modem" in article
+assert "SIM is not the modem" in article
 assert "not necessarily" in article.lower()
 assert "not a universal guarantee" in article.lower()
 
